@@ -9,7 +9,7 @@ if (file_exists($cekAvatar)) {
 
 ?>
 
-<link rel="stylesheet" href="<?= base_url() ?>bower_components/select2/dist/css/select2.min.css">
+<link rel="stylesheet" href="<?= COMPONENT_URL ?>bower_components/select2/dist/css/select2.min.css">
 <!-- sidebar: style can be found in sidebar.less -->
 <section class="sidebar">
 	<!-- Sidebar user panel -->
@@ -52,4 +52,4 @@ if (file_exists($cekAvatar)) {
 	});
 </script>
 <!-- Select2 -->
-<script src="<?= base_url() ?>bower_components/select2/dist/js/select2.full.js"></script>
+<script src="<?= COMPONENT_URL ?>bower_components/select2/dist/js/select2.full.js"></script>
