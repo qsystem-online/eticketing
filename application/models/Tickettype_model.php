@@ -10,6 +10,10 @@ class Tickettype_model extends MY_MODEL {
         parent::__construct();
     }
 
+    public function getDataById($fin_ticket_type_id){
+        $ssql = "select fin_ticket_type_id,fst_ticket_type_name,"
+    }
+
     public function getRules($mode = "ADD", $id = 0){
         $rules = [];
 
