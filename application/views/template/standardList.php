@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
 <!-- <link rel="stylesheet" href="<?=base_url()?>bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css"> -->
-<link rel="stylesheet" href="<?=base_url()?>bower_components/datatables.net/datatables.min.css">
+<link rel="stylesheet" href="<?=COMPONENT_URL?>bower_components/datatables.net/datatables.min.css">
 
 <section class="content-header">
 	<h1><?=$page_name?><small>List</small></h1>
@@ -197,7 +197,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	}
 </script>
 <!-- DataTables -->
-<script src="<?=base_url()?>bower_components/datatables.net/datatables.min.js"></script>
+<script src="<?=COMPONENT_URL?>bower_components/datatables.net/datatables.min.js"></script>
 <!--
 <script src="<?=base_url()?>bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="<?=base_url()?>bower_components/datatables.net/js/datetime.js"></script>

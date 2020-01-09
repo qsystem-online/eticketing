@@ -10,6 +10,12 @@ class Ticketlog_model extends MY_MODEL {
         parent::__construct();
     }
 
+    public function getDataById($fin_ticket_id){
+        $ssql = "select a.*,b.fin_ticket_id from ". $this->tableName ." a left join ticket b on
+                a.fin_ticket_id = b.fin_ticket_id where fin_ticket_id = ? ";
+        
+    }
+
     public function getRules($mode = "ADD", $id = 0){
         $rules = [];
 
