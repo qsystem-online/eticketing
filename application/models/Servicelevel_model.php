@@ -44,7 +44,7 @@ class Servicelevel_model extends MY_MODEL {
         return $rs;
     }
 
-    public function get_Servicelevel(){
+    public function get_ServiceLevel(){
         $query = $this->db->get('servicelevel');
         return $query->result_array();
     }
