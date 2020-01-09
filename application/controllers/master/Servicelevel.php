@@ -39,7 +39,7 @@ class Servicelevel extends MY_Controller
         $this->list['columns'] = [
             ['title' => 'Service Level ID', 'width' => '25%', 'data' => 'fin_service_level_id'],
             ['title' => 'Service Level Name', 'width' => '40%', 'data' => 'fst_service_level_name'],
-            ['title' => 'Service Level Days', 'width' => '25%', 'data' => 'fin_service_level_days'],
+            ['title' => 'Service Level Days', 'width' => '25%', 'data' => 'fin_service_level_days', 'className' => 'dt-body-center text-center'],
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center']
         ];
         $main_header = $this->parser->parse('inc/main_header', [], true);
