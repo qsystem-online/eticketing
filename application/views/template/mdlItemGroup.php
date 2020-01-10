@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= base_url() ?>bower_components/jstree/dist/themes/default/style.min.css" />
+<link rel="stylesheet" href="<?=COMPONENT_URL?>bower_components/jstree/dist/themes/default/style.min.css" />
 <style>
 .vakata-context, .vakata-context ul{
 	z-index:1060;
@@ -271,4 +271,4 @@
 </script>
 
 <!-- jstree -->
-<script src="<?= base_url() ?>bower_components/jstree/dist/jstree.min.js"></script>
+<script src="<?=COMPONENT_URL?>bower_components/jstree/dist/jstree.min.js"></script>

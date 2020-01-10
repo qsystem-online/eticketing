@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
-<link rel="stylesheet" href="<?=base_url()?>bower_components/select2/dist/css/select2.min.css">
+<link rel="stylesheet" href="<?=COMPONENT_URL?>bower_components/select2/dist/css/select2.min.css">
 
 <style type="text/css">
 	.border-0{
@@ -34,7 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <section class="content">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-xs-12 col-md-12">
             <div class="box box-info">
 				<div class="box-header with-border">
 				<h3 class="box-title title"><?=$title?></h3>
@@ -55,48 +55,48 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <input type="hidden" id="frm-mode" value="<?=$mode?>">
 
                     <div class='form-group'>
-                    <label for="fin_user_id" class="col-sm-2 control-label"><?=lang("User ID")?> #</label>
-						<div class="col-sm-10">
+                    <label for="fin_user_id" class="col-xs-6 col-sm-2 control-label"><?=lang("User ID")?> #</label>
+						<div class="col-xs-6 col-sm-10">
 							<input type="text" class="form-control" id="fin_user_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_user_id" value="<?=$fin_user_id?>" readonly>
 							<div id="fin_user_id_err" class="text-danger"></div>
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="fst_username" class="col-sm-2 control-label"><?=lang("User Name")?> *</label>
-						<div class="col-sm-10">
+						<label for="fst_username" class="col-xs-6 col-sm-2 control-label"><?=lang("User Name")?> *</label>
+						<div class="col-xs-6 col-sm-10">
 							<input type="text" class="form-control" id="fst_username" placeholder="<?=lang("Username")?>" name="fst_username" value="<?= set_value("fst_username") ?>">
 							<div id="fst_username_err" class="text-danger"></div>
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="fst_fullname" class="col-sm-2 control-label"><?=lang("Full Name")?> *</label>
-						<div class="col-sm-10">
+						<label for="fst_fullname" class="col-xs-6 col-sm-2 control-label"><?=lang("Full Name")?> *</label>
+						<div class="col-xs-6 col-sm-10">
 							<input type="text" class="form-control" id="fst_fullname" placeholder="<?=lang("Full Name")?>" name="fst_fullname">
 							<div id="fst_fullname_err" class="text-danger"></div>
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="fst_gender" class="col-sm-2 control-label"><?=lang("Gender")?></label>
-						<div class="col-sm-4">
+						<label for="fst_gender" class="col-xs-6 col-sm-2 control-label"><?=lang("Gender")?></label>
+						<div class="col-xs-6 col-sm-4">
 							<select class="form-control" id="fst_gender" name="fst_gender">
 								<option value='M'><?=lang("Male")?></option>
 								<option value='F'><?=lang("Female")?></option>
 							</select>
 						</div>
 
-						<label for="fst_email" class="col-md-2 control-label"><?=lang("Email")?> *</label>
-						<div class="col-md-4">
+						<label for="fst_email" class="col-xs-6 col-md-2 control-label"><?=lang("Email")?> *</label>
+						<div class="col-xs-6 col-md-4">
 							<input type="text" class="form-control" id="fst_email" placeholder="<?=lang("Email")?>" name="fst_email">
 							<div id="fst_email_err" class="text-danger"></div>
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="fdt_birthdate" class="col-sm-2 control-label text-right"><?=lang("Birth Date")?> *</label>
-						<div class="col-sm-4">
+						<label for="fdt_birthdate" class="col-xs-6 col-sm-2 control-label"><?=lang("Birth Date")?> *</label>
+						<div class="col-xs-6 col-sm-4">
 							<div class="input-group date">
 								<div class="input-group-addon">
 									<i class="fa fa-calendar"></i>
@@ -106,65 +106,65 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<div id="fdt_birthdate_err" class="text-danger"></div>
 						</div>
 
-						<label for="fst_birthplace" class="col-sm-2 control-label text-right"><?=lang("Birth Place")?></label>
-						<div class="col-sm-4">
+						<label for="fst_birthplace" class="col-xs-6 col-sm-2 control-label"><?=lang("Birth Place")?></label>
+						<div class="col-xs-6 col-sm-4">
 							<input type="text" class="form-control text-right" id="fst_birthplace" placeholder="<?=lang("Birth Place")?>" name="fst_birthplace">
 							<div id="fst_birthplace_err" class="text-danger"></div>
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="fst_address" class="col-md-2 control-label"><?=lang("Address")?> *</label>
-						<div class="col-md-10" row="10" cols="50">
+						<label for="fst_address" class="col-xs-6 col-md-2 control-label"><?=lang("Address")?> *</label>
+						<div class="col-xs-6 col-md-10" row="10" cols="50">
 							<textarea class="form-control" id="fst_address" placeholder="<?=lang("Address")?>" name="fst_address"></textarea>
 							<div id="fst_address_err" class="text-danger"></div>
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="fst_phone" class="col-md-2 control-label"><?=lang("Phone")?> *</label>
-						<div class="col-md-4">
+						<label for="fst_phone" class="col-xs-6 col-md-2 control-label"><?=lang("Phone")?> *</label>
+						<div class="col-xs-6 col-md-4">
 							<input type="text" class="form-control" id="fst_phone" placeholder="<?=lang("Phone")?>" name="fst_phone">
 							<div id="fst_phone_err" class="text-danger"></div>
 						</div>
 
-						<label for="fin_branch_id" class="col-md-2 control-label"><?=lang("Branch")?></label>
-						<div class="col-md-4">
+						<label for="fin_branch_id" class="col-xs-6 col-md-2 control-label"><?=lang("Branch")?></label>
+						<div class="col-xs-6 col-md-4">
 							<select class="form-control select2" id="fin_branch_id" name="fin_branch_id"></select>
 							<div id="fin_branch_id_err" class="text-danger"></div>
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="select-departmentname" class="col-md-2 control-label"><?=lang("Department ID")?></label>
-						<div class="col-md-4">
+						<label for="select-departmentname" class="col-xs-6 col-md-2 control-label"><?=lang("Department ID")?></label>
+						<div class="col-xs-6 col-md-4">
 							<select id="select-departmentname" class="form-control" name="fin_department_id"></select>
 							<div id="fst_department_name_err" class="text-danger"></div>
 						</div>
                     
-                        <label for="fin_group_id" class="col-md-2 control-label"><?=lang("Group")?></label>
-						<div class="col-md-4">
+                        <label for="fin_group_id" class="col-xs-6 col-md-2 control-label"><?=lang("Group")?></label>
+						<div class="col-xs-6 col-md-4">
 							<select class="form-control select2" id="fin_group_id" name="fin_group_id"></select>
 							<div id="fin_group_id_err" class="text-danger"></div>
 						</div>
                     </div>
 
 					<div class="form-group">
-						<label for="fst_birthplace" class="col-sm-2 control-label"></label>
-						<div class="col-sm-10">
+						<label for="fst_birthplace" class="col-xs-6 col-sm-2 control-label"></label>
+						<div class="col-xs-6 col-sm-10">
 							<img id="imgAvatar" style="border:1px solid #999;width:128px;" src="<?=site_url()?>assets/app/users/avatar/default.jpg"/>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="fst_birthplace" class="col-sm-2 control-label"><?=lang("Avatar")?></label>
-						<div class="col-sm-4">
+						<label for="fst_birthplace" class="col-xs-6 col-sm-2 control-label"><?=lang("Avatar")?></label>
+						<div class="col-xs-6 col-sm-4">
 							<input type="file" class="form-control" id="fst_avatar"  name="fst_avatar">
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="fbl_admin" class="col-sm-2 control-label"><?=lang("Admin")?></label>
-						<div class="col-md-2">
+						<label for="fbl_admin" class="col-xs-6 col-sm-2 control-label"><?=lang("Admin")?></label>
+						<div class="col-xs-6 col-md-2">
 							<label class="checkbox-inline"><input id="fbl_admin" name='fbl_admin' type="checkbox" value="1"><?=lang("Admin")?></label>
 						</div>
 					</div>
@@ -190,37 +190,37 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-12" >
+                    <div class="col-xs-12 col-md-12" >
                         <div style="border:1px inset #f0f0f0;border-radius:10px;padding:5px">
                             <fieldset style="padding:10px">
 
                             <form class="form-horizontal">
                                 <div class="form-group">
-                                    <label for="select-branch_R" class="col-md-3 control-label"><?= lang("Branch") ?></label>
-                                    <div class="col-md-7">
+                                    <label for="select-branch_R" class="col-xs-6 col-md-3 control-label"><?= lang("Branch") ?></label>
+                                    <div class="col-xs-6 col-md-7">
                                         <select id="select-branch_R" class="form-control" name="fin_branch_id">
                                         </select>
                                         <div id="fin_branch_id_err" class="text-danger"></div>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="select-department_R" class="col-md-3 control-label"><?= lang("Department") ?></label>
-                                    <div class="col-md-7">
+                                    <label for="select-department_R" class="col-xs-6 col-md-3 control-label"><?= lang("Department") ?></label>
+                                    <div class="col-xs-6 col-md-7">
                                         <select id="select-department_R" class="form-control" name="fin_department_id">
                                         </select>
                                         <div id="fin_department_id_err" class="text-danger"></div>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="select-userId_start" class="col-md-3 control-label"><?= lang("User ID") ?></label>
-                                    <div class="col-md-3">
+                                    <label for="select-userId_start" class="col-xs-6 col-md-3 control-label"><?= lang("User ID") ?></label>
+                                    <div class="col-xs-6 col-md-3">
                                         <select id="select-userId_start" class="form-control" name="fin_user_id">
                                             <option value="0">--  <?= lang("select") ?>  --</option>
                                         </select>
                                         <div id="fin_user_id_err" class="text-danger"></div>
                                     </div>
-                                    <label for="select-userId_end" class="col-md-1 control-label"><?= lang("s/d") ?></label>
-                                    <div class="col-md-3">
+                                    <label for="select-userId_end" class="col-xs-6 col-md-1 control-label"><?= lang("s/d") ?></label>
+                                    <div class="col-xs-6 col-md-3">
                                         <select id="select-userId_end" class="form-control" name="fin_user_id">
                                             <option value="0">--  <?= lang("select") ?>  --</option>
                                         </select>
@@ -559,6 +559,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 </script>
 <!-- Select2 -->
-<script src="<?=base_url()?>bower_components/select2/dist/js/select2.full.js"></script>
+<script src="<?=COMPONENT_URL?>bower_components/select2/dist/js/select2.full.js"></script>
 <!-- DataTables -->
-<script src="<?= base_url() ?>bower_components/datatables.net/datatables.min.js"></script>
+<script src="<?=COMPONENT_URL?>bower_components/datatables.net/datatables.min.js"></script>

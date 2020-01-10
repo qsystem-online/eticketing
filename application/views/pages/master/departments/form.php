@@ -1,8 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
-<link rel="stylesheet" href="<?=base_url()?>bower_components/select2/dist/css/select2.min.css">
-<link rel="stylesheet" href="<?=base_url()?>bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="<?=COMPONENT_URL?>bower_components/select2/dist/css/select2.min.css">
+<link rel="stylesheet" href="<?=COMPONENT_URL?>bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 
 <style type="text/css">
 	.border-0{
@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <section class="content">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-xs-12 col-md-12">
             <div class="box box-info">
 				<div class="box-header with-border">
 				<h3 class="box-title title"><?=$title?></h3>
@@ -55,16 +55,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<input type="hidden" id="frm-mode" value="<?=$mode?>">
 
 					<div class='form-group'>
-                    <label for="fin_department_id" class="col-sm-3 control-label"><?=lang("Department ID")?> #</label>
-						<div class="col-sm-9">
+                    <label for="fin_department_id" class="col-xs-6 col-sm-3 control-label"><?=lang("Department ID")?> #</label>
+						<div class="col-xs-6 col-sm-9">
 							<input type="text" class="form-control" id="fin_department_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_department_id" value="<?=$fin_department_id?>" readonly>
 							<div id="fin_department_id_err" class="text-danger"></div>
 						</div>
 					</div>
 
 					<div class="form-group">
-                    <label for="fst_department_name" class="col-sm-3 control-label"><?=lang("Department Name")?> *</label>
-						<div class="col-sm-9">
+                    <label for="fst_department_name" class="col-xs-6 col-sm-3 control-label"><?=lang("Department Name")?> *</label>
+						<div class="col-xs-6 col-sm-9">
 							<input type="text" class="form-control" id="fst_department_name" placeholder="<?=lang("Department Name")?>" name="fst_department_name">
 							<div id="fst_department_name_err" class="text-danger"></div>
 						</div>
@@ -237,4 +237,4 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </script>
 
 <!-- Select2 -->
-<script src="<?=base_url()?>bower_components/select2/dist/js/select2.full.js"></script>
+<script src="<?=COMPONENT_URL?>bower_components/select2/dist/js/select2.full.js"></script>

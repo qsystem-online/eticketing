@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
-<link rel="stylesheet" href="<?=base_url()?>bower_components/select2/dist/css/select2.min.css">
+<link rel="stylesheet" href="<?=COMPONENT_URL?>bower_components/select2/dist/css/select2.min.css">
 
 <section class="content-header">
 	<h1><?=lang("Users Group")?><small><?=lang("form")?></small></h1>
@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <section class="content">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-xs-12 col-md-12">
             <div class="box box-info">
 				<div class="box-header with-border">
 				<h3 class="box-title title"><?=$title?></h3>
@@ -34,8 +34,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <input type="hidden" id="frm-mode" value="<?=$mode?>">
 
                     <div class='form-group'>
-                    <label for="fin_group_id" class="col-sm-3 control-label"><?=lang("Group ID")?> #</label>
-						<div class="col-sm-9">
+                    <label for="fin_group_id" class="col-xs-6 col-sm-3 control-label"><?=lang("Group ID")?> #</label>
+						<div class="col-xs-6 col-sm-9">
 							<input type="text" class="form-control" id="fin_group_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_group_id" value="<?=$fin_group_id?>" readonly>
 							<div id="fin_group_id_err" class="text-danger"></div>
 
@@ -43,16 +43,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
 
 					<div class="form-group">
-                    <label for="fst_group_name" class="col-sm-3 control-label"><?=lang("Group Name")?> *</label>
-						<div class="col-sm-9">
+                    <label for="fst_group_name" class="col-xs-6 col-sm-3 control-label"><?=lang("Group Name")?> *</label>
+						<div class="col-xs-6 col-sm-9">
 							<input type="text" class="form-control" id="fst_group_name" placeholder="<?=lang("Group Name")?>" name="fst_group_name">
 							<div id="fst_group_name_err" class="text-danger"></div>
 						</div>
 					</div>
 
                     <div class="form-group">
-                    <label for="fin_level" class="col-sm-3 control-label"><?=lang("Level")?></label>
-						<div class="col-sm-3">
+                    <label for="fin_level" class="col-xs-6 col-sm-3 control-label"><?=lang("Level")?></label>
+						<div class="col-xs-6 col-sm-3">
 							<select class="form-control" id="fin_level" name="fin_level">
 								<option value='0'><?= lang("Top Management")?></option>
 								<option value='1'><?= lang("Upper Management")?></option>
@@ -237,7 +237,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </script>
 
 <!-- Select2 -->
-<script src="<?=base_url()?>bower_components/select2/dist/js/select2.full.js"></script>
+<script src="<?=COMPONENT_URL?>bower_components/select2/dist/js/select2.full.js"></script>
 
 <script type="text/javascript">
     $(function(){
