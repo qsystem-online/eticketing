@@ -10,6 +10,18 @@ class Ticket_model extends MY_MODEL {
         parent::__construct();
     }
 
+    public function getDataById($fin_ticket_id){
+        $ssql = "select * from ". $this->tableName ." where fin_ticket_id = ?";
+        $qr = $this->db->query($ssql,[$fin_ticket_id]);
+        $rwTicket = $qr->row();
+
+        $data = [
+            "ms_ticket" => $rwTicket
+        ];
+
+        return $data;
+    }
+
     public function getRules($mode = "ADD", $id = 0){
         $rules = [];
 
