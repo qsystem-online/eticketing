@@ -27,7 +27,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
 <section class="content">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-xs-12 col-md-12">
             <div class="box box-info">
                 <div class="box-header with-border">
                     <h3 class="box-title title"><?= $title ?></h3>
@@ -47,28 +47,28 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 						<input type="hidden" id="frm-mode" value="<?=$mode?>">
 
                         <div class="form-group">
-                            <label for="fin_service_level_id" class="col-sm-2 control-label"><?=lang("Service Level")?> #</label>
-                            <div class="col-sm-10">
+                            <label for="fin_service_level_id" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?> #</label>
+                            <div class="col-xs-6 col-md-10">
                                 <input type="text" class="form-control" id="fin_service_level_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_service_level_id" value="<?=$fin_service_level_id?>" readonly>
                                 <div id="fin_service_level_id_err" class="text-danger"></div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="fst_service_level_name" class="col-sm-2 control-label"><?=lang("Service Level Name")?> *</label>
-                            <div class="col-sm-10">
+                            <label for="fst_service_level_name" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level Name")?>*</label>
+                            <div class="col-xs-6 col-md-10">
                                 <input type="text" class="form-control" id="fst_service_level_name" placeholder="<?=lang("Service Level Name")?>" name="fst_service_level_name">
                                 <div id="fst_service_level_name_err" class="text-danger"></div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="fin_service_level_days" class="col-sm-2 control-label"><?=lang("Service Level Days")?></label>
-                            <div class="col-sm-2">
+                            <label for="fin_service_level_days" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level Days")?></label>
+                            <div class="col-xs-6 col-md-2">
                                 <input type="text" class="form-control" id="fin_service_level_days" placeholder="<?=lang("Service Level Days")?>" name="fin_service_level_days">
                                 <div id="fin_service_level_days_err" class="text-danger"></div>
                             </div>
-                            <label for="fin_terms_payment" class="col-sm-0 control-label"><?=lang("Day")?></label>
+                            <!--<label for="fin_terms_payment" class="col-sm-0 control-label"><?=lang("Day")?></label>-->
                         </div>
                     </div>
                     <!-- end box body -->

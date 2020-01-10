@@ -74,7 +74,7 @@
 	</style>
 
 	<body class="hold-transition skin-blue sidebar-mini <?= $sidebarCollapse?>" style="overflow-x:auto">
-		<div class="wrapper" style="overflow-x:auto;min-width:800px">
+		<div class="wrapper" style="overflow-x:auto">
 			<header class="main-header">
 				{MAIN_HEADER}
 			</header>

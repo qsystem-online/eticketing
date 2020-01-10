@@ -41,7 +41,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
 <section class="content">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-xs-12 col-md-12">
             <div class="box box-info">
                 <div class="box-header with-border">
                     <h3 class="box-title title"><?= $title ?></h3>
@@ -61,24 +61,24 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         <input type="hidden" id="frm-mode" value="<?= $mode ?>">
 
                         <div class="form-group">
-                            <label for="fin_ticket_type_id" class="col-sm-2 control-label"><?=lang("Ticket Type ID")?> #</label>
-                            <div class="col-sm-10">
+                            <label for="fin_ticket_type_id" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type ID")?> #</label>
+                            <div class="col-xs-6 col-md-10">
                                 <input type="text" class="form-control" id="fin_ticket_type_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_type_id" value="<?= $fin_ticket_type_id ?>" readonly>
                                 <div id="fin_ticket_type_id_err" class="text-danger"></div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="fst_ticket_type_name" class="col-sm-2 control-label"><?=lang("Ticket Type Name")?> *</label>
-                            <div class="col-sm-10">
+                            <label for="fst_ticket_type_name" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type Name")?> *</label>
+                            <div class="col-xs-6 col-md-10">
                                 <input type="text" class="form-control" id="fst_ticket_type_name" placeholder="<?=lang("Ticket Type Name")?>" name="fst_ticket_type_name">
                                 <div id="fst_ticket_type_name_err" class="text-danger"></div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="fst_assignment_or_notice" class="col-sm-2 control-label"><?=lang("Assignment or Notice")?></label>
-                            <div class="col-sm-4">
+                            <label for="fst_assignment_or_notice" class="col-xs-6 col-md-2 control-label"><?=lang("Assignment or Notice")?></label>
+                            <div class="col-xs-6 col-md-4">
                                 <select class="form-control" id="fst_assignment_or_notice" name="fst_assignment_or_notice">
                                     <option value='A'><?=lang("Assignment")?></option>
                                     <option value='N'><?=lang("Notice")?></option>
@@ -87,8 +87,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         </div>
 
                         <div class="form-group">
-                            <label for="fbl_need_approval" class="col-sm-2 control-label"><?=lang("Need Approval")?></label>
-                            <div class="col-sm-2">
+                            <label for="fbl_need_approval" class="col-xs-6 col-md-2 control-label"><?=lang("Need Approval")?></label>
+                            <div class="col-xs-6 col-md-2">
                                 <label class="checkbox-inline"><input id="fbl_need_approval" name="fbl_need_approval" type="checkbox" value="1"><?=lang("Need Approval")?></label>
                             </div>
                         </div>
