@@ -147,8 +147,8 @@ class Tickettype extends MY_Controller
         $this->load->model('tickettype_model');
         $fin_ticket_type_id = $this->input->post("fin_ticket_type_id");
         $data = $this->tickettype_model->getDataById($fin_ticket_type_id);
-        $tickettype = $data["ticketType"];
-        if (!$tickettype) {
+        $mstickettype = $data["ticketType"];
+        if (!$mstickettype) {
             $this->ajxResp["status"] = "DATA_NOT_FOUND";
             $this->ajxResp["message"] = "Data id $fin_ticket_type_id Not Found ";
             $this->ajxResp["data"] = [];
@@ -199,7 +199,7 @@ class Tickettype extends MY_Controller
     public function fetch_list_data()
     {
         $this->load->library("datatables");
-        $this->datatables->setTableName("tickettype");
+        $this->datatables->setTableName("mstickettype");
 
         $selectFields = "fin_ticket_type_id,fst_ticket_type_name,fst_assignment_or_notice,'action' as action";
         $this->datatables->setSelectFields($selectFields);
@@ -246,6 +246,7 @@ class Tickettype extends MY_Controller
 
     public function getAllList()
     {
+        $this->load->model('tickettype_model');
         $result = $this->tickettype_model->getAllList();
         $this->ajxResp["data"] = $result;
         $this->json_output();
@@ -254,7 +255,7 @@ class Tickettype extends MY_Controller
     public function get_TicketType()
     {
         $term = $this->input->get("term");
-        $ssql = "select * from tickettype where fst_ticket_type_name like ? order by fst_ticket_type_name";
+        $ssql = "select * from mstickettype where fst_ticket_type_name like ? order by fst_ticket_type_name";
         $qr = $this->db->query($ssql, ['%' . $term . '%']);
         $rs = $qr->result();
 

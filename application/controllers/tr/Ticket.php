@@ -1,14 +1,17 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Servicelevel extends MY_Controller
+class ticket extends MY_Controller
 {
 
     public function __construct()
     {
         parent::__construct();
         $this->load->library('form_validation');
+        $this->load->model('ticket_model');
         $this->load->model('servicelevel_model');
+        $this->load->model('ticket_model');
+        $this->load->model('users_model');
     }
 
     public function index()
@@ -19,27 +22,28 @@ class Servicelevel extends MY_Controller
     public function lizt()
     {
         $this->load->library('menus');
-        $this->list['page_name'] = "Service Level";
-        $this->list['list_name'] = "Service Level List";
-        $this->list['addnew_ajax_url'] = site_url() . 'master/servicelevel/add';
+        $this->list['page_name'] = "Ticket";
+        $this->list['list_name'] = "Ticket List";
+        $this->list['addnew_ajax_url'] = site_url() . 'tr/ticket/add';
         $this->list['pKey'] = "id";
-        $this->list['fetch_list_data_ajax_url'] = site_url() . 'master/servicelevel/fetch_list_data';
-        $this->list['delete_ajax_url'] = site_url() . 'master/servicelevel/delete/';
-        $this->list['edit_ajax_url'] = site_url() . 'master/servicelevel/edit/';
+        $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticket/fetch_list_data';
+        $this->list['delete_ajax_url'] = site_url() . 'tr/ticket/delete/';
+        $this->list['edit_ajax_url'] = site_url() . 'tr/ticket/edit/';
         $this->list['arrSearch'] = [
-            'fin_service_level_id' => 'Service Level ID',
-            'fst_service_level_name' => 'Service Level Name'
+            'fin_ticket_id' => 'Ticket ID.',
+            'fst_ticket_no' => 'Ticket No.'
         ];
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
-            ['title' => 'Service Level', 'link' => '#', 'icon' => ''],
+            ['title' => 'Ticket', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
         $this->list['columns'] = [
-            ['title' => 'Service Level ID', 'width' => '25%', 'data' => 'fin_service_level_id'],
-            ['title' => 'Service Level Name', 'width' => '40%', 'data' => 'fst_service_level_name'],
-            ['title' => 'Service Level Days', 'width' => '25%', 'data' => 'fin_service_level_days', 'className' => 'dt-body-center text-center'],
+            ['title' => 'Ticket ID.', 'width' => '15%', 'data' => 'fin_ticket_id'],
+            ['title' => 'Ticket No.', 'width' => '25%', 'data' => 'fst_ticket_no'],
+            ['title' => 'Ticket Datetime', 'width' => '20%', 'data' => 'fdt_ticket_datetime'],
+            ['title' => 'Memo', 'width' => '30%', 'data' => 'fst_memo'],
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center']
         ];
         $main_header = $this->parser->parse('inc/main_header', [], true);
@@ -55,7 +59,7 @@ class Servicelevel extends MY_Controller
         $this->parser->parse('template/main', $this->data);
     }
 
-    private function openForm($mode = "ADD", $fin_service_level_id = 0)
+    private function openForm($mode = "ADD", $fin_ticket_id = 0)
     {
         $this->load->library("menus");
 
@@ -67,10 +71,10 @@ class Servicelevel extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
 
         $data["mode"] = $mode;
-        $data["title"] = $mode == "ADD" ? "Add Service Level" : "Update Service Level";
-        $data["fin_service_level_id"] = $fin_service_level_id;
+        $data["title"] = $mode == "ADD" ? "Add Ticket" : "Update Ticket";
+        $data["fin_ticket_id"] = $fin_ticket_id;
 
-        $page_content = $this->parser->parse('pages/master/servicelevel/form', $data, true);
+        $page_content = $this->parser->parse('pages/tr/ticket/form', $data, true);
         $main_footer = $this->parser->parse('inc/main_footer', [], true);
 
         $control_sidebar = NULL;
@@ -87,15 +91,15 @@ class Servicelevel extends MY_Controller
         $this->openForm("ADD", 0);
     }
 
-    public function Edit($fin_service_level_id)
+    public function Edit($fin_ticket_id)
     {
-        $this->openForm("EDIT", $fin_service_level_id);
+        $this->openForm("EDIT", $fin_ticket_id);
     }
 
     public function ajx_add_save()
     {
-        $this->load->model('servicelevel_model');
-        $this->form_validation->set_rules($this->servicelevel_model->getRules("ADD", 0));
+        $this->load->model('ticket_model');
+        $this->form_validation->set_rules($this->ticket_model->getRules("ADD", 0));
         $this->form_validation->set_error_delimiters('<div class="text-danger">* ', '</div>');
 
         if ($this->form_validation->run() == FALSE) {
@@ -108,13 +112,22 @@ class Servicelevel extends MY_Controller
         }
 
         $data = [
-            "fst_service_level_name" => $this->input->post("fst_service_level_name"),
-            "fin_service_level_days" => $this->input->post("fin_service_level_days"),
+            "fst_ticket_no" => $this->input->post("fst_ticket_no"),
+            "fdt_ticket_datetime" => dBDateTimeFormat($this->input->post("fdt_ticket_datetime")),
+            "fdt_acceptance_expiry_datetime" => dBDateTimeFormat($this->input->post("fdt_acceptance_expiry_datetime")),
+            "fin_ticket_type_id" => $this->input->post("fin_ticket_type_id"),
+            "fin_service_level_id" => $this->input->post("fin_service_level_id"),
+            "fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_datetime")),
+            "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
+            "fdt_ticket_expiry_extended_datetime" =>dBDateTimeFormat($this->input->post("fdt_ticket_expiry_extended_datetime")),
+            "fin_issued_by_user_id" => $this->aauth->get_active_user_id(),
+            "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
+            "fst_memo" => $this->input->post("fst_memo"),
             "fst_active" => 'A'
         ];
 
         $this->db->trans_start();
-        $insertId = $this->servicelevel_model->insert($data);
+        $insertId = $this->ticket_model->insert($data);
         $dbError  = $this->db->error();
         if ($dbError["code"] != 0) {
             $this->ajxResp["status"] = "DB_FAILED";
@@ -135,19 +148,19 @@ class Servicelevel extends MY_Controller
 
     public function ajx_edit_save()
     {
-        $this->load->model('servicelevel_model');
-        $fin_service_level_id = $this->input->post("fin_service_level_id");
-        $data = $this->servicelevel_model->getDataById($fin_service_level_id);
-        $msservicelevel = $data["serviceLevel"];
-        if (!$msservicelevel) {
+        $this->load->model('ticket_model');
+        $fin_ticket_id = $this->input->post("fin_ticket_id");
+        $data = $this->ticket_model->getDataById($fin_ticket_id);
+        $trticket = $data["ms_ticket"];
+        if (!$trticket) {
             $this->ajxResp["status"] = "DATA_NOT_FOUND";
-            $this->ajxResp["message"] = "Data id $fin_service_level_id Not Found ";
+            $this->ajxResp["message"] = "Data id $fin_ticket_id Not Found ";
             $this->ajxResp["data"] = [];
             $this->json_output();
             return;
         }
 
-        $this->form_validation->set_rules($this->servicelevel_model->getRules("EDIT", $fin_service_level_id));
+        $this->form_validation->set_rules($this->ticket_model->getRules("EDIT", $fin_ticket_id));
         $this->form_validation->set_error_delimiters('<div class="text-danger">* ', '</div>');
         if ($this->form_validation->run() == FALSE) {
             //print_r($this->form_validation->error_array());
@@ -159,15 +172,24 @@ class Servicelevel extends MY_Controller
         }
 
         $data = [
-            "fin_service_level_id" => $fin_service_level_id,
-            "fst_service_level_name" => $this->input->post("fst_service_level_name"),
-            "fin_service_level_days" => $this->input->post("fin_service_level_days"),
+            "fin_ticket_id" => $fin_ticket_id,
+            "fst_ticket_no" => $this->input->post("fst_ticket_no"),
+            "fdt_ticket_datetime" => dBDateTimeFormat($this->input->post("fdt_ticket_datetime")),
+            "fdt_acceptance_expiry_datetime" => dBDateTimeFormat($this->input->post("fdt_acceptance_expiry_datetime")),
+            "fin_ticket_type_id" => $this->input->post("fin_ticket_type_id"),
+            "fin_service_level_id" => $this->input->post("fin_service_level_id"),
+            "fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_datetime")),
+            "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
+            "fdt_ticket_expiry_extended_datetime" =>dBDateTimeFormat($this->input->post("fdt_ticket_expiry_extended_datetime")),
+            "fin_issued_by_user_id" => $this->aauth->get_active_user_id(),
+            "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
+            "fst_memo" => $this->input->post("fst_memo"),
             "fst_active" => 'A'
         ];
 
         $this->db->trans_start();
 
-        $this->servicelevel_model->update($data);
+        $this->ticket_model->update($data);
         $dbError = $this->db->error();
         if ($dbError["code"] != 0) {
             $this->ajxResp["status"] = "DB_FAILED";
@@ -182,16 +204,16 @@ class Servicelevel extends MY_Controller
 
         $this->ajxResp["status"] = "SUCCESS";
         $this->ajxResp["message"] = "Data Saved !";
-        $this->ajxResp["data"]["insert_id"] = $fin_service_level_id;
+        $this->ajxResp["data"]["insert_id"] = $fin_ticket_id;
         $this->json_output();
     }
 
     public function fetch_list_data()
     {
         $this->load->library("datatables");
-        $this->datatables->setTableName("msservicelevel");
+        $this->datatables->setTableName("trticket");
 
-        $selectFields = "fin_service_level_id,fst_service_level_name,fin_service_level_days,'action' as action";
+        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fst_memo,'action' as action";
         $this->datatables->setSelectFields($selectFields);
 
         $Fields = $this->input->get('optionSearch');
@@ -205,7 +227,7 @@ class Servicelevel extends MY_Controller
         foreach ($arrData as $data) {
             //action
             $data["action"]    = "<div style='font-size:16px'>
-					<a class='btn-edit' href='#' data-id='" . $data["fin_service_level_id"] . "'><i class='fa fa-pencil'></i></a>
+					<a class='btn-edit' href='#' data-id='" . $data["fin_ticket_id"] . "'><i class='fa fa-pencil'></i></a>
 				</div>";
 
             $arrDataFormated[] = $data;
@@ -214,10 +236,10 @@ class Servicelevel extends MY_Controller
         $this->json_output($datasources);
     }
 
-    public function fetch_data($fin_service_level_id)
+    public function fetch_data($fin_ticket_id)
     {
-        $this->load->model("servicelevel_model");
-        $data = $this->servicelevel_model->getDataById($fin_service_level_id);
+        $this->load->model("ticket_model");
+        $data = $this->ticket_model->getDataById($fin_ticket_id);
 
         //$this->load->library("datatables");		
         $this->json_output($data);
@@ -225,7 +247,7 @@ class Servicelevel extends MY_Controller
 
 	public function delete($id){
 		$this->db->trans_start();
-        $this->servicelevel_model->delete($id);
+        $this->ticket_model->delete($id);
         $this->db->trans_complete();
 
         $this->ajxResp["status"] = "SUCCESS";
@@ -234,25 +256,46 @@ class Servicelevel extends MY_Controller
 		$this->json_output();
 	}
 
-    public function getAllList()
-    {
-        $this->load->model('servicelevel_model');
-        $result = $this->servicelevel_model->getAllList();
+    public function getAllList() {
+        $this->load->model('ticket_model');
+        $result = $this->ticket_model->getAllList();
         $this->ajxResp["data"] = $result;
         $this->json_output();
     }
 
-    public function get_ServiceLevel()
+    public function get_ticketType(){
+        $term = $this->input->get("term");
+        $ssql = "select fin_ticket_type_id,fst_ticket_type_name from mstickettype where fst_ticket_type_name like ?";
+        $qr = $this->db->query($ssql,['%'.$term.'%']);
+        $rs = $qr->result();
+
+        $this->ajxResp["status"] = "SUCCESS";
+		$this->ajxResp["data"] = $rs;
+		$this->json_output();
+    }
+
+    public function get_serviceLevel(){
+        $term = $this->input->get("term");
+        $ssql = "select fin_service_level_id,fst_service_level_name from msservicelevel where fst_service_level_name like ?";
+        $qr = $this->db->query($ssql,['%'.$term.'%']);
+        $rs = $qr->result();
+
+        $this->ajxResp["status"] = "SUCCESS";
+		$this->ajxResp["data"] = $rs;
+		$this->json_output();
+    }
+
+    public function get_ticket()
     {
         $term = $this->input->get("term");
-        $ssql = "select * from msservicelevel where fst_service_level_name like ? order by fst_service_level_name";
+        $ssql = "select * from trticket where fst_ticket_no like ? order by fst_ticket_no";
         $qr = $this->db->query($ssql, ['%' . $term . '%']);
         $rs = $qr->result();
 
         $this->json_output($rs);
     }
 
-    public function report_servicelevel()
+    public function report_ticket()
     {
         $this->load->library('pdf');
         //$customPaper = array(0,0,381.89,595.28);
@@ -260,13 +303,13 @@ class Servicelevel extends MY_Controller
         $this->pdf->setPaper('A4', 'portrait');
         //$this->pdf->setPaper('A4', 'landscape');
 
-        $this->load->model("servicelevel_model");
-        $listServicelevel = $this->servicelevel_model->get_ServiceLevel();
+        $this->load->model("ticket_model");
+        $listticket = $this->ticket_model->get_ticket();
         $data = [
-            "datas" => $listServicelevel
+            "datas" => $listticket
         ];
 
-        $this->pdf->load_view('report/servicelevel_pdf', $data);
+        $this->pdf->load_view('report/ticket_pdf', $data);
         $this->Cell(30, 10, 'Percobaan Header Dan Footer With Page Number', 0, 0, 'C');
         $this->Cell(0, 10, 'Halaman ' . $this->PageNo() . ' dari {nb}', 0, 0, 'R');
     }

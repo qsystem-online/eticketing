@@ -3,7 +3,7 @@ if (!defined('BASEPATH')) exit ('No direct script access allowed');
 
 class Servicelevel_model extends MY_MODEL {
 
-    public $tableName = "servicelevel";
+    public $tableName = "msservicelevel";
     public $pkey = "fin_service_level_id";
 
     public function __construct() {

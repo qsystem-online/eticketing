@@ -3,7 +3,7 @@ if (!defined('BASEPATH')) exit ('No direct script access allowed');
 
 class Tickettype_model extends MY_MODEL {
 
-    public $tableName = "tickettype";
+    public $tableName = "mstickettype";
     public $pkey = "fin_ticket_type_id";
 
     public function __construct() {

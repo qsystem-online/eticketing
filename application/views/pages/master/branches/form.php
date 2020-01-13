@@ -39,7 +39,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="col-xs-6 col-sm-10">
                                 <input type="text" class="form-control" id="fin_branch_id" placeholder="<?= lang("(Autonumber)") ?>" name="fin_branch_id" value="<?= $fin_branch_id ?>" readonly>
                                 <div id="fin_branch_id_err" class="text-danger"></div>
-
                             </div>
                         </div>
 
