@@ -110,14 +110,7 @@ class ticket extends MY_Controller
     public function ajx_add_save()
     {
         $fdt_ticket_datetime = dBDateTimeFormat($this->input->post("fdt_ticket_datetime"));
-		$resp = dateIsLock($fdt_ticket_datetime);
-		if ($resp["status"] != "SUCCESS" ){
-			$this->ajxResp["status"] = $resp["status"];
-			$this->ajxResp["message"] = $resp["message"];
-			$this->json_output();
-			return;
-        }
-        
+		
         $fst_ticket_no = $this->ticket_model->GenerateTicketNo();
         $this->load->model('ticket_model');
         $this->form_validation->set_rules($this->ticket_model->getRules("ADD", 0));
