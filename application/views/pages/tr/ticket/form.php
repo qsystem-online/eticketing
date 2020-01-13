@@ -54,31 +54,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div id="fst_ticket_no_err" class="text-danger"></div>
                             </div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="fdt_ticket_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Datetime")?></label>
-                            <div class="col-xs-6 col-md-4">
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_ticket_datetime" name="fdt_ticket_datetime"/>								
-                                </div>
-                                <div id="fdt_ticket_datetime_err" class="text-danger"></div>
-                            </div>
 
-                            <label for="fdt_acceptance_expiry_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Expiry Datetime")?></label>
-                            <div class="col-xs-6 col-md-4">
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_acceptance_expiry_datetime" name="fdt_acceptance_expiry_datetime"/>
-                                </div>
-                                <div id="fdt_acceptance_expiry_datetime_err" class="text-danger"></div>
-                            </div>
-                        </div>
-                        
                         <div class="form-group">
                             <label for="fin_ticket_type_id" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
                             <div class="col-xs-6 col-md-4">
@@ -98,8 +74,32 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         </div>
                         
                         <div class="form-group">
+                            <label for="fdt_ticket_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Datetime")?></label>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_ticket_datetime" name="fdt_ticket_datetime"/>								
+                                </div>
+                                <div id="fdt_ticket_datetime_err" class="text-danger"></div>
+                            </div>
+
+                            <label for="fdt_acceptance_expiry_datetime" class="col-xs-6 col-md-4 control-label"><?=lang("Acceptance Expiry Datetime")?></label>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_acceptance_expiry_datetime" name="fdt_acceptance_expiry_datetime"/>
+                                </div>
+                                <div id="fdt_acceptance_expiry_datetime_err" class="text-danger"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
                             <label for="fdt_deadline_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Deadline Datetime")?></label>
-                            <div class="col-xs-6 col-md-4">
+                            <div class="col-xs-6 col-md-3">
                                 <div class="input-group date">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
@@ -109,8 +109,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div id="fdt_deadline_datetime_err" class="text-danger"></div>
                             </div>
  
-                            <label for="fdt_deadline_extended_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Extended Datetime")?></label>
-                            <div class="col-xs-6 col-md-4">
+                            <label for="fdt_deadline_extended_datetime" class="col-xs-6 col-md-4 control-label"><?=lang("Deadline Extended Datetime")?></label>
+                            <div class="col-xs-6 col-md-3">
                                 <div class="input-group date">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
