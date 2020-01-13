@@ -50,7 +50,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         <div class="form-group">
                             <label for="fst_ticket_no" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket No.")?></label>
                             <div class="col-xs-6 col-md-10">
-                                <input type="text" class="form-control" id="fst_ticket_no" placeholder="<?=lang("Ticket No.")?>" name="fst_ticket_no" readonly>
+                                <input type="text" class="form-control" id="fst_ticket_no" placeholder="<?=lang("Ticket No.")?>" name="fst_ticket_no" value="<?=$fst_ticket_no?>" readonly>
                                 <div id="fst_ticket_no_err" class="text-danger"></div>
                             </div>
                         </div>

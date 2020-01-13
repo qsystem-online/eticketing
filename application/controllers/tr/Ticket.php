@@ -30,7 +30,7 @@ class ticket extends MY_Controller
         $this->list['delete_ajax_url'] = site_url() . 'tr/ticket/delete/';
         $this->list['edit_ajax_url'] = site_url() . 'tr/ticket/edit/';
         $this->list['arrSearch'] = [
-            'fin_ticket_id' => 'Ticket ID.',
+            'fin_ticket_no' => 'Ticket No.',
             'fst_ticket_no' => 'Ticket No.'
         ];
 
@@ -40,10 +40,11 @@ class ticket extends MY_Controller
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
         $this->list['columns'] = [
-            ['title' => 'Ticket ID.', 'width' => '15%', 'data' => 'fin_ticket_id'],
+            ['title' => 'Ticket ID.', 'width' => '15%', 'visible' => 'false', 'data' => 'fin_ticket_id'],
             ['title' => 'Ticket No.', 'width' => '25%', 'data' => 'fst_ticket_no'],
             ['title' => 'Ticket Datetime', 'width' => '20%', 'data' => 'fdt_ticket_datetime'],
-            ['title' => 'Memo', 'width' => '30%', 'data' => 'fst_memo'],
+            ['title' => 'Acceptance Expiry Datetime', 'width' => '20%', 'data' => 'fdt_acceptance_expiry_datetime'],
+            ['title' => 'Memo', 'width' => '25%', 'data' => 'fst_memo'],
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center']
         ];
         $main_header = $this->parser->parse('inc/main_header', [], true);
@@ -69,10 +70,20 @@ class ticket extends MY_Controller
 
         $main_header = $this->parser->parse('inc/main_header', [], true);
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
-
         $data["mode"] = $mode;
         $data["title"] = $mode == "ADD" ? "Add Ticket" : "Update Ticket";
         $data["fin_ticket_id"] = $fin_ticket_id;
+        // tambah ini
+        if ($mode == 'ADD'){
+            $data["fin_ticket_id"] = 0;
+            $data["fst_ticket_no"] = $this->ticket_model->GenerateTicketNo();
+        }else if ($mode == "EDIT"){
+            $data["fin_ticket_id"] = $fin_ticket_id;
+            $data["fst_ticket_no"] = "";
+        }else if ($mode == "VIEW"){
+            $data["fin_ticket_id"] = $fin_ticket_id;
+            $data["fst_ticket_no"] = "";
+        }
 
         $page_content = $this->parser->parse('pages/tr/ticket/form', $data, true);
         $main_footer = $this->parser->parse('inc/main_footer', [], true);
@@ -98,6 +109,16 @@ class ticket extends MY_Controller
 
     public function ajx_add_save()
     {
+        $fdt_ticket_datetime = dBDateTimeFormat($this->input->post("fdt_ticket_datetime"));
+		$resp = dateIsLock($fdt_ticket_datetime);
+		if ($resp["status"] != "SUCCESS" ){
+			$this->ajxResp["status"] = $resp["status"];
+			$this->ajxResp["message"] = $resp["message"];
+			$this->json_output();
+			return;
+        }
+        
+        $fst_ticket_no = $this->ticket_model->GenerateTicketNo();
         $this->load->model('ticket_model');
         $this->form_validation->set_rules($this->ticket_model->getRules("ADD", 0));
         $this->form_validation->set_error_delimiters('<div class="text-danger">* ', '</div>');
@@ -112,8 +133,8 @@ class ticket extends MY_Controller
         }
 
         $data = [
-            "fst_ticket_no" => $this->input->post("fst_ticket_no"),
-            "fdt_ticket_datetime" => dBDateTimeFormat($this->input->post("fdt_ticket_datetime")),
+            "fst_ticket_no" => $fst_ticket_no,
+            "fdt_ticket_datetime" => $fdt_ticket_datetime,
             "fdt_acceptance_expiry_datetime" => dBDateTimeFormat($this->input->post("fdt_acceptance_expiry_datetime")),
             "fin_ticket_type_id" => $this->input->post("fin_ticket_type_id"),
             "fin_service_level_id" => $this->input->post("fin_service_level_id"),

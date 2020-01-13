@@ -61,7 +61,7 @@ class Ticket_model extends MY_MODEL {
         return $query->result_array();
     }
 
-    /*public function GenerateTicketNo($trDate = null) {
+    public function GenerateTicketNo($trDate = null) {
         $trDate = ($trDate == null) ? date ("Y-m-d"): $trDate;
         $tahun = date("Y/m", strtotime ($trDate));
         $activeBranch = $this->aauth->get_active_branch();
@@ -69,8 +69,8 @@ class Ticket_model extends MY_MODEL {
         if($activeBranch){
             $branchCode = $activeBranch->fst_branch_code;
         }
-        $prefix = getDbConfig("purchaseorder_prefix") . "/" . $branchCode ."/";
-        $query = $this->db->query("SELECT MAX(fst_ticket_no) as max_id FROM ticket where fst_ticket_no like '".$prefix.$tahun."%'");
+        $prefix = getDbConfig("ticket_prefix") . "/" . $branchCode ."/";
+        $query = $this->db->query("SELECT MAX(fst_ticket_no) as max_id FROM trticket where fst_ticket_no like '".$prefix.$tahun."%'");
         $row = $query->row_array();
 
         $max_id = $row['max_id']; 
@@ -82,5 +82,5 @@ class Ticket_model extends MY_MODEL {
         $max_tr_no = $prefix.''.$tahun.'/'.sprintf("%05s",$fst_tr_no);
         
         return $max_tr_no;
-    }*/
+    }
 }
