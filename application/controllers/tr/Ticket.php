@@ -10,7 +10,7 @@ class ticket extends MY_Controller
         $this->load->library('form_validation');
         $this->load->model('ticket_model');
         $this->load->model('servicelevel_model');
-        $this->load->model('ticket_model');
+        $this->load->model('tickettype_model');
         $this->load->model('users_model');
     }
 
@@ -277,20 +277,9 @@ class ticket extends MY_Controller
         $this->json_output();
     }
 
-    public function get_ticketType(){
+    public function get_users(){
         $term = $this->input->get("term");
-        $ssql = "select fin_ticket_type_id,fst_ticket_type_name from mstickettype where fst_ticket_type_name like ?";
-        $qr = $this->db->query($ssql,['%'.$term.'%']);
-        $rs = $qr->result();
-
-        $this->ajxResp["status"] = "SUCCESS";
-		$this->ajxResp["data"] = $rs;
-		$this->json_output();
-    }
-
-    public function get_serviceLevel(){
-        $term = $this->input->get("term");
-        $ssql = "select fin_service_level_id,fst_service_level_name from msservicelevel where fst_service_level_name like ?";
+        $ssql = "select fin_user_id,fst_username from users where fst_username like ?";
         $qr = $this->db->query($ssql,['%'.$term.'%']);
         $rs = $qr->result();
 

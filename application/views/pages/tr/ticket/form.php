@@ -56,18 +56,28 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         </div>
 
                         <div class="form-group">
-                            <label for="fin_ticket_type_id" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
+                            <label for="select-ticketType" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
                             <div class="col-xs-6 col-md-4">
-                                <select id="select-ticketType" class="form-control" name="fin_ticket_type_id">
-                                    <option value="0">-- <?=lang("select")?> --</option>
+                                <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id">
+                                    <?php
+                                        $tickettypeList = $this->tickettype_model->get_data_ticketType();
+                                        foreach ($tickettypeList as $ticketType) {
+                                            echo "<option value='$ticketType->fin_ticket_type_id'>$ticketType->fst_ticket_type_name</option>";
+                                        }
+                                    ?>
                                 </select>
                                 <div id="fin_ticket_type_id_err" class="text-danger"></div>
                             </div>
                         
-                            <label for="fin_service_level_id" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
+                            <label for="select_serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
                             <div class="col-xs-6 col-md-4">
-                                <select id="select-serviceLevel" class="form-control" name="fin_service_level_id">
-                                    <option value="0">-- <?=lang("select")?> --</option>
+                                <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id">
+                                    <?php
+                                        $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
+                                        foreach ($servicelevelList as $serviceLevel) {
+                                            echo "<option value='$serviceLevel->fin_service_level_id'>$serviceLevel->fst_service_level_name</option>";
+                                        }
+                                    ?>
                                 </select>
                                 <div id="fin_service_level_id_err" class="text-danger"></div>
                             </div>
@@ -135,15 +145,29 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         </div>
 
                         <div class="form-group">
-                            <label for="fin_issued_by_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
+                            <label for="select-users" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
                             <div class="col-xs-6 col-md-4">
-                                <input type="text" class="form-control" id="fin_issued_by_user_id" placeholder="<?=lang("Issued By")?>" name="fin_issued_by_user_id">
+                                <select id="select-users" class="form-control select2" name="fin_issued_by_user_id">
+                                    <?php
+                                        $usersList = $this->users_model->getUserList();
+                                        foreach ($usersList as $users) {
+                                            echo "<option value='$users->fin_user_id'>$users->fst_username</option>";
+                                        }
+                                    ?>
+                                </select>
                                 <div id="fin_issued_by_user_id_err" class="text-danger"></div>
                             </div>
 
-                            <label for="fin_issued_to_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
+                            <label for="select-toUser" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
                             <div class="col-xs-6 col-md-4">
-                                <input type="text" class="form-control" id="fin_issued_to_user_id" placeholder="<?=lang("Issued To")?>" name="fin_issued_to_user_id">
+                                <select id="select-toUser" class="form-control" name="fin_issued_to_user_id">
+                                    <?php
+                                        $touserList = $this->users_model->getUserList();
+                                        foreach ($touserList as $toUser){
+                                            echo "<option value='$toUser->fin_user_id'>$toUser->fst_username</option>";
+                                        }
+                                    ?>
+                                </select>
                                 <div id="fin_issued_to_user_id_err" class="text-danger"></div>
                             </div>
                         </div>
@@ -235,53 +259,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             });
         });
 
-        $("#select-ticketType").select2({
-            width: '100%',
-            ajax: {
-                url: '<?=site_url()?>tr/ticket/get_ticketType',
-                dataType: 'json',
-                delay: 250,
-                processResults: function (data){
-                    items = [];
-                    data  = data.data;
-                    $.each(data,function(index,value){
-                        items.push({
-                            "id" : value.fin_ticket_type_id,
-                            "text" : value.fst_ticket_type_name
-                        });
-                    });
-                    console.log(items);
-                    return {
-                        results: items
-                    };
-                },
-                cache: true,
-            }
-        });
+        $("#select-ticketType").select2();
 
-        $("#select-serviceLevel").select2({
-            width: '100%',
-            ajax: {
-                url: '<?=site_url()?>tr/ticket/get_serviceLevel',
-                dataType: 'json',
-                delay: 250,
-                processResults: function (data){
-                    items = [];
-                    data  = data.data;
-                    $.each(data,function(index,value){
-                        items.push({
-                            "id" : value.fin_service_level_id,
-                            "text" : value.fst_service_level_name
-                        });
-                    });
-                    console.log(items);
-                    return {
-                        results: items
-                    };
-                },
-                cache: true,
-            }
-        });
+        $("#select-serviceLevel").select2();
+
+        $("#select-users").select2();
+
+        $("#select-toUser").select2();
 
         $("#btnNew").click(function(e){
             e.preventDefault();
@@ -363,11 +347,17 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 });
                 $("#fdt_ticket_datetime").val(dateTimeFormat("<?=date("Y-m-d H:i:s")?>").datetimepicker("update"));
                 
-                var newOption = new Option (resp.ms_ticket.fst_ticket_type_name, resp.ms_ticket.fin_ticket_type_id, true, true);
-                $("#select-ticketType").append(newOption).trigger('change');
+                var arrTickettype = (resp.ms_ticket.fst_ticket_type_name);
+                $('#select-ticketType').val(arrTickettype).trigger("change.select2");
 
-                var newOption = new Option (resp.ms_ticket.fst_service_level_name, resp.ms_ticket.fin_service_level_id, true,true);
-                $("#select-serviceLevel").append(newOption).trigger('change');
+                var arrServicelevel = (resp.ms_ticket.fst_service_level_name);
+                $('#select-serviceLevel').val(arrServicelevel).trigger("change.select2");
+
+                var arrUsers = (resp.ms_ticket.fst_username);
+                $('#select-users').val(arrUsers).trigger("change.select2");
+                var arrToUser = (resp.ms_ticket.fst_username);
+                $('#select-toUser').val(arrToUser).trigger("change.select2");
+
             },
 
             error: function (e) {

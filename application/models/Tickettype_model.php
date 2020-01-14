@@ -48,4 +48,12 @@ class Tickettype_model extends MY_MODEL {
         $query = $this->db->get('tickettype');
         return $query->result_array();
     }
+
+    public function get_data_ticketType(){
+        $term = $this->input->get("term");
+        $ssql = "select * from " . $this->tableName . " where fst_active = 'A' order by fst_ticket_type_name";
+        $qr = $this->db->query($ssql, []);
+        $rs = $qr->result();
+        return $rs;
+    }
 }
