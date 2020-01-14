@@ -64,13 +64,13 @@ class Ticket_model extends MY_MODEL {
 
     public function GenerateTicketNo($trDate = null) {
         $trDate = ($trDate == null) ? date ("Y-m-d"): $trDate;
-        $tahun = date("Y/m", strtotime ($trDate));
+        $tahun = date("Ymd", strtotime ($trDate));
         $activeBranch = $this->aauth->get_active_branch();
         $branchCode = "";
         if($activeBranch){
             $branchCode = $activeBranch->fst_branch_code;
         }
-        $prefix = getDbConfig("ticket_prefix") . "/" . $branchCode ."/";
+        $prefix = getDbConfig("ticket_prefix") . "/";
         $query = $this->db->query("SELECT MAX(fst_ticket_no) as max_id FROM trticket where fst_ticket_no like '".$prefix.$tahun."%'");
         $row = $query->row_array();
 
