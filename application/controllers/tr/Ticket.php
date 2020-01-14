@@ -30,7 +30,6 @@ class ticket extends MY_Controller
         $this->list['delete_ajax_url'] = site_url() . 'tr/ticket/delete/';
         $this->list['edit_ajax_url'] = site_url() . 'tr/ticket/edit/';
         $this->list['arrSearch'] = [
-            'fin_ticket_no' => 'Ticket No.',
             'fst_ticket_no' => 'Ticket No.'
         ];
 
@@ -43,7 +42,6 @@ class ticket extends MY_Controller
             ['title' => 'Ticket ID.', 'width' => '15%', 'visible' => 'false', 'data' => 'fin_ticket_id'],
             ['title' => 'Ticket No.', 'width' => '25%', 'data' => 'fst_ticket_no'],
             ['title' => 'Ticket Datetime', 'width' => '20%', 'data' => 'fdt_ticket_datetime'],
-            ['title' => 'Acceptance Expiry Datetime', 'width' => '20%', 'data' => 'fdt_acceptance_expiry_datetime'],
             ['title' => 'Memo', 'width' => '25%', 'data' => 'fst_memo'],
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center']
         ];
@@ -110,7 +108,6 @@ class ticket extends MY_Controller
     public function ajx_add_save()
     {
         $fdt_ticket_datetime = dBDateTimeFormat($this->input->post("fdt_ticket_datetime"));
-		
         $fst_ticket_no = $this->ticket_model->GenerateTicketNo();
         $this->load->model('ticket_model');
         $this->form_validation->set_rules($this->ticket_model->getRules("ADD", 0));
@@ -134,7 +131,7 @@ class ticket extends MY_Controller
             "fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_datetime")),
             "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
             "fdt_ticket_expiry_extended_datetime" =>dBDateTimeFormat($this->input->post("fdt_ticket_expiry_extended_datetime")),
-            "fin_issued_by_user_id" => $this->aauth->get_active_user_id(),
+            "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fst_memo" => $this->input->post("fst_memo"),
             "fst_active" => 'A'
@@ -142,6 +139,7 @@ class ticket extends MY_Controller
 
         $this->db->trans_start();
         $insertId = $this->ticket_model->insert($data);
+        $insertId = $this->ticketlog_model->insert($data);
         $dbError  = $this->db->error();
         if ($dbError["code"] != 0) {
             $this->ajxResp["status"] = "DB_FAILED";
@@ -164,9 +162,10 @@ class ticket extends MY_Controller
     {
         $this->load->model('ticket_model');
         $fin_ticket_id = $this->input->post("fin_ticket_id");
+        $fdt_ticket_datetime = dBDateTimeFormat($this->input->post("fdt_ticket_datetime"));
         $data = $this->ticket_model->getDataById($fin_ticket_id);
-        $trticket = $data["ms_ticket"];
-        if (!$trticket) {
+        $ticket = $data["ms_ticket"];
+        if (!$ticket) {
             $this->ajxResp["status"] = "DATA_NOT_FOUND";
             $this->ajxResp["message"] = "Data id $fin_ticket_id Not Found ";
             $this->ajxResp["data"] = [];
@@ -188,14 +187,14 @@ class ticket extends MY_Controller
         $data = [
             "fin_ticket_id" => $fin_ticket_id,
             "fst_ticket_no" => $this->input->post("fst_ticket_no"),
-            "fdt_ticket_datetime" => dBDateTimeFormat($this->input->post("fdt_ticket_datetime")),
+            "fdt_ticket_datetime" => $fdt_ticket_datetime,
             "fdt_acceptance_expiry_datetime" => dBDateTimeFormat($this->input->post("fdt_acceptance_expiry_datetime")),
             "fin_ticket_type_id" => $this->input->post("fin_ticket_type_id"),
             "fin_service_level_id" => $this->input->post("fin_service_level_id"),
             "fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_datetime")),
             "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
             "fdt_ticket_expiry_extended_datetime" =>dBDateTimeFormat($this->input->post("fdt_ticket_expiry_extended_datetime")),
-            "fin_issued_by_user_id" => $this->aauth->get_active_user_id(),
+            "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fst_memo" => $this->input->post("fst_memo"),
             "fst_active" => 'A'

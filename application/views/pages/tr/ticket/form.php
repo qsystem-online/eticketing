@@ -259,14 +259,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             });
         });
 
-        $("#select-ticketType").select2();
-
-        $("#select-serviceLevel").select2();
-
-        $("#select-users").select2();
-
-        $("#select-toUser").select2();
-
         $("#btnNew").click(function(e){
             e.preventDefault();
             window.location.replace("<?=site_url()?>tr/ticket/add");
@@ -345,7 +337,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             console.log(val);
                     }
                 });
-                $("#fdt_ticket_datetime").val(dateTimeFormat("<?=date("Y-m-d H:i:s")?>").datetimepicker("update"));
+                $("#fdt_ticket_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s")?>")).datetimepicker("update");
                 
                 var arrTickettype = (resp.ms_ticket.fst_ticket_type_name);
                 $('#select-ticketType').val(arrTickettype).trigger("change.select2");
