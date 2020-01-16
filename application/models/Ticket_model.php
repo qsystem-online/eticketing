@@ -11,9 +11,11 @@ class Ticket_model extends MY_MODEL {
     }
 
     public function getDataById($fin_ticket_id){
-        $ssql = "select a.*,b.fst_ticket_type_name,c.fin_service_level_name from ". $this->tableName ." a
+        $ssql = "select a.*,b.fst_ticket_type_name,c.fst_service_level_name,d.fst_username as useractive,e.fst_username from ". $this->tableName ." a
         left join mstickettype b on a.fin_ticket_type_id = b.fin_ticket_type_id
-        left join msservicelevel b on a.fin_service_level_id = c.fin_service_level_id
+        left join msservicelevel c on a.fin_service_level_id = c.fin_service_level_id
+        left join users d on a.fin_issued_by_user_id = d.fin_user_id
+        left join users e on a.fin_issued_to_user_id = e.fin_user_id
         where fin_ticket_id = ?";
         $qr = $this->db->query($ssql,[$fin_ticket_id]);
         $rwTicket = $qr->row();
@@ -37,15 +39,6 @@ class Ticket_model extends MY_MODEL {
             )
         ];
 
-        $rules[] = [
-            'field' => 'fst_memo',
-            'label' => 'Memo',
-            'rules' => 'required',
-            'errors' => array(
-                'required' => '%s tidak boleh kosong'
-            )
-            ];
-
         return $rules;
     }
 
@@ -63,13 +56,13 @@ class Ticket_model extends MY_MODEL {
 
     public function GenerateTicketNo($trDate = null) {
         $trDate = ($trDate == null) ? date ("Y-m-d"): $trDate;
-        $tahun = date("Y/m", strtotime ($trDate));
+        $tahun = date("Ymd", strtotime ($trDate));
         $activeBranch = $this->aauth->get_active_branch();
         $branchCode = "";
         if($activeBranch){
             $branchCode = $activeBranch->fst_branch_code;
         }
-        $prefix = getDbConfig("ticket_prefix") . "/" . $branchCode ."/";
+        $prefix = getDbConfig("ticket_prefix") . "/";
         $query = $this->db->query("SELECT MAX(fst_ticket_no) as max_id FROM trticket where fst_ticket_no like '".$prefix.$tahun."%'");
         $row = $query->row_array();
 
@@ -83,4 +76,5 @@ class Ticket_model extends MY_MODEL {
         
         return $max_tr_no;
     }
+
 }

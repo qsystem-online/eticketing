@@ -37,6 +37,14 @@ class Servicelevel_model extends MY_MODEL {
         return $rules;
     }
 
+    public function get_data_serviceLevel(){
+        $term = $this->input->get("term");
+        $ssql = "select * from " . $this->tableName . " where fst_active = 'A' order by fst_service_level_name";
+        $qr = $this->db->query($ssql, []);
+        $rs = $qr->result();
+        return $rs;
+    }
+
     public function getAllList(){
         $ssql = "select fin_service_level_id,fst_service_level_name from " . $this->tableName . " where fst_active = 'A' order by fst_service_level_name";
         $qr = $this->db->query($ssql, []);
