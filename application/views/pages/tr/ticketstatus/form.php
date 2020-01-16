@@ -56,28 +56,18 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         </div>
 
                         <div class="form-group">
-                            <label for="select-ticketType" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
+                            <label for="fin_ticket_type_id" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
                             <div class="col-xs-6 col-md-4">
-                                <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id">
-                                    <?php
-                                        $tickettypeList = $this->tickettype_model->get_data_ticketType();
-                                        foreach ($tickettypeList as $ticketType) {
-                                            echo "<option value='$ticketType->fin_ticket_type_id'>$ticketType->fst_ticket_type_name</option>";
-                                        }
-                                    ?>
+                                <select id="select-ticketType" class="form-control" name="fin_ticket_type_id">
+                                    <option value="0">-- <?=lang("select")?> --</option>
                                 </select>
                                 <div id="fin_ticket_type_id_err" class="text-danger"></div>
                             </div>
                         
-                            <label for="select_serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
-                            <div class="col-xs-6 col-md-4 personal-info">
-                                <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id">
-                                    <?php
-                                        $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
-                                        foreach ($servicelevelList as $serviceLevel) {
-                                            echo "<option value='$serviceLevel->fin_service_level_id'>$serviceLevel->fst_service_level_name - $serviceLevel->fin_service_level_days HARI </option>";
-                                        }
-                                    ?>
+                            <label for="fin_service_level_id" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
+                            <div class="col-xs-6 col-md-4">
+                                <select id="select-serviceLevel" class="form-control" name="fin_service_level_id">
+                                    <option value="0">-- <?=lang("select")?> --</option>
                                 </select>
                                 <div id="fin_service_level_id_err" class="text-danger"></div>
                             </div>
@@ -93,7 +83,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <input type="text" class="form-control text-right datetimepicker" id="fdt_ticket_datetime" name="fdt_ticket_datetime"/>								
                                 </div>
                                 <div id="fdt_ticket_datetime_err" class="text-danger"></div>
-                                <!-- /.input group -->
                             </div>
 
                             <label for="fdt_acceptance_expiry_datetime" class="col-xs-6 col-md-4 control-label"><?=lang("Acceptance Expiry Datetime")?></label>
@@ -131,31 +120,30 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
                             </div>
                         </div>
+                        
+                        <div class="form-group">
+                            <label for="fdt_ticket_expiry_extended_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Expiry Ext. Datetime")?></label>
+                            <div class="col-xs-6 col-md-10">
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_ticket_expiry_extended_datetime" name="fdt_ticket_expiry_extended_datetime"/>
+                                </div>
+                                <div id="fdt_ticket_expiry_extended_datetime_err" class="text-danger"></div>
+                            </div>
+                        </div>
 
                         <div class="form-group">
-                            <label for="select-users" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
+                            <label for="fin_issued_by_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
                             <div class="col-xs-6 col-md-4">
-                                <select id="select-users" class="form-control select2" name="fin_issued_by_user_id">
-                                    <?php
-                                        $usersList = $this->users_model->getUserList();
-                                        foreach ($usersList as $users) {
-                                            echo "<option value='$users->fin_user_id'>$users->fst_username</option>";
-                                        }
-                                    ?>
-                                </select>
+                                <input type="text" class="form-control" id="fin_issued_by_user_id" placeholder="<?=lang("Issued By")?>" name="fin_issued_by_user_id">
                                 <div id="fin_issued_by_user_id_err" class="text-danger"></div>
                             </div>
 
-                            <label for="select-toUser" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
+                            <label for="fin_issued_to_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
                             <div class="col-xs-6 col-md-4">
-                                <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
-                                    <?php
-                                        $touserList = $this->users_model->getUserList();
-                                        foreach ($touserList as $toUser){
-                                            echo "<option value='$toUser->fin_user_id'>$toUser->fst_username</option>";
-                                        }
-                                    ?>
-                                </select>
+                                <input type="text" class="form-control" id="fin_issued_to_user_id" placeholder="<?=lang("Issued To")?>" name="fin_issued_to_user_id">
                                 <div id="fin_issued_to_user_id_err" class="text-danger"></div>
                             </div>
                         </div>
@@ -247,6 +235,54 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             });
         });
 
+        $("#select-ticketType").select2({
+            width: '100%',
+            ajax: {
+                url: '<?=site_url()?>tr/ticket/get_ticketType',
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data){
+                    items = [];
+                    data  = data.data;
+                    $.each(data,function(index,value){
+                        items.push({
+                            "id" : value.fin_ticket_type_id,
+                            "text" : value.fst_ticket_type_name
+                        });
+                    });
+                    console.log(items);
+                    return {
+                        results: items
+                    };
+                },
+                cache: true,
+            }
+        });
+
+        $("#select-serviceLevel").select2({
+            width: '100%',
+            ajax: {
+                url: '<?=site_url()?>tr/ticket/get_serviceLevel',
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data){
+                    items = [];
+                    data  = data.data;
+                    $.each(data,function(index,value){
+                        items.push({
+                            "id" : value.fin_service_level_id,
+                            "text" : value.fst_service_level_name
+                        });
+                    });
+                    console.log(items);
+                    return {
+                        results: items
+                    };
+                },
+                cache: true,
+            }
+        });
+
         $("#btnNew").click(function(e){
             e.preventDefault();
             window.location.replace("<?=site_url()?>tr/ticket/add");
@@ -325,24 +361,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             console.log(val);
                     }
                 });
-
-                $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
-                $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
-                $("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
-                $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
-                $("#fdt_ticket_expiry_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_expiry_extended_datetime));
-
-                var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, resp.ms_ticket.fin_ticket_type_id, true, true);
-                $('#select-ticketType').append(newOption).trigger('change');
+                $("#fdt_ticket_datetime").val(dateTimeFormat("<?=date("Y-m-d H:i:s")?>").datetimepicker("update"));
                 
-                var newOption = new Option(resp.ms_ticket.fst_service_level_name, resp.ms_ticket.fin_service_level_id, true, true);
-                $('#select-serviceLevel').append(newOption).trigger('change');
+                var newOption = new Option (resp.ms_ticket.fst_ticket_type_name, resp.ms_ticket.fin_ticket_type_id, true, true);
+                $("#select-ticketType").append(newOption).trigger('change');
 
-                var newOption = new Option(resp.ms_ticket.fin_issued_by_user_id, true);
-                $('#select-users').append(newOption).trigger('change');
-                var newOption = new Option(resp.ms_ticket.fin_issued_to_user_id, true);
-                $('#select-toUser').append(newOption).trigger('change');
-
+                var newOption = new Option (resp.ms_ticket.fst_service_level_name, resp.ms_ticket.fin_service_level_id, true,true);
+                $("#select-serviceLevel").append(newOption).trigger('change');
             },
 
             error: function (e) {

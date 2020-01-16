@@ -23,55 +23,121 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="small-box bg-aqua">
                 <div class="inner">
                     <h3>{ttlNeedApproval}</h3>
-                    <p><?=lang("Need Approval")?></p>
+                    <p><?=lang("Approval Request")?></p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-android-checkbox-outline"></i>
                 </div>
-                <a href="<?= site_url() ?>tr/approval" class="small-box-footer">More info <i class="fa fa-check" aria-hidden="true"></i></a>
+                <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-check" aria-hidden="true"></i></a>
             </div>
         </div>
 
-        <!--<div class="col-lg-3 col-xs-6">
-            // small box 
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
             <div class="small-box bg-green">
                 <div class="inner">
-                    <h3>{ttlNeedApproval}</h3>
-                    <p><?=lang("Need Approval")?></p>
+                    <h3>{ttlApproved}</h3>
+                    <p><?=lang("Approved")?></p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-compose"></i>
                 </div>
-                <a href="<?= site_url() ?>tr/approval" class="small-box-footer">More info <i class="fa fa-pencil" aria-hidden="true"></i></a>
+                <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-pencil" aria-hidden="true"></i></a>
             </div>
         </div>
 
         <div class="col-lg-3 col-xs-6">
-            // small box
+            <!-- small box -->
             <div class="small-box bg-yellow">
                 <div class="inner">
                     <h3>{ttlChangeAfterApproved}</h3>
-                    <p><?= lang("Version changed")?></p>
+                    <p><?= lang("Revision Request")?></p>
                 </div>
                 <div class="icon">			  
                     <i class="fa fa-recycle"></i>
                 </div>
-                <a href="<?= site_url() ?>tr/approval" class="small-box-footer">More info <i class="fa fa-recycle"></i></a>
+                <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-recycle"></i></a>
             </div>
         </div>
 
         <div class="col-lg-3 col-xs-6">
-            // small box 
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>{ttlVoidAuthorize}</h3>
+                    <p><?=lang("Ticket Issued Open")?></p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-android-checkbox-outline"></i>
+                </div>
+                <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-check" aria-hidden="true"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
             <div class="small-box bg-red">
                 <div class="inner">
                     <h3>{ttlVoidAuthorize}</h3>
-                    <p><?=lang("Void Authorize")?></p>
+                    <p><?=lang("Ticket Issued Completed")?></p>
                 </div>
                 <div class="icon">
                     <i class="fa fa-ban"></i>
                 </div>
-                <a href="<?= site_url() ?>tr/approval" class="small-box-footer">More info <i class="fa fa-ban"></i></a>
+                <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-ban"></i></a>
             </div>
-        </div>-->
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3>{ttlVoidAuthorize}</h3>
+                    <p><?=lang("Ticket Issued Close")?></p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-ban"></i>
+                </div>
+                <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-ban"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>{ttlVoidAuthorize}</h3>
+                    <p><?=lang("Ticket Received Open")?></p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-android-checkbox-outline"></i>
+                </div>
+                <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-check" aria-hidden="true"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3>{ttlVoidAuthorize}</h3>
+                    <p><?=lang("Ticket Received Completed")?></p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-ban"></i>
+                </div>
+                <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-ban"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3>{ttlVoidAuthorize}</h3>
+                    <p><?=lang("Ticket Received Close")?></p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-ban"></i>
+                </div>
+                <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-ban"></i></a>
+            </div>
+        </div>
     </div>
 </section>

@@ -45,7 +45,7 @@ class Tickettype_model extends MY_MODEL {
     }
 
     public function get_TicketType() {
-        $query = $this->db->get('tickettype');
+        $query = $this->db->get('mstickettype');
         return $query->result_array();
     }
 
