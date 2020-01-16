@@ -75,7 +75,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <?php
                                         $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
                                         foreach ($servicelevelList as $serviceLevel) {
-                                            echo "<option value='$serviceLevel->fin_service_level_id'>$serviceLevel->fst_service_level_name</option>";
+                                            echo "<option value='$serviceLevel->fin_service_level_id'>$serviceLevel->fst_service_level_name - $serviceLevel->fin_service_level_days HARI</option>";
                                         }
                                     ?>
                                 </select>
@@ -129,19 +129,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime"/>
                                 </div>
                                 <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="fdt_ticket_expiry_extended_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Expiry Ext. Datetime")?></label>
-                            <div class="col-xs-6 col-md-3">
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_ticket_expiry_extended_datetime" name="fdt_ticket_expiry_extended_datetime"/>
-                                </div>
-                                <div id="fdt_ticket_expiry_extended_datetime_err" class="text-danger"></div>
                             </div>
                         </div>
 
