@@ -123,7 +123,7 @@ body {
               <h3 class="card-id"><?php echo $card['fin_ticket_id']; ?></h3>
               <p><?php echo $card['fdt_ticket_datetime']; ?></p>
               <p><?php echo $card['fst_memo']; ?></p>
-              <p><button >Detail</button></p>
+              <p><button data-id='<?= $card["fin_ticket_id"]?>'>Detail</button></p>
               </div>
           </div>
       <?php endforeach; ?>
@@ -141,8 +141,9 @@ $(document).ready(function() {
     });
 
     $("#recipe-card button").on("click",function(event){
-      id = $(this).data("#card-id");
-      window.location.replace("<?=$edit_ajax_url?>" + id);
+      id = $(this).data("id");
+      //window.location.replace("<=$edit_ajax_url?>" + id);
+      window.location.href = "<?=$edit_ajax_url?>" + id;
     });
 });
 </script>
