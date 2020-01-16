@@ -75,7 +75,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <?php
                                         $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
                                         foreach ($servicelevelList as $serviceLevel) {
-                                            echo "<option value='$serviceLevel->fin_service_level_id'>$serviceLevel->fst_service_level_name</option>";
+                                            echo "<option value='$serviceLevel->fin_service_level_id'>$serviceLevel->fst_service_level_name ($serviceLevel->fin_service_level_days hari) </option>";
                                         }
                                     ?>
                                 </select>
