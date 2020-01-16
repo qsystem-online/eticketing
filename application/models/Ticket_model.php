@@ -39,15 +39,6 @@ class Ticket_model extends MY_MODEL {
             )
         ];
 
-        $rules[] = [
-            'field' => 'fst_memo',
-            'label' => 'Memo',
-            'rules' => 'required',
-            'errors' => array(
-                'required' => '%s tidak boleh kosong'
-            )
-            ];
-
         return $rules;
     }
 
@@ -85,4 +76,5 @@ class Ticket_model extends MY_MODEL {
         
         return $max_tr_no;
     }
+
 }

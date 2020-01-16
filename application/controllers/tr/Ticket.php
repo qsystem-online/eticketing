@@ -30,6 +30,7 @@ class ticket extends MY_Controller
         $this->list['delete_ajax_url'] = site_url() . 'tr/ticket/delete/';
         $this->list['edit_ajax_url'] = site_url() . 'tr/ticket/edit/';
         $this->list['arrSearch'] = [
+            'fin_ticket_id' => 'Ticket ID',
             'fst_ticket_no' => 'Ticket No.'
         ];
 
@@ -39,9 +40,10 @@ class ticket extends MY_Controller
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
         $this->list['columns'] = [
-            ['title' => 'Ticket ID.', 'width' => '15%', 'visible' => 'false', 'data' => 'fin_ticket_id'],
+            ['title' => 'Ticket ID.', 'width' => '10%', 'data' => 'fin_ticket_id'],
             ['title' => 'Ticket No.', 'width' => '25%', 'data' => 'fst_ticket_no'],
-            ['title' => 'Ticket Datetime', 'width' => '20%', 'data' => 'fdt_ticket_datetime'],
+            ['title' => 'Ticket Datetime', 'width' => '15%', 'data' => 'fdt_ticket_datetime'],
+            ['title' => 'Deadline Datetime', 'width' => '15%', 'data' => 'fdt_deadline_datetime'],
             ['title' => 'Memo', 'width' => '25%', 'data' => 'fst_memo'],
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center']
         ];
@@ -70,7 +72,6 @@ class ticket extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $data["mode"] = $mode;
         $data["title"] = $mode == "ADD" ? "Add Ticket" : "Update Ticket";
-        $data["fin_ticket_id"] = $fin_ticket_id;
         // tambah ini
         if ($mode == 'ADD'){
             $data["fin_ticket_id"] = 0;
@@ -109,10 +110,10 @@ class ticket extends MY_Controller
     {
         $fdt_ticket_datetime = dBDateTimeFormat($this->input->post("fdt_ticket_datetime"));
         $fst_ticket_no = $this->ticket_model->GenerateTicketNo();
+
         $this->load->model('ticket_model');
         $this->form_validation->set_rules($this->ticket_model->getRules("ADD", 0));
         $this->form_validation->set_error_delimiters('<div class="text-danger">* ', '</div>');
-
         if ($this->form_validation->run() == FALSE) {
             //print_r($this->form_validation->error_array());
             $this->ajxResp["status"] = "VALIDATION_FORM_FAILED";
@@ -122,6 +123,7 @@ class ticket extends MY_Controller
             return;
         }
 
+        //Prepare Data
         $data = [
             "fst_ticket_no" => $fst_ticket_no,
             "fdt_ticket_datetime" => $fdt_ticket_datetime,
@@ -138,7 +140,19 @@ class ticket extends MY_Controller
         ];
 
         $this->db->trans_start();
+        //save data
         $insertId = $this->ticket_model->insert($data);
+
+        // Ticket Log
+        $this->load->model("ticketlog_model");
+        $log_id = $this->input->post("fin_ticket_id");
+        $data = [
+            "fin_ticket_id" => $log_id,
+            "fdt_status_datetime" => $fdt_ticket_datetime,
+            "fst_status" => '1',
+            "fst_status_memo" => $this->input->post("fst_memo"),
+            "fin_status_by_user_id" => $this->input->post("fin_issued_by_user_id")
+        ];
         $insertId = $this->ticketlog_model->insert($data);
         $dbError  = $this->db->error();
         if ($dbError["code"] != 0) {
@@ -151,7 +165,6 @@ class ticket extends MY_Controller
         }
 
         $this->db->trans_complete();
-
         $this->ajxResp["status"] = "SUCCESS";
         $this->ajxResp["message"] = "Data Saved !";
         $this->ajxResp["data"]["insert_id"] = $insertId;
@@ -162,7 +175,6 @@ class ticket extends MY_Controller
     {
         $this->load->model('ticket_model');
         $fin_ticket_id = $this->input->post("fin_ticket_id");
-        $fdt_ticket_datetime = dBDateTimeFormat($this->input->post("fdt_ticket_datetime"));
         $data = $this->ticket_model->getDataById($fin_ticket_id);
         $ticket = $data["ms_ticket"];
         if (!$ticket) {
@@ -187,13 +199,13 @@ class ticket extends MY_Controller
         $data = [
             "fin_ticket_id" => $fin_ticket_id,
             "fst_ticket_no" => $this->input->post("fst_ticket_no"),
-            "fdt_ticket_datetime" => $fdt_ticket_datetime,
+            "fdt_ticket_datetime" => dBDateTimeFormat($this->input->post("fdt_ticket_datetime")),
             "fdt_acceptance_expiry_datetime" => dBDateTimeFormat($this->input->post("fdt_acceptance_expiry_datetime")),
             "fin_ticket_type_id" => $this->input->post("fin_ticket_type_id"),
             "fin_service_level_id" => $this->input->post("fin_service_level_id"),
             "fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_datetime")),
             "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
-            "fdt_ticket_expiry_extended_datetime" =>dBDateTimeFormat($this->input->post("fdt_ticket_expiry_extended_datetime")),
+            "fdt_ticket_expiry_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_ticket_expiry_extended_datetime")),
             "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fst_memo" => $this->input->post("fst_memo"),
@@ -201,7 +213,6 @@ class ticket extends MY_Controller
         ];
 
         $this->db->trans_start();
-
         $this->ticket_model->update($data);
         $dbError = $this->db->error();
         if ($dbError["code"] != 0) {
@@ -214,7 +225,6 @@ class ticket extends MY_Controller
         }
 
         $this->db->trans_complete();
-
         $this->ajxResp["status"] = "SUCCESS";
         $this->ajxResp["message"] = "Data Saved !";
         $this->ajxResp["data"]["insert_id"] = $fin_ticket_id;
@@ -226,7 +236,7 @@ class ticket extends MY_Controller
         $this->load->library("datatables");
         $this->datatables->setTableName("trticket");
 
-        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fst_memo,'action' as action";
+        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fdt_deadline_datetime,fst_memo,'action' as action";
         $this->datatables->setSelectFields($selectFields);
 
         $Fields = $this->input->get('optionSearch');
@@ -249,12 +259,10 @@ class ticket extends MY_Controller
         $this->json_output($datasources);
     }
 
-    public function fetch_data($fin_ticket_id)
-    {
+    public function fetch_data($fin_ticket_id){
         $this->load->model("ticket_model");
         $data = $this->ticket_model->getDataById($fin_ticket_id);
-
-        //$this->load->library("datatables");		
+		
         $this->json_output($data);
     }
 

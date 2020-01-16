@@ -70,7 +70,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             </div>
                         
                             <label for="select_serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
-                            <div class="col-xs-6 col-md-4">
+                            <div class="col-xs-6 col-md-4 personal-info">
                                 <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id">
                                     <?php
                                         $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
@@ -93,6 +93,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <input type="text" class="form-control text-right datetimepicker" id="fdt_ticket_datetime" name="fdt_ticket_datetime"/>								
                                 </div>
                                 <div id="fdt_ticket_datetime_err" class="text-danger"></div>
+                                <!-- /.input group -->
                             </div>
 
                             <label for="fdt_acceptance_expiry_datetime" class="col-xs-6 col-md-4 control-label"><?=lang("Acceptance Expiry Datetime")?></label>
@@ -133,7 +134,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         
                         <div class="form-group">
                             <label for="fdt_ticket_expiry_extended_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Expiry Ext. Datetime")?></label>
-                            <div class="col-xs-6 col-md-10">
+                            <div class="col-xs-6 col-md-3">
                                 <div class="input-group date">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
@@ -160,7 +161,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                             <label for="select-toUser" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
                             <div class="col-xs-6 col-md-4">
-                                <select id="select-toUser" class="form-control" name="fin_issued_to_user_id">
+                                <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
                                     <?php
                                         $touserList = $this->users_model->getUserList();
                                         foreach ($touserList as $toUser){
@@ -337,18 +338,23 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             console.log(val);
                     }
                 });
-                $("#fdt_ticket_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s")?>")).datetimepicker("update");
+
+                $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
+                $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
+                $("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
+                $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
+                $("#fdt_ticket_expiry_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_expiry_extended_datetime));
+
+                var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, resp.ms_ticket.fin_ticket_type_id, true, true);
+                $('#select-ticketType').append(newOption).trigger('change');
                 
-                var arrTickettype = (resp.ms_ticket.fst_ticket_type_name);
-                $('#select-ticketType').val(arrTickettype).trigger("change.select2");
+                var newOption = new Option(resp.ms_ticket.fst_service_level_name, resp.ms_ticket.fin_service_level_id, true, true);
+                $('#select-serviceLevel').append(newOption).trigger('change');
 
-                var arrServicelevel = (resp.ms_ticket.fst_service_level_name);
-                $('#select-serviceLevel').val(arrServicelevel).trigger("change.select2");
-
-                var arrUsers = (resp.ms_ticket.fst_username);
-                $('#select-users').val(arrUsers).trigger("change.select2");
-                var arrToUser = (resp.ms_ticket.fst_username);
-                $('#select-toUser').val(arrToUser).trigger("change.select2");
+                var newOption = new Option(resp.ms_ticket.fin_issued_by_user_id, true);
+                $('#select-users').append(newOption).trigger('change');
+                var newOption = new Option(resp.ms_ticket.fin_issued_to_user_id, true);
+                $('#select-toUser').append(newOption).trigger('change');
 
             },
 
