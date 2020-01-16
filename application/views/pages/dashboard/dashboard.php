@@ -45,21 +45,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-pencil" aria-hidden="true"></i></a>
             </div>
         </div>
-
-        <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box bg-yellow">
-                <div class="inner">
-                    <h3>{ttlChangeAfterApproved}</h3>
-                    <p><?= lang("Revision Request")?></p>
-                </div>
-                <div class="icon">			  
-                    <i class="fa fa-recycle"></i>
-                </div>
-                <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-recycle"></i></a>
-            </div>
-        </div>
-
+    </div>
+    <div class="row">   
         <div class="col-lg-3 col-xs-6">
             <!-- small box -->
             <div class="small-box bg-aqua">
@@ -71,6 +58,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <i class="ion ion-android-checkbox-outline"></i>
                 </div>
                 <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-check" aria-hidden="true"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <h3>{ttlChangeAfterApproved}</h3>
+                    <p><?= lang(" Ticket Issued Accepted")?></p>
+                </div>
+                <div class="icon">			  
+                    <i class="fa fa-recycle"></i>
+                </div>
+                <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-recycle"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <h3>{ttlChangeAfterApproved}</h3>
+                    <p><?= lang("Need Revision")?></p>
+                </div>
+                <div class="icon">			  
+                    <i class="fa fa-recycle"></i>
+                </div>
+                <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-recycle"></i></a>
             </div>
         </div>
         <div class="col-lg-3 col-xs-6">
@@ -99,7 +112,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <a href="<?= site_url() ?>tr/ticketstatus" class="small-box-footer">More info <i class="fa fa-ban"></i></a>
             </div>
         </div>
+    </div>
 
+    <div class="row">
         <div class="col-lg-3 col-xs-6">
             <!-- small box -->
             <div class="small-box bg-aqua">
