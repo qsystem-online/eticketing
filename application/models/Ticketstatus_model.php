@@ -11,15 +11,17 @@ class Ticketstatus_model extends MY_MODEL {
     }
 
     public function getDataById($fin_ticket_id){
-        $ssql = "select a.*,b.fst_ticket_type_name,c.fin_service_level_name from ". $this->tableName ." a
+        $ssql = "select a.*,b.fst_ticket_type_name,c.fst_service_level_name,d.fst_username as useractive,e.fst_username from ". $this->tableName ." a
         left join mstickettype b on a.fin_ticket_type_id = b.fin_ticket_type_id
-        left join msservicelevel b on a.fin_service_level_id = c.fin_service_level_id
+        left join msservicelevel c on a.fin_service_level_id = c.fin_service_level_id
+        left join users d on a.fin_issued_by_user_id = d.fin_user_id
+        left join users e on a.fin_issued_to_user_id = e.fin_user_id
         where fin_ticket_id = ?";
         $qr = $this->db->query($ssql,[$fin_ticket_id]);
-        $rwTicket = $qr->row();
+        $rwTicketstatus = $qr->row();
 
         $data = [
-            "ms_ticket" => $rwTicket
+            "ms_ticketstatus" => $rwTicketstatus
         ];
 
         return $data;
@@ -59,5 +61,77 @@ class Ticketstatus_model extends MY_MODEL {
     public function get_Ticketstatus() {
         $query = $this->db->get('trticket');
         return $query->result_array();
+    }
+
+    public function get_IssuedApproved(){
+        $user = $this->aauth->user();
+        $ssql = "select * from trticket 
+            where fst_status = 'APPROVED/OPEN' and fin_issued_by_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        return $qr->result_array();
+
+    }
+
+    public function get_IssuedAccepted(){
+        $user = $this->aauth->user();
+        $ssql = "select * from trticket 
+            where fst_status = 'ACCEPTED' and fin_issued_by_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        return $qr->result_array();
+
+    }
+
+    public function get_IssuedNeedRevision(){
+        $user = $this->aauth->user();
+        $ssql = "select * from trticket 
+            where fst_status = 'NEED_REVISION' and fin_issued_by_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        return $qr->result_array();
+
+    }
+
+    public function get_IssuedCompleted(){
+        $user = $this->aauth->user();
+        $ssql = "select * from trticket 
+            where fst_status = 'COMPLETED' and fin_issued_by_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        return $qr->result_array();
+
+    }
+
+    public function get_ReceivedApproved(){
+        $user = $this->aauth->user();
+        $ssql = "select * from trticket 
+            where fst_status = 'APPROVED/OPEN' and fin_issued_to_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        return $qr->result_array();
+
+    }
+
+    public function get_ReceivedAccepted(){
+        $user = $this->aauth->user();
+        $ssql = "select * from trticket 
+            where fst_status = 'ACCEPTED' and fin_issued_to_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        return $qr->result_array();
+
+    }
+
+    public function get_ReceivedNeedRevision(){
+        $user = $this->aauth->user();
+        $ssql = "select * from trticket 
+            where fst_status = 'NEED_REVISION' and fin_issued_to_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        return $qr->result_array();
+
+    }
+
+    public function get_ReceivedCompleted(){
+        $user = $this->aauth->user();
+        $ssql = "select * from trticket 
+            where fst_status = 'COMPLETED' and fin_issued_to_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        return $qr->result_array();
+
     }
 }
