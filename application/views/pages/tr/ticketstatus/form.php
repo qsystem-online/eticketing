@@ -131,19 +131,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         </div>
                         
                         <div class="form-group">
-                            <label for="fdt_ticket_expiry_extended_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Expiry Ext. Datetime")?></label>
-                            <div class="col-xs-6 col-md-3">
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_ticket_expiry_extended_datetime" name="fdt_ticket_expiry_extended_datetime"/>
-                                </div>
-                                <div id="fdt_ticket_expiry_extended_datetime_err" class="text-danger"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
                             <label for="select-users" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
                             <div class="col-xs-6 col-md-4">
                                 <select id="select-users" class="form-control select2" name="fin_issued_by_user_id">
@@ -170,6 +157,23 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     ?>
                                 </select>
                                 <div id="fin_issued_to_user_id_err" class="text-danger"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Status")?></label>
+                            <div class="col-xs-6 col-md-4">
+                                <select id="select-status" class="form-control select2" name="fst_status">
+                                    <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
+                                    <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
+                                    <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
+                                    <option valeu="NEED_REVISION"><?=lang("NEED REVISION")?></option>
+                                    <option valeu="COMPLETED"><?=lang("COMPLETED")?></option>
+                                    <option valeu="CLOSED"><?=lang("CLOSED")?></option>
+                                    <option valeu="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
+                                    <option valeu="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
+                                    <option valeu="VOID"><?=lang("VOID")?></option>
+                                </select>
                             </div>
                         </div>
 
