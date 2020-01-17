@@ -63,6 +63,15 @@ class Ticketstatus_model extends MY_MODEL {
         return $query->result_array();
     }
 
+    public function get_NeeddApproval(){
+        $user = $this->aauth->user();
+        $ssql = "select * from trticket 
+            where fst_status = 'NEED_APPROVAL' and fin_issued_by_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        return $qr->result_array();
+
+    }
+
     public function get_IssuedApproved(){
         $user = $this->aauth->user();
         $ssql = "select * from trticket 
