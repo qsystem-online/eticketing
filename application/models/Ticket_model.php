@@ -12,7 +12,7 @@ class Ticket_model extends MY_MODEL {
 
     public function getDataById($fin_ticket_id){
         $activeUser = $this->aauth->is_login();
-        $ssql = "select a.*,b.fst_ticket_type_name,c.fst_service_level_name,d.fst_fullname as activeUser,e.fst_username from ". $this->tableName ." a
+        $ssql = "select a.*,b.fst_ticket_type_name,c.fst_service_level_name,d.fst_username as useractive,e.fst_username from ". $this->tableName ." a
         left join mstickettype b on a.fin_ticket_type_id = b.fin_ticket_type_id
         left join msservicelevel c on a.fin_service_level_id = c.fin_service_level_id
         left join users d on a.fin_issued_by_user_id = d.fin_user_id
@@ -58,11 +58,11 @@ class Ticket_model extends MY_MODEL {
     public function GenerateTicketNo($trDate = null) {
         $trDate = ($trDate == null) ? date ("Y-m-d"): $trDate;
         $tahun = date("Ymd", strtotime ($trDate));
-        $activeBranch = $this->aauth->get_active_branch();
+        /*$activeBranch = $this->aauth->get_active_branch();
         $branchCode = "";
         if($activeBranch){
             $branchCode = $activeBranch->fst_branch_code;
-        }
+        }*/
         $prefix = getDbConfig("ticket_prefix") . "/";
         $query = $this->db->query("SELECT MAX(fst_ticket_no) as max_id FROM trticket where fst_ticket_no like '".$prefix.$tahun."%'");
         $row = $query->row_array();
