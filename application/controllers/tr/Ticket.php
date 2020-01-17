@@ -41,10 +41,10 @@ class ticket extends MY_Controller
         ];
         $this->list['columns'] = [
             ['title' => 'Ticket ID.', 'width' => '10%', 'data' => 'fin_ticket_id'],
-            ['title' => 'Ticket No.', 'width' => '25%', 'data' => 'fst_ticket_no'],
+            ['title' => 'Ticket No.', 'width' => '20%', 'data' => 'fst_ticket_no'],
             ['title' => 'Ticket Datetime', 'width' => '15%', 'data' => 'fdt_ticket_datetime'],
             ['title' => 'Deadline Datetime', 'width' => '15%', 'data' => 'fdt_deadline_datetime'],
-            ['title' => 'Memo', 'width' => '25%', 'data' => 'fst_memo'],
+            ['title' => 'Memo', 'width' => '30%', 'data' => 'fst_memo'],
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center']
         ];
         $main_header = $this->parser->parse('inc/main_header', [], true);
@@ -300,17 +300,6 @@ class ticket extends MY_Controller
         $result = $this->ticket_model->getAllList();
         $this->ajxResp["data"] = $result;
         $this->json_output();
-    }
-
-    public function get_users(){
-        $term = $this->input->get("term");
-        $ssql = "select fin_user_id,fst_username from users where fst_username like ?";
-        $qr = $this->db->query($ssql,['%'.$term.'%']);
-        $rs = $qr->result();
-
-        $this->ajxResp["status"] = "SUCCESS";
-		$this->ajxResp["data"] = $rs;
-		$this->json_output();
     }
 
     public function get_ticket()

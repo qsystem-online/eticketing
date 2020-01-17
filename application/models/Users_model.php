@@ -209,12 +209,6 @@ class Users_model extends MY_Model
 		return $qr->result();
 	}
 
-	public function getByUserList(){
-		$ssql = "select fin_user_id,fst_username from users where fst_active = 'A' order by fst_username";
-		$qr = $this->db->query($ssql,[]);
-		return $qr->result();
-	}
-
 	public function getToUserList(){
 		$activeBranchId = $this->aauth->get_active_branch_id();
 		$ssql = "select fin_user_id,fst_username from users where fin_branch_id = ? order by fst_username";
