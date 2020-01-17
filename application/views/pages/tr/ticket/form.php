@@ -153,7 +153,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <div class="col-xs-6 col-md-4">
                                 <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
                                     <?php
-                                        $touserList = $this->users_model->getToUserList();
+                                        $touserList = $this->users_model->getAllList();
                                         foreach ($touserList as $toUser){
                                             echo "<option value='$toUser->fin_user_id'>$toUser->fst_username</option>";
                                         }
