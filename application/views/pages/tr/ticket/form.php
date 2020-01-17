@@ -181,8 +181,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         </div>
 
                         <div class="form-group">
-                            <label for="fst_memo" class="col-md-2 control-label"><?= lang("Memo") ?></label>
-                            <div class="col-md-10">
+                            <label for="fst_memo" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
+                            <div class="col-xs-6 col-md-10">
                                 <textarea rows="4" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo"></textarea>
                             </div>
                         </div>
