@@ -57,7 +57,7 @@ class Ticket_model extends MY_MODEL {
 
     public function GenerateTicketNo($trDate = null) {
         $trDate = ($trDate == null) ? date ("Y-m-d"): $trDate;
-        $tahun = date("Ymd", strtotime ($trDate));
+        $tahun = date("Y/m/d", strtotime ($trDate));
         $activeBranch = $this->aauth->get_active_branch();
         $branchCode = "";
         if($activeBranch){
