@@ -134,8 +134,4 @@ class Ticketstatus_model extends MY_MODEL {
         return $qr->result_array();
 
     }
-
-    public function show_ticketStatus($fin_ticket_id){
-        redirect(site_url()."/ticketstatus/Update/$fin_ticket_id", 'refresh');
-    }
 }
