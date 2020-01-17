@@ -136,7 +136,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <select id="select-users" class="form-control select2" name="fin_issued_by_user_id">
                                     <?php
                                         $active_user = $this->session->userdata("active_user");
-                                        $usersList = $this->users_model->getByUserList();
+                                        $usersList = $this->users_model->getAllList();
                                         foreach ($usersList as $users) {
                                             $isActive = ($users->fin_user_id == $active_user) ? "selected" : "";
                                             echo "<option value=" . $users->fin_user_id . " $isActive >" . $users->fst_username . "</option>";
@@ -150,7 +150,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <div class="col-xs-6 col-md-4">
                                 <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
                                     <?php
-                                        $touserList = $this->users_model->getToUserList();
+                                        $touserList = $this->users_model->getAllList();
                                         foreach ($touserList as $toUser){
                                             echo "<option value='$toUser->fin_user_id'>$toUser->fst_username</option>";
                                         }
