@@ -136,13 +136,10 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         <div class="form-group">
                             <label for="select-users" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
                             <div class="col-xs-6 col-md-4">
-                                <?php
-                                    $active_user = $this->session->userdata("active_user");
-                                    $usersList = $this->users_model->getByUserList();	
-                                ?>
                                 <select id="select-users" class="form-control select2" name="fin_issued_by_user_id">
                                     <?php
-                                        //$activeUser = $this->session->userdata("active_user");
+                                        $active_user = $this->session->userdata("active_user");
+                                        $usersList = $this->users_model->getByUserList();
                                         foreach ($usersList as $users) {
                                             $isActive = ($users->fin_user_id == $active_user) ? "selected" : "";
                                             echo "<option value=" . $users->fin_user_id . " $isActive >" . $users->fst_username . "</option>";
