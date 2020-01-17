@@ -139,26 +139,14 @@ class ticket extends MY_Controller
             "fdt_ticket_expiry_extended_datetime" =>dBDateTimeFormat($this->input->post("fdt_ticket_expiry_extended_datetime")),
             "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
+            "fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
             "fst_active" => 'A'
         ];
 
-        $this->db->trans_start();
         //save data
+        $this->db->trans_start();
         $insertId = $this->ticket_model->insert($data);
-
-        // Ticket Log
-        $this->load->model("ticketlog_model");
-        $log_id = $this->input->post("fin_ticket_id");
-        $data = [
-            "fin_rec_id" => $fin_rec_id,
-            "fin_ticket_id" => $log_id,
-            "fdt_status_datetime" => $fdt_ticket_datetime,
-            "fst_status" => '1',
-            "fst_status_memo" => $this->input->post("fst_memo"),
-            "fin_status_by_user_id" => $this->input->post("fin_issued_by_user_id")
-        ];
-        $insertId = $this->ticketlog_model->insert($data);
         $dbError  = $this->db->error();
         if ($dbError["code"] != 0) {
             $this->ajxResp["status"] = "DB_FAILED";
@@ -168,6 +156,17 @@ class ticket extends MY_Controller
             $this->db->trans_rollback();
             return;
         }
+
+        // Ticket Log
+        $this->load->model("ticketlog_model");
+        $data = [
+            "fin_ticket_id" => $insertId,
+            "fdt_status_datetime" => $fdt_ticket_datetime,
+            "fst_status" => $this->input->post("fst_status"),
+            "fst_status_memo" => $this->input->post("fst_memo"),
+            "fin_status_by_user_id" => $this->input->post("fin_issued_by_user_id")
+        ];
+        $insertId = $this->ticketlog_model->insert($data);
 
         $this->db->trans_complete();
         $this->ajxResp["status"] = "SUCCESS";
@@ -213,6 +212,7 @@ class ticket extends MY_Controller
             "fdt_ticket_expiry_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_ticket_expiry_extended_datetime")),
             "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
+            "fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
             "fst_active" => 'A'
         ];
@@ -228,6 +228,17 @@ class ticket extends MY_Controller
             $this->db->trans_rollback();
             return;
         }
+
+        // Ticket Log
+        $this->load->model("ticketlog_model");
+        $data = [
+            "fin_ticket_id" => $insertId,
+            "fdt_status_datetime" => $fdt_ticket_datetime,
+            "fst_status" => $this->input->post("fst_status"),
+            "fst_status_memo" => $this->input->post("fst_memo"),
+            "fin_status_by_user_id" => $this->input->post("fin_issued_by_user_id")
+        ];
+        $insertId = $this->ticketlog_model->insert($data);
 
         $this->db->trans_complete();
         $this->ajxResp["status"] = "SUCCESS";

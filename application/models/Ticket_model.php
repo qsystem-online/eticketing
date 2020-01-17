@@ -11,12 +11,13 @@ class Ticket_model extends MY_MODEL {
     }
 
     public function getDataById($fin_ticket_id){
-        $ssql = "select a.*,b.fst_ticket_type_name,c.fst_service_level_name,d.fst_username as useractive,e.fst_username from ". $this->tableName ." a
+        $activeUser = $this->aauth->is_login();
+        $ssql = "select a.*,b.fst_ticket_type_name,c.fst_service_level_name,d.fst_fullname as activeUser,e.fst_username from ". $this->tableName ." a
         left join mstickettype b on a.fin_ticket_type_id = b.fin_ticket_type_id
         left join msservicelevel c on a.fin_service_level_id = c.fin_service_level_id
         left join users d on a.fin_issued_by_user_id = d.fin_user_id
         left join users e on a.fin_issued_to_user_id = e.fin_user_id
-        where fin_ticket_id = ?";
+        where a.fin_ticket_id = ?";
         $qr = $this->db->query($ssql,[$fin_ticket_id]);
         $rwTicket = $qr->row();
 

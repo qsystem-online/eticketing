@@ -49,7 +49,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         <input type="hidden" class="form-control" id="fin_ticket_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_id" value="<?=$fin_ticket_id?>" readonly>
 
                         <div class="form-group">
-                            <label for="fst_ticket_no" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket No.")?></label>
+                            <label for="fst_ticket_no" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket No.")?> #</label>
                             <div class="col-xs-6 col-md-10">
                                 <input type="text" class="form-control" id="fst_ticket_no" placeholder="<?=lang("Ticket No.")?>" name="fst_ticket_no" value="<?=$fst_ticket_no?>" readonly>
                                 <div id="fst_ticket_no_err" class="text-danger"></div>
@@ -136,12 +136,23 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         <div class="form-group">
                             <label for="select-users" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
                             <div class="col-xs-6 col-md-4">
+                                <?php
+                                    $active_user = $this->session->userdata("active_user");
+                                    $usersList = $this->users_model->getByUserList();			
+                                    //$branchs = $this->msbranches_model->getAllList();
+                                ?>
                                 <select id="select-users" class="form-control select2" name="fin_issued_by_user_id">
                                     <?php
-                                        $usersList = $this->users_model->getUserList();
+                                        $activeUser = $this->session->userdata("active_user_id");
                                         foreach ($usersList as $users) {
-                                            echo "<option value='$users->fin_user_id'>$users->fst_username</option>";
+                                            $isActive = ($users->fin_user_id == $activeUser) ? "selected" : "";
+                                            echo "<option value=" . $users->fin_user_id . " $isActive >" . $users->fst_username . "</option>";
                                         }
+                                        /*$activeBranchId = $this->session->userdata("active_branch_id");
+                                        foreach ($branchs as $branch) {
+                                            $isActive = ($branch->fin_branch_id == $activeBranchId) ? "selected" : "";
+                                            echo "<option value=" . $branch->fin_branch_id . " $isActive >" . $branch->fst_branch_name . "</option>";
+                                        }*/
                                     ?>
                                 </select>
                                 <div id="fin_issued_by_user_id_err" class="text-danger"></div>
@@ -151,13 +162,31 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <div class="col-xs-6 col-md-4">
                                 <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
                                     <?php
-                                        $touserList = $this->users_model->getUserList();
+                                        $touserList = $this->users_model->getToUserList();
                                         foreach ($touserList as $toUser){
                                             echo "<option value='$toUser->fin_user_id'>$toUser->fst_username</option>";
                                         }
                                     ?>
                                 </select>
                                 <div id="fin_issued_to_user_id_err" class="text-danger"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Status")?></label>
+                            <div class="col-xs-6 col-md-4">
+                                <select id="select-status" class="form-control select2" name="fst_status">
+                                    <option value="ALL">-- <?=lang("ALL")?> --</option>
+                                    <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
+                                    <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
+                                    <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
+                                    <option valeu="NEED_REVISION"><?=lang("NEED REVISION")?></option>
+                                    <option valeu="COMPLETED"><?=lang("COMPLETED")?></option>
+                                    <option valeu="CLOSED"><?=lang("CLOSED")?></option>
+                                    <option valeu="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
+                                    <option valeu="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
+                                    <option valeu="VOID"><?=lang("VOID")?></option>
+                                </select>
                             </div>
                         </div>
 
@@ -251,47 +280,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         $("#btnNew").click(function(e){
             e.preventDefault();
             window.location.replace("<?=site_url()?>tr/ticket/add");
-        });
-
-        $("#btnDelete").confirmation({
-            title:"<?=lang("Hapus data ini ?")?>",
-            rootSelector: '#btnDelete',
-            placement: 'left',
-        });
-        $("#btnDelete").click(function(e){
-            e.preventDefault();
-            blockUIOnAjaxRequest("<h5>Deleting ....</h5>");
-            $.ajax({
-                url:"<?= site_url() ?>tr/ticket/delete/" + $("#fin_ticket_id").val(),
-            }).done(function(resp){
-                //consoleLog(resp):
-                $.unblockUI();
-                if (resp.message != "") {
-                    $.alert({
-                        title: 'Message',
-                        content: resp.message,
-                        buttons: {
-                            OK : function() {
-                                if (resp.status == "SUCCESS") {
-                                    window.location.href = "<?=site_url() ?>tr/ticket/lizt";
-                                    return;
-                                }
-                            },
-                        }
-                    });
-                }
-
-                if (resp.status == "SUCCESS") {
-                    data = resp.data;
-                    $("#fin_ticket_id").val(data.insert_id);
-
-                    //Clear all previous error
-                    $(".text-danger").html("");
-                    //Change to Edit Mode
-                    $("#frm-mode").val("EDIT"); //ADD|EDIT
-                    $('#fst_ticket_no').prop('readonly', true);
-                }
-            });
         });
 
         $("#btnList").click(function(e){
