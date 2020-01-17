@@ -177,6 +177,8 @@ class ticket extends MY_Controller
 
     public function ajx_edit_save()
     {
+        $fdt_ticket_datetime = dBDateTimeFormat($this->input->post("fdt_ticket_datetime"));
+
         $this->load->model('ticket_model');
         $fin_ticket_id = $this->input->post("fin_ticket_id");
         $data = $this->ticket_model->getDataById($fin_ticket_id);
@@ -232,7 +234,7 @@ class ticket extends MY_Controller
         // Ticket Log
         $this->load->model("ticketlog_model");
         $data = [
-            "fin_ticket_id" => $insertId,
+            "fin_ticket_id" => $fin_ticket_id,
             "fdt_status_datetime" => $fdt_ticket_datetime,
             "fst_status" => $this->input->post("fst_status"),
             "fst_status_memo" => $this->input->post("fst_memo"),

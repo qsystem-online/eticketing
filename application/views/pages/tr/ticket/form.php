@@ -138,21 +138,15 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <div class="col-xs-6 col-md-4">
                                 <?php
                                     $active_user = $this->session->userdata("active_user");
-                                    $usersList = $this->users_model->getByUserList();			
-                                    //$branchs = $this->msbranches_model->getAllList();
+                                    $usersList = $this->users_model->getByUserList();	
                                 ?>
                                 <select id="select-users" class="form-control select2" name="fin_issued_by_user_id">
                                     <?php
-                                        $activeUser = $this->session->userdata("active_user_id");
+                                        //$activeUser = $this->session->userdata("active_user");
                                         foreach ($usersList as $users) {
-                                            $isActive = ($users->fin_user_id == $activeUser) ? "selected" : "";
+                                            $isActive = ($users->fin_user_id == $active_user) ? "selected" : "";
                                             echo "<option value=" . $users->fin_user_id . " $isActive >" . $users->fst_username . "</option>";
                                         }
-                                        /*$activeBranchId = $this->session->userdata("active_branch_id");
-                                        foreach ($branchs as $branch) {
-                                            $isActive = ($branch->fin_branch_id == $activeBranchId) ? "selected" : "";
-                                            echo "<option value=" . $branch->fin_branch_id . " $isActive >" . $branch->fst_branch_name . "</option>";
-                                        }*/
                                     ?>
                                 </select>
                                 <div id="fin_issued_by_user_id_err" class="text-danger"></div>
@@ -176,7 +170,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Status")?></label>
                             <div class="col-xs-6 col-md-4">
                                 <select id="select-status" class="form-control select2" name="fst_status">
-                                    <option value="ALL">-- <?=lang("ALL")?> --</option>
                                     <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
                                     <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
                                     <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
