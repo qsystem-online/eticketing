@@ -16,10 +16,16 @@ class Home extends MY_Controller {
 		$main_sidebar = $this->parser->parse('inc/main_sidebar',[],true);
 
 		$this->data["title"] = "Dashboard";
-		$this->data["ttlApproved"] = formatNumber($this->dashboard_model->getTtlApproved());
 		$this->data["ttlNeedApproval"] = formatNumber($this->dashboard_model->getTtlNeedApproval());
-		$this->data["ttlChangeAfterApproved"] = formatNumber($this->dashboard_model->getTtlChangeAfterApproved());
-		$this->data["ttlVoidAuthorize"] = formatNumber($this->dashboard_model->getTtlVoidAuthorize());
+		$this->data["ttlIssuedApproved"] = formatNumber($this->dashboard_model->getTtlIssuedApproved());
+		$this->data["ttlIssuedNeedRevision"] = formatNumber($this->dashboard_model->getTtlIssuedNeedRevision());
+		$this->data["ttlIssuedAccepted"] = formatNumber($this->dashboard_model->getTtlIssuedAccepted());
+		$this->data["ttlIssuedCompleted"] = formatNumber($this->dashboard_model->getTtlIssuedCompleted());
+
+		$this->data["ttlReceivedApproved"] = formatNumber($this->dashboard_model->getTtlReceivedApproved());
+		$this->data["ttlReceivedNeedRevision"] = formatNumber($this->dashboard_model->getTtlReceivedNeedRevision());
+		$this->data["ttlReceivedAccepted"] = formatNumber($this->dashboard_model->getTtlReceivedAccepted());
+		$this->data["ttlReceivedCompleted"] = formatNumber($this->dashboard_model->getTtlReceivedCompleted());
 
 		$page_content = $this->parser->parse('pages/dashboard/dashboard', $this->data, true);
 		$main_footer = $this->parser->parse('inc/main_footer', [], true);

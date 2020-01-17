@@ -120,9 +120,9 @@ body {
       <?php foreach($cards as $card): ?>
           <div class="column">
               <div class="card">
-              <h3 class="card-id"><?php echo $card['fin_ticket_id']; ?></h3>
+              <h3 class="card-id"><?php echo $card['fst_ticket_no']; ?></h3>
               <p><?php echo $card['fdt_ticket_datetime']; ?></p>
-              <p><?php echo $card['fst_memo']; ?></p>
+              <p><?php echo Substr($card['fst_memo'],0,30); ?></p>
               <p><button data-id='<?= $card["fin_ticket_id"]?>'>Detail</button></p>
               </div>
           </div>
@@ -142,7 +142,6 @@ $(document).ready(function() {
 
     $("#recipe-card button").on("click",function(event){
       id = $(this).data("id");
-      //window.location.replace("<=$edit_ajax_url?>" + id);
       window.location.href = "<?=$edit_ajax_url?>" + id;
     });
 });

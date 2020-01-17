@@ -2,47 +2,105 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Dashboard_model extends CI_Model {
-    //Get Approval List
-    public function getTtlApproved2(){
-        $tbl = "";
-        $ssql = "select count(*) as ttl_approve from trverification a
-            inner join users b on a.fin_department_id = b.fin_department_id
-            inner join users c on a.fin_user_group_id = c.fin_group_id
-            where a.fin_rec_id = ? and a.fst_verification_status = 'RV'
-            and b.fst_active = 'A'";
-        $query = $this->db->query($ssql,$this->aauth->get_user_id());
-        $row = $query->row();
-        return $row->ttl_approve;
-    }
-
+    //Get Ticket Status List
     public function getTtlNeedApproval(){
         $user = $this->aauth->user();
 
-        $ssql = "select count(*) as ttl_need_approval from trticket_log a
-            inner join trticket b on a.fin_ticket_id = b.fin_ticket_id
-            where a.fst_status = '0' and b.fin_issued_by_user_id =? ";
+        $ssql = "select count(*) as ttl_need_approval from trticket 
+            where fst_status = 'NEED_APPROVAL' and fin_issued_by_user_id =? ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         $rw = $qr->row();
         return $rw->ttl_need_approval;
 
     }
-    public function getTtlApproved(){
+    public function getTtlIssuedApproved(){
         $user = $this->aauth->user();
 
-        $ssql = "select count(*) as ttl_approved from trticket_log a
-            inner join trticket b on a.fin_ticket_id = b.fin_ticket_id
-            where a.fst_status = '1' and b.fin_issued_by_user_id =? ";
+        $ssql = "select count(*) as ttl_approved from trticket 
+            where fst_status = 'APPROVED/OPEN' and fin_issued_by_user_id =? ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         $rw = $qr->row();
         return $rw->ttl_approved;
 
     }
 
-    public function getTtlChangeAfterApproved(){
+    public function getTtlIssuedAccepted(){
+        $user = $this->aauth->user();
+
+        $ssql = "select count(*) as ttl_need_revision from trticket 
+            where fst_status = 'ACCEPTED' and fin_issued_by_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        $rw = $qr->row();
+        return $rw->ttl_need_revision;
 
     }
 
-    public function getTtlVoidAuthorize(){
+    public function getTtlIssuedNeedRevision(){
+        $user = $this->aauth->user();
+
+        $ssql = "select count(*) as ttl_need_revision from trticket 
+            where fst_status = 'NEED_REVISION' and fin_issued_by_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        $rw = $qr->row();
+        return $rw->ttl_need_revision;
 
     }
+
+    
+    public function getTtlIssuedCompleted(){
+        $user = $this->aauth->user();
+
+        $ssql = "select count(*) as ttl_need_revision from trticket 
+            where fst_status = 'COMPLETED' and fin_issued_by_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        $rw = $qr->row();
+        return $rw->ttl_need_revision;
+
+    }
+
+    public function getTtlReceivedApproved(){
+        $user = $this->aauth->user();
+
+        $ssql = "select count(*) as ttl_approved from trticket 
+            where fst_status = 'APPROVED/OPEN' and fin_issued_to_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        $rw = $qr->row();
+        return $rw->ttl_approved;
+
+    }
+
+    public function getTtlReceivedAccepted(){
+        $user = $this->aauth->user();
+
+        $ssql = "select count(*) as ttl_need_revision from trticket 
+            where fst_status = 'ACCEPTED' and fin_issued_to_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        $rw = $qr->row();
+        return $rw->ttl_need_revision;
+
+    }
+
+    public function getTtlReceivedNeedRevision(){
+        $user = $this->aauth->user();
+
+        $ssql = "select count(*) as ttl_need_revision from trticket 
+            where fst_status = 'NEED_REVISION' and fin_issued_to_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        $rw = $qr->row();
+        return $rw->ttl_need_revision;
+
+    }
+
+    
+    public function getTtlReceivedCompleted(){
+        $user = $this->aauth->user();
+
+        $ssql = "select count(*) as ttl_need_revision from trticket 
+            where fst_status = 'COMPLETED' and fin_issued_to_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        $rw = $qr->row();
+        return $rw->ttl_need_revision;
+
+    }
+
 }

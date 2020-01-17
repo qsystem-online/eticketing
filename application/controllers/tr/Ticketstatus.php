@@ -9,6 +9,9 @@ class Ticketstatus extends MY_Controller
         parent::__construct();
         $this->load->library('form_validation');
         $this->load->model('ticketstatus_model');
+        $this->load->model('servicelevel_model');
+        $this->load->model('tickettype_model');
+        $this->load->model('users_model');
     }
 
     public function index()
@@ -23,7 +26,7 @@ class Ticketstatus extends MY_Controller
         $this->list['list_name'] = "Ticket Status List";
         $this->list['pKey'] = "id";
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
-        $this->list['edit_ajax_url'] = site_url() . 'tr/ticket/edit/';
+        $this->list['edit_ajax_url'] = site_url() . 'tr/ticketstatus/Update/';
         $this->list['arrSearch'] = [
             'fin_ticket_id' => 'Ticket ID',
             'fst_ticket_no' => 'Ticket Number',
@@ -36,6 +39,270 @@ class Ticketstatus extends MY_Controller
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
         $this->list["cards"] = $this->ticketstatus_model->get_Ticketstatus();
+        $main_header = $this->parser->parse('inc/main_header', [], true);
+        $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
+        $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
+        $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = null;
+        $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
+        $this->data['MAIN_HEADER'] = $main_header;
+        $this->data['MAIN_SIDEBAR'] = $main_sidebar;
+        $this->data['PAGE_CONTENT'] = $page_content;
+        $this->data['MAIN_FOOTER'] = $main_footer;
+        $this->parser->parse('template/main', $this->data);
+    }
+
+    public function I01()
+    {
+        $this->load->library('menus');
+        $this->list['page_name'] = "Ticket Status";
+        $this->list['list_name'] = "Ticket Status List";
+        $this->list['pKey'] = "id";
+        $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
+        $this->list['edit_ajax_url'] = site_url() . 'tr/ticketstatus/Update/';
+        $this->list['arrSearch'] = [
+            'fin_ticket_id' => 'Ticket ID',
+            'fst_ticket_no' => 'Ticket Number',
+            'fst_memo' => 'Ticket Memo'
+        ];
+
+        $this->list['breadcrumbs'] = [
+            ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
+            ['title' => 'List', 'link' => NULL, 'icon' => ''],
+        ];
+        $this->list["cards"] = $this->ticketstatus_model->get_IssuedApproved();
+        $main_header = $this->parser->parse('inc/main_header', [], true);
+        $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
+        $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
+        $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = null;
+        $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
+        $this->data['MAIN_HEADER'] = $main_header;
+        $this->data['MAIN_SIDEBAR'] = $main_sidebar;
+        $this->data['PAGE_CONTENT'] = $page_content;
+        $this->data['MAIN_FOOTER'] = $main_footer;
+        $this->parser->parse('template/main', $this->data);
+    }
+
+    public function I02()
+    {
+        $this->load->library('menus');
+        $this->list['page_name'] = "Ticket Status";
+        $this->list['list_name'] = "Ticket Status List";
+        $this->list['pKey'] = "id";
+        $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
+        $this->list['edit_ajax_url'] = site_url() . 'tr/ticketstatus/Update/';
+        $this->list['arrSearch'] = [
+            'fin_ticket_id' => 'Ticket ID',
+            'fst_ticket_no' => 'Ticket Number',
+            'fst_memo' => 'Ticket Memo'
+        ];
+
+        $this->list['breadcrumbs'] = [
+            ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
+            ['title' => 'List', 'link' => NULL, 'icon' => ''],
+        ];
+        $this->list["cards"] = $this->ticketstatus_model->get_IssuedAccepted();
+        $main_header = $this->parser->parse('inc/main_header', [], true);
+        $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
+        $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
+        $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = null;
+        $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
+        $this->data['MAIN_HEADER'] = $main_header;
+        $this->data['MAIN_SIDEBAR'] = $main_sidebar;
+        $this->data['PAGE_CONTENT'] = $page_content;
+        $this->data['MAIN_FOOTER'] = $main_footer;
+        $this->parser->parse('template/main', $this->data);
+    }
+
+    public function I03()
+    {
+        $this->load->library('menus');
+        $this->list['page_name'] = "Ticket Status";
+        $this->list['list_name'] = "Ticket Status List";
+        $this->list['pKey'] = "id";
+        $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
+        $this->list['edit_ajax_url'] = site_url() . 'tr/ticketstatus/Update/';
+        $this->list['arrSearch'] = [
+            'fin_ticket_id' => 'Ticket ID',
+            'fst_ticket_no' => 'Ticket Number',
+            'fst_memo' => 'Ticket Memo'
+        ];
+
+        $this->list['breadcrumbs'] = [
+            ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
+            ['title' => 'List', 'link' => NULL, 'icon' => ''],
+        ];
+        $this->list["cards"] = $this->ticketstatus_model->get_IssuedNeedRevision();
+        $main_header = $this->parser->parse('inc/main_header', [], true);
+        $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
+        $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
+        $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = null;
+        $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
+        $this->data['MAIN_HEADER'] = $main_header;
+        $this->data['MAIN_SIDEBAR'] = $main_sidebar;
+        $this->data['PAGE_CONTENT'] = $page_content;
+        $this->data['MAIN_FOOTER'] = $main_footer;
+        $this->parser->parse('template/main', $this->data);
+    }
+
+    public function I04()
+    {
+        $this->load->library('menus');
+        $this->list['page_name'] = "Ticket Status";
+        $this->list['list_name'] = "Ticket Status List";
+        $this->list['pKey'] = "id";
+        $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
+        $this->list['edit_ajax_url'] = site_url() . 'tr/ticketstatus/Update/';
+        $this->list['arrSearch'] = [
+            'fin_ticket_id' => 'Ticket ID',
+            'fst_ticket_no' => 'Ticket Number',
+            'fst_memo' => 'Ticket Memo'
+        ];
+
+        $this->list['breadcrumbs'] = [
+            ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
+            ['title' => 'List', 'link' => NULL, 'icon' => ''],
+        ];
+        $this->list["cards"] = $this->ticketstatus_model->get_IssuedCompleted();
+        $main_header = $this->parser->parse('inc/main_header', [], true);
+        $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
+        $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
+        $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = null;
+        $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
+        $this->data['MAIN_HEADER'] = $main_header;
+        $this->data['MAIN_SIDEBAR'] = $main_sidebar;
+        $this->data['PAGE_CONTENT'] = $page_content;
+        $this->data['MAIN_FOOTER'] = $main_footer;
+        $this->parser->parse('template/main', $this->data);
+    }
+
+    public function R01()
+    {
+        $this->load->library('menus');
+        $this->list['page_name'] = "Ticket Status";
+        $this->list['list_name'] = "Ticket Status List";
+        $this->list['pKey'] = "id";
+        $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
+        $this->list['edit_ajax_url'] = site_url() . 'tr/ticketstatus/Update/';
+        $this->list['arrSearch'] = [
+            'fin_ticket_id' => 'Ticket ID',
+            'fst_ticket_no' => 'Ticket Number',
+            'fst_memo' => 'Ticket Memo'
+        ];
+
+        $this->list['breadcrumbs'] = [
+            ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
+            ['title' => 'List', 'link' => NULL, 'icon' => ''],
+        ];
+        $this->list["cards"] = $this->ticketstatus_model->get_ReceivedApproved();
+        $main_header = $this->parser->parse('inc/main_header', [], true);
+        $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
+        $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
+        $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = null;
+        $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
+        $this->data['MAIN_HEADER'] = $main_header;
+        $this->data['MAIN_SIDEBAR'] = $main_sidebar;
+        $this->data['PAGE_CONTENT'] = $page_content;
+        $this->data['MAIN_FOOTER'] = $main_footer;
+        $this->parser->parse('template/main', $this->data);
+    }
+
+    public function R02()
+    {
+        $this->load->library('menus');
+        $this->list['page_name'] = "Ticket Status";
+        $this->list['list_name'] = "Ticket Status List";
+        $this->list['pKey'] = "id";
+        $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
+        $this->list['edit_ajax_url'] = site_url() . 'tr/ticketstatus/Update/';
+        $this->list['arrSearch'] = [
+            'fin_ticket_id' => 'Ticket ID',
+            'fst_ticket_no' => 'Ticket Number',
+            'fst_memo' => 'Ticket Memo'
+        ];
+
+        $this->list['breadcrumbs'] = [
+            ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
+            ['title' => 'List', 'link' => NULL, 'icon' => ''],
+        ];
+        $this->list["cards"] = $this->ticketstatus_model->get_ReceivedAccepted();
+        $main_header = $this->parser->parse('inc/main_header', [], true);
+        $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
+        $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
+        $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = null;
+        $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
+        $this->data['MAIN_HEADER'] = $main_header;
+        $this->data['MAIN_SIDEBAR'] = $main_sidebar;
+        $this->data['PAGE_CONTENT'] = $page_content;
+        $this->data['MAIN_FOOTER'] = $main_footer;
+        $this->parser->parse('template/main', $this->data);
+    }
+
+    public function R03()
+    {
+        $this->load->library('menus');
+        $this->list['page_name'] = "Ticket Status";
+        $this->list['list_name'] = "Ticket Status List";
+        $this->list['pKey'] = "id";
+        $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
+        $this->list['edit_ajax_url'] = site_url() . 'tr/ticketstatus/Update/';
+        $this->list['arrSearch'] = [
+            'fin_ticket_id' => 'Ticket ID',
+            'fst_ticket_no' => 'Ticket Number',
+            'fst_memo' => 'Ticket Memo'
+        ];
+
+        $this->list['breadcrumbs'] = [
+            ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
+            ['title' => 'List', 'link' => NULL, 'icon' => ''],
+        ];
+        $this->list["cards"] = $this->ticketstatus_model->get_ReceivedNeedRevision();
+        $main_header = $this->parser->parse('inc/main_header', [], true);
+        $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
+        $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
+        $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = null;
+        $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
+        $this->data['MAIN_HEADER'] = $main_header;
+        $this->data['MAIN_SIDEBAR'] = $main_sidebar;
+        $this->data['PAGE_CONTENT'] = $page_content;
+        $this->data['MAIN_FOOTER'] = $main_footer;
+        $this->parser->parse('template/main', $this->data);
+    }
+
+    public function R04()
+    {
+        $this->load->library('menus');
+        $this->list['page_name'] = "Ticket Status";
+        $this->list['list_name'] = "Ticket Status List";
+        $this->list['pKey'] = "id";
+        $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
+        $this->list['edit_ajax_url'] = site_url() . 'tr/ticketstatus/Update/';
+        $this->list['arrSearch'] = [
+            'fin_ticket_id' => 'Ticket ID',
+            'fst_ticket_no' => 'Ticket Number',
+            'fst_memo' => 'Ticket Memo'
+        ];
+
+        $this->list['breadcrumbs'] = [
+            ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
+            ['title' => 'List', 'link' => NULL, 'icon' => ''],
+        ];
+        $this->list["cards"] = $this->ticketstatus_model->get_ReceivedCompleted();
         $main_header = $this->parser->parse('inc/main_header', [], true);
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
@@ -81,7 +348,7 @@ class Ticketstatus extends MY_Controller
         $this->openForm("ADD", 0);
     }
 
-    public function Edit($fin_ticket_id)
+    public function Update($fin_ticket_id)
     {
         $this->openForm("EDIT", $fin_ticket_id);
     }
@@ -238,32 +505,7 @@ class Ticketstatus extends MY_Controller
         $this->json_output();
     }
 
-    public function get_TicketType()
-    {
-        $term = $this->input->get("term");
-        $ssql = "select * from mstickettype where fst_ticket_type_name like ? order by fst_ticket_type_name";
-        $qr = $this->db->query($ssql, ['%' . $term . '%']);
-        $rs = $qr->result();
 
-        $this->json_output($rs);
-    }
 
-    public function report_tickettype()
-    {
-        $this->load->library('pdf');
-        //$customPaper = array(0,0,381.89,595.28);
-        //$this->pdf->setPaper($customPaper, 'landscape');
-        $this->pdf->setPaper('A4', 'portrait');
-        //$this->pdf->setPaper('A4', 'landscape');
 
-        $this->load->model("ticketstatus_model");
-        $listTickettype = $this->ticketstatus_model->get_TicketType();
-        $data = [
-            "datas" => $listTickettype
-        ];
-
-        $this->pdf->load_view('report/tickettype_pdf', $data);
-        $this->Cell(30, 10, 'Percobaan Header Dan Footer With Page Number', 0, 0, 'C');
-        $this->Cell(0, 10, 'Halaman ' . $this->PageNo() . ' dari {nb}', 0, 0, 'R');
-    }
 }
