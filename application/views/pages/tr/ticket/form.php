@@ -31,12 +31,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             <div class="box box-info">
                 <div class="box-header with-border">
                     <h3 class="box-title title"><?= $title ?></h3>
+                    <?php if ($mode != "VIEW") { ?>
                     <div class="btn-group btn-group-sm pull-right">
                         <a id="btnNew" class="btn btn-primary" href="#" title="<?=lang("Tambah Baru")?>"><i class="fa fa-plus" aria-hidden="true"></i></a>
                         <a id="btnSubmitAjax" class="btn btn-primary" href="#" title="<?=lang("Simpan")?>"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
-                        <a id="btnDelete" class="btn btn-primary" href="#" title="<?=lang("Hapus")?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
                         <a id="btnList" class="btn btn-primary" href="#" title="<?=lang("Daftar Transaksi")?>"><i class="fa fa-list" aria-hidden="true"></i></a>
                     </div>
+                    <?php } ?>
                 </div>
                 <!-- end box header -->
 
@@ -75,7 +76,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <?php
                                         $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
                                         foreach ($servicelevelList as $serviceLevel) {
-                                            echo "<option value='$serviceLevel->fin_service_level_id'>$serviceLevel->fst_service_level_name ($serviceLevel->fin_service_level_days hari) </option>";
+                                            echo "<option value='$serviceLevel->fin_service_level_id'>$serviceLevel->fst_service_level_name - $serviceLevel->fin_service_level_days HARI </option>";
                                         }
                                     ?>
                                 </select>
@@ -129,19 +130,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime"/>
                                 </div>
                                 <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="fdt_ticket_expiry_extended_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Expiry Ext. Datetime")?></label>
-                            <div class="col-xs-6 col-md-3">
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_ticket_expiry_extended_datetime" name="fdt_ticket_expiry_extended_datetime"/>
-                                </div>
-                                <div id="fdt_ticket_expiry_extended_datetime_err" class="text-danger"></div>
                             </div>
                         </div>
 
