@@ -41,11 +41,18 @@ class ticket extends MY_Controller
         ];
         $this->list['columns'] = [
             ['title' => 'Ticket ID.', 'width' => '10%', 'data' => 'fin_ticket_id'],
-            ['title' => 'Ticket No.', 'width' => '20%', 'data' => 'fst_ticket_no'],
+            ['title' => 'Ticket No.', 'width' => '15%', 'data' => 'fst_ticket_no'],
             ['title' => 'Ticket Datetime', 'width' => '15%', 'data' => 'fdt_ticket_datetime'],
             ['title' => 'Deadline Datetime', 'width' => '15%', 'data' => 'fdt_deadline_datetime'],
-            ['title' => 'Memo', 'width' => '30%', 'data' => 'fst_memo'],
-            ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center']
+            ['title' => 'Memo', 'width' => '35%', 'data' => 'fst_memo'],
+            ['title' => 'Action', 'width' => '6%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center',
+                'render'=>"function(data,type,row){
+                    action = \"<div style='font-size:16px'>\";
+                    action += \"<a class='btn-view' href='#' data-id='\" + row.fin_ticket_id + \"'><i style='font-size:16px;color:lime' class='fa fa-bars'></i></a>\";
+					action += \"</div>\";
+					return action;
+                }",
+            ]
         ];
         $main_header = $this->parser->parse('inc/main_header', [], true);
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
@@ -258,6 +265,7 @@ class ticket extends MY_Controller
         $Fields = $this->input->get('optionSearch');
         $searchFields = [$Fields];
         $this->datatables->setSearchFields($searchFields);
+        $this->datatables->activeCondition = "fst_active !='D'";
         
         // Format Data
         $datasources = $this->datatables->getData();
@@ -266,7 +274,7 @@ class ticket extends MY_Controller
         foreach ($arrData as $data) {
             //action
             $data["action"]    = "<div style='font-size:16px'>
-					<a class='btn-edit' href='#' data-id='" . $data["fin_ticket_id"] . "'><i class='fa fa-pencil'></i></a>
+					<a class='btn-view' href='#' data-id='" . $data["fin_ticket_id"] . "'><i style='font-size:16px;color:lime class='fa fa-bars'></i></a>
 				</div>";
 
             $arrDataFormated[] = $data;
@@ -328,4 +336,6 @@ class ticket extends MY_Controller
         $this->Cell(30, 10, 'Percobaan Header Dan Footer With Page Number', 0, 0, 'C');
         $this->Cell(0, 10, 'Halaman ' . $this->PageNo() . ' dari {nb}', 0, 0, 'R');
     }
+
+
 }

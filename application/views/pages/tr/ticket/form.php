@@ -35,6 +35,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     <div class="btn-group btn-group-sm pull-right">
                         <a id="btnNew" class="btn btn-primary" href="#" title="<?=lang("Tambah Baru")?>"><i class="fa fa-plus" aria-hidden="true"></i></a>
                         <a id="btnSubmitAjax" class="btn btn-primary" href="#" title="<?=lang("Simpan")?>"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
+                        <a id="btnDelete" class="btn btn-primary" href="#" title="<?=lang("Void")?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
                         <a id="btnList" class="btn btn-primary" href="#" title="<?=lang("Daftar Transaksi")?>"><i class="fa fa-list" aria-hidden="true"></i></a>
                     </div>
                     <?php } ?>
@@ -111,7 +112,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         
                         <div class="form-group">
                             <label for="fdt_deadline_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Deadline Datetime")?></label>
-                            <div class="col-xs-6 col-md-3">
+                            <!--<div class="col-xs-6 col-md-3">
                                 <div class="input-group date">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
@@ -119,9 +120,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_datetime" name="fdt_deadline_datetime"/>
                                 </div>
                                 <div id="fdt_deadline_datetime_err" class="text-danger"></div>
-                            </div>
+                            </div>-->
  
-                            <label for="fdt_deadline_extended_datetime" class="col-xs-6 col-md-4 control-label"><?=lang("Deadline Extended Datetime")?></label>
+                            <!--<label for="fdt_deadline_extended_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Deadline Datetime")?></label>-->
                             <div class="col-xs-6 col-md-3">
                                 <div class="input-group date">
                                     <div class="input-group-addon">
@@ -254,9 +255,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         //Clear all previous error
                         $(".text-danger").html("");
 
-                        //Change to Edit Mode
-                        $("#frm-mode").val("EDIT"); //ADD|EDIT
-                        $('#fst_ticket_no').prop('readonly', true);
                     }
                 },
                 error: function (e) {
