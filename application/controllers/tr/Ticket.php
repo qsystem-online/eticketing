@@ -29,6 +29,7 @@ class ticket extends MY_Controller
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticket/fetch_list_data';
         $this->list['delete_ajax_url'] = site_url() . 'tr/ticket/delete/';
         $this->list['edit_ajax_url'] = site_url() . 'tr/ticket/edit/';
+        $this->list['view_ajax_url'] = site_url() . 'tr/ticket/view/';
         $this->list['arrSearch'] = [
             'fin_ticket_id' => 'Ticket ID',
             'fst_ticket_no' => 'Ticket No.'
@@ -45,7 +46,7 @@ class ticket extends MY_Controller
             ['title' => 'Ticket Datetime', 'width' => '15%', 'data' => 'fdt_ticket_datetime'],
             ['title' => 'Deadline Datetime', 'width' => '15%', 'data' => 'fdt_deadline_datetime'],
             ['title' => 'Memo', 'width' => '35%', 'data' => 'fst_memo'],
-            ['title' => 'Action', 'width' => '6%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center',
+            ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center',
                 'render'=>"function(data,type,row){
                     action = \"<div style='font-size:16px'>\";
                     action += \"<a class='btn-view' href='#' data-id='\" + row.fin_ticket_id + \"'><i style='font-size:16px;color:lime' class='fa fa-bars'></i></a>\";
@@ -113,8 +114,8 @@ class ticket extends MY_Controller
         $this->openForm("EDIT", $fin_ticket_id);
     }
 
-    public function view($fin_ticket_id){
-        $this->openForm("VIEW", $fin_ticket_id);
+    public function view($finTicketId){
+        $this->openForm("VIEW", $finTicketId);
     }
 
     public function ajx_add_save()
@@ -336,6 +337,5 @@ class ticket extends MY_Controller
         $this->Cell(30, 10, 'Percobaan Header Dan Footer With Page Number', 0, 0, 'C');
         $this->Cell(0, 10, 'Halaman ' . $this->PageNo() . ' dari {nb}', 0, 0, 'R');
     }
-
 
 }

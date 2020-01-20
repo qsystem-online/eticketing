@@ -59,7 +59,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                         <div class="form-group">
                             <label for="select-ticketType" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
-                            <div class="col-xs-6 col-md-4">
+                            <div class="col-xs-6 col-md-3">
                                 <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id">
                                     <?php
                                         $tickettypeList = $this->tickettype_model->get_data_ticketType();
@@ -71,7 +71,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div id="fin_ticket_type_id_err" class="text-danger"></div>
                             </div>
                         
-                            <label for="select_serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
+                            <label for="select_serviceLevel" class="col-xs-6 col-md-3 control-label"><?=lang("Service Level")?></label>
                             <div class="col-xs-6 col-md-4 personal-info">
                                 <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id">
                                     <?php
@@ -98,8 +98,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <!-- /.input group -->
                             </div>
 
-                            <label for="fdt_acceptance_expiry_datetime" class="col-xs-6 col-md-4 control-label"><?=lang("Acceptance Expiry Datetime")?></label>
-                            <div class="col-xs-6 col-md-3">
+                            <label for="fdt_acceptance_expiry_datetime" class="col-xs-6 col-md-3 control-label"><?=lang("Acceptance Expiry Datetime")?></label>
+                            <div class="col-xs-6 col-md-4">
                                 <div class="input-group date">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
@@ -112,17 +112,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         
                         <div class="form-group">
                             <label for="fdt_deadline_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Deadline Datetime")?></label>
-                            <!--<div class="col-xs-6 col-md-3">
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_datetime" name="fdt_deadline_datetime"/>
-                                </div>
-                                <div id="fdt_deadline_datetime_err" class="text-danger"></div>
-                            </div>-->
- 
-                            <!--<label for="fdt_deadline_extended_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Deadline Datetime")?></label>-->
                             <div class="col-xs-6 col-md-3">
                                 <div class="input-group date">
                                     <div class="input-group-addon">
@@ -132,40 +121,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 </div>
                                 <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="select-users" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
-                            <div class="col-xs-6 col-md-4">
-                                <select id="select-users" class="form-control select2" name="fin_issued_by_user_id">
-                                    <?php
-                                        $active_user = $this->aauth->get_user_id();
-                                        $usersList = $this->users_model->getAllList();
-                                        foreach ($usersList as $users) {
-                                            $isActive = ($users->fin_user_id == $active_user) ? "selected" : "";
-                                            echo "<option value=" . $users->fin_user_id . " $isActive >" . $users->fst_username . "</option>";
-                                        }
-                                    ?>
-                                </select>
-                                <div id="fin_issued_by_user_id_err" class="text-danger"></div>
-                            </div>
-
-                            <label for="select-toUser" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
-                            <div class="col-xs-6 col-md-4">
-                                <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
-                                    <?php
-                                        $touserList = $this->users_model->getAllList();
-                                        foreach ($touserList as $toUser){
-                                            echo "<option value='$toUser->fin_user_id'>$toUser->fst_username</option>";
-                                        }
-                                    ?>
-                                </select>
-                                <div id="fin_issued_to_user_id_err" class="text-danger"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Status")?></label>
+                            <label for="fst_status" class="col-xs-6 col-md-3 control-label"><?=lang("Status")?></label>
                             <div class="col-xs-6 col-md-4">
                                 <select id="select-status" class="form-control select2" name="fst_status">
                                     <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
@@ -180,6 +137,53 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 </select>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="select-users" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
+                            <div class="col-xs-6 col-md-3">
+                                <select id="select-users" class="form-control select2" name="fin_issued_by_user_id">
+                                    <?php
+                                        $active_user = $this->aauth->get_user_id();
+                                        $usersList = $this->users_model->getAllList();
+                                        foreach ($usersList as $users) {
+                                            $isActive = ($users->fin_user_id == $active_user) ? "selected" : "";
+                                            echo "<option value=" . $users->fin_user_id . " $isActive >" . $users->fst_username . "</option>";
+                                        }
+                                    ?>
+                                </select>
+                                <div id="fin_issued_by_user_id_err" class="text-danger"></div>
+                            </div>
+
+                            <label for="select-toUser" class="col-xs-6 col-md-3 control-label"><?=lang("Issued To")?></label>
+                            <div class="col-xs-6 col-md-4">
+                                <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
+                                    <?php
+                                        $touserList = $this->users_model->getAllList();
+                                        foreach ($touserList as $toUser){
+                                            echo "<option value='$toUser->fin_user_id'>$toUser->fst_username</option>";
+                                        }
+                                    ?>
+                                </select>
+                                <div id="fin_issued_to_user_id_err" class="text-danger"></div>
+                            </div>
+                        </div>
+
+                        <!--<div class="form-group">
+                            <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Status")?></label>
+                            <div class="col-xs-6 col-md-4">
+                                <select id="select-status" class="form-control select2" name="fst_status">
+                                    <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
+                                    <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
+                                    <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
+                                    <option valeu="NEED_REVISION"><?=lang("NEED REVISION")?></option>
+                                    <option valeu="COMPLETED"><?=lang("COMPLETED")?></option>
+                                    <option valeu="CLOSED"><?=lang("CLOSED")?></option>
+                                    <option valeu="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
+                                    <option valeu="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
+                                    <option valeu="VOID"><?=lang("VOID")?></option>
+                                </select>
+                            </div>
+                        </div> -->
 
                         <div class="form-group">
                             <label for="fst_memo" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
@@ -200,7 +204,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
 <script type="text/javascript">
     $(function(){
-        <?php if($mode == "EDIT"){?>
+
+        <?php if($mode == "VIEW"){?>
             init_form($("#fin_ticket_id").val());
         <?php } ?>
 
@@ -328,6 +333,19 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             }
         });
     }
+
+    /*function showTransaction(element, isList){
+        //alert("Show");
+        if (isList){
+            t = $('#tblList').DataTable();
+        }
+
+        var trRow = element.parents('tr');
+        data = t.row(trRow).data();
+
+        url = "<?= site_url() ?>tr/ticket/viewDetail/" + data.fin_ticket_id;
+        window.open(url);
+    }*/
 </script>
 
 <!-- Select2 -->

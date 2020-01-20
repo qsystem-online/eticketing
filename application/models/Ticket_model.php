@@ -78,8 +78,8 @@ class Ticket_model extends MY_MODEL {
         return $max_tr_no;
     }
 
-    public function show_ticket($fin_ticket_id){
+    /*public function show_ticket($fin_ticket_id){
         redirect(site_url()."tr/ticket/view/$fin_ticket_id", 'refresh');
-    }
+    }*/
 
 }
