@@ -87,9 +87,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         </div>
 
                         <div class="form-group">
-                            <label for="fbl_need_approval" class="col-xs-6 col-md-2 control-label"><?=lang("Need Approval")?></label>
-                            <div class="col-xs-6 col-md-2">
-                                <label class="checkbox-inline"><input id="fbl_need_approval" name="fbl_need_approval" type="checkbox" value="1"><?=lang("Need Approval")?></label>
+                            <div class="col-xs-6 col md-2 col-xs-offset-6 col-md-offset-2">
+                            <label class="checkbox-inline"><input id="fbl_need_approval" type="checkbox" name="fbl_need_approval" value="1"><?=lang("Need Approval")?></label></br>
+                                <div id="fbl_need_approval_err" class="text-danger" style="padding-left:200px"></div>
                             </div>
                         </div>
                     </div>

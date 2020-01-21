@@ -28,7 +28,8 @@ class ticket extends MY_Controller
         $this->list['pKey'] = "id";
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticket/fetch_list_data';
         $this->list['delete_ajax_url'] = site_url() . 'tr/ticket/delete/';
-        $this->list['edit_ajax_url'] = site_url() . 'tr/ticket/edit/';
+        $this->list['edit_ajax_url'] = site_url() . 'tr/ticket/view/';
+        //$this->list['view_ajax_url'] = site_url() . 'tr/ticket/view/';
         $this->list['arrSearch'] = [
             'fin_ticket_id' => 'Ticket ID',
             'fst_ticket_no' => 'Ticket No.'
@@ -41,11 +42,17 @@ class ticket extends MY_Controller
         ];
         $this->list['columns'] = [
             ['title' => 'Ticket ID.', 'width' => '10%', 'data' => 'fin_ticket_id'],
-            ['title' => 'Ticket No.', 'width' => '20%', 'data' => 'fst_ticket_no'],
+            ['title' => 'Ticket No.', 'width' => '15%', 'data' => 'fst_ticket_no'],
             ['title' => 'Ticket Datetime', 'width' => '15%', 'data' => 'fdt_ticket_datetime'],
-            ['title' => 'Deadline Datetime', 'width' => '15%', 'data' => 'fdt_deadline_datetime'],
-            ['title' => 'Memo', 'width' => '30%', 'data' => 'fst_memo'],
-            ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center']
+            ['title' => 'Memo', 'width' => '50%', 'data' => 'fst_memo'],
+            ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center',
+                'render'=>"function(data,type,row){
+                    action = \"<div style='font-size:16px'>\";
+                    action += \"<a class='btn-edit' href='#' data-id='\" + row.fin_ticket_id + \"'><i style='font-size:16px;color:lime' class='fa fa-bars'></i></a>\";
+					action += \"</div>\";
+					return action;
+                }",
+            ]
         ];
         $main_header = $this->parser->parse('inc/main_header', [], true);
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
@@ -71,14 +78,14 @@ class ticket extends MY_Controller
         $main_header = $this->parser->parse('inc/main_header', [], true);
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $data["mode"] = $mode;
-        $data["title"] = $mode == "ADD" ? "Add Ticket" : "Update Ticket";
+        $data["title"] = $mode == "ADD" ? "Add Ticket" : "View Ticket";
         // tambah ini
         if ($mode == 'ADD'){
             $data["fin_ticket_id"] = 0;
             $data["fst_ticket_no"] = $this->ticket_model->GenerateTicketNo();
-        }else if ($mode == "EDIT"){
+        /*}else if ($mode == "EDIT"){
             $data["fin_ticket_id"] = $fin_ticket_id;
-            $data["fst_ticket_no"] = "";
+            $data["fst_ticket_no"] = "";*/
         }else if ($mode == "VIEW"){
             $data["fin_ticket_id"] = $fin_ticket_id;
             $data["fst_ticket_no"] = "";
@@ -101,13 +108,13 @@ class ticket extends MY_Controller
         $this->openForm("ADD", 0);
     }
 
-    public function Edit($fin_ticket_id)
+    /*public function Edit($fin_ticket_id)
     {
         $this->openForm("EDIT", $fin_ticket_id);
-    }
+    }*/
 
-    public function view($fin_ticket_id){
-        $this->openForm("VIEW", $fin_ticket_id);
+    public function view($finTicketId){
+        $this->openForm("VIEW", $finTicketId);
     }
 
     public function ajx_add_save()
@@ -140,6 +147,7 @@ class ticket extends MY_Controller
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
+            "fbl_void_view" => ($this->input->post("fbl_void_view") == null) ? 0 : 1,
             "fst_active" => 'A'
         ];
 
@@ -214,6 +222,7 @@ class ticket extends MY_Controller
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
+            "fbl_void_view" => ($this->input->post("fbl_void_view") == null) ? 0 : 1,
             "fst_active" => 'A'
         ];
 
@@ -252,12 +261,13 @@ class ticket extends MY_Controller
         $this->load->library("datatables");
         $this->datatables->setTableName("trticket");
 
-        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fdt_deadline_datetime,fst_memo,'action' as action";
+        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fst_memo,'action' as action";
         $this->datatables->setSelectFields($selectFields);
 
         $Fields = $this->input->get('optionSearch');
         $searchFields = [$Fields];
         $this->datatables->setSearchFields($searchFields);
+        $this->datatables->activeCondition = "fst_active !='D'";
         
         // Format Data
         $datasources = $this->datatables->getData();
@@ -266,7 +276,7 @@ class ticket extends MY_Controller
         foreach ($arrData as $data) {
             //action
             $data["action"]    = "<div style='font-size:16px'>
-					<a class='btn-edit' href='#' data-id='" . $data["fin_ticket_id"] . "'><i class='fa fa-pencil'></i></a>
+					<a class='btn-edit' href='#' data-id='" . $data["fin_ticket_id"] . "'><i style='font-size:16px;color:lime class='fa fa-bars'></i></a>
 				</div>";
 
             $arrDataFormated[] = $data;
@@ -328,4 +338,10 @@ class ticket extends MY_Controller
         $this->Cell(30, 10, 'Percobaan Header Dan Footer With Page Number', 0, 0, 'C');
         $this->Cell(0, 10, 'Halaman ' . $this->PageNo() . ' dari {nb}', 0, 0, 'R');
     }
+
+    /*public function viewDetail($fin_ticket_id){
+        $this->load->model('ticket_model');
+        $this->ticket_model->showTransaction($fin_ticket_id);
+    }*/
+
 }

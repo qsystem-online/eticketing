@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <section class="content">
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-xs-12 col-md-12">
 			<div class="box box-info">
 				<div class="box-header with-border">
 				<h3 class="box-title"><?=$list_name?></h3>

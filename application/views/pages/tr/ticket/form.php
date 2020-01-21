@@ -35,6 +35,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     <div class="btn-group btn-group-sm pull-right">
                         <a id="btnNew" class="btn btn-primary" href="#" title="<?=lang("Tambah Baru")?>"><i class="fa fa-plus" aria-hidden="true"></i></a>
                         <a id="btnSubmitAjax" class="btn btn-primary" href="#" title="<?=lang("Simpan")?>"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
+                        <a id="btnDelete" class="btn btn-primary" href="#" title="<?=lang("Void")?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
                         <a id="btnList" class="btn btn-primary" href="#" title="<?=lang("Daftar Transaksi")?>"><i class="fa fa-list" aria-hidden="true"></i></a>
                     </div>
                     <?php } ?>
@@ -97,8 +98,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <!-- /.input group -->
                             </div>
 
-                            <label for="fdt_acceptance_expiry_datetime" class="col-xs-6 col-md-4 control-label"><?=lang("Acceptance Expiry Datetime")?></label>
-                            <div class="col-xs-6 col-md-3">
+                            <label for="fdt_acceptance_expiry_datetime" class="col-xs-6 col-md-3 control-label"><?=lang("Acceptance Exp. Datetime")?></label>
+                            <div class="col-xs-6 col-md-4">
                                 <div class="input-group date">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
@@ -116,20 +117,25 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_datetime" name="fdt_deadline_datetime"/>
-                                </div>
-                                <div id="fdt_deadline_datetime_err" class="text-danger"></div>
-                            </div>
- 
-                            <label for="fdt_deadline_extended_datetime" class="col-xs-6 col-md-4 control-label"><?=lang("Deadline Extended Datetime")?></label>
-                            <div class="col-xs-6 col-md-3">
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
                                     <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime"/>
                                 </div>
                                 <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
+                            </div>
+
+                            <label for="fst_status" class="col-xs-6 col-md-3 control-label"><?=lang("Status")?></label>
+                            <div class="col-xs-6 col-md-4">
+                                <select id="select-status" class="form-control select2" name="fst_status">
+                                    <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
+                                    <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
+                                    <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
+                                    <option value="NEED_REVISION"><?=lang("NEED REVISION")?></option>
+                                    <option value="COMPLETED"><?=lang("COMPLETED")?></option>
+                                    <option value="COMPLETION_REVISED"><?=lang("COMPLETION REVISED")?></option>
+                                    <option value="CLOSED"><?=lang("CLOSED")?></option>
+                                    <option value="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
+                                    <option value="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
+                                    <option value="VOID"><?=lang("VOID")?></option>
+                                </select>
                             </div>
                         </div>
 
@@ -153,7 +159,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <div class="col-xs-6 col-md-4">
                                 <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
                                     <?php
-                                        $touserList = $this->users_model->getAllList();
+                                        $touserList = $this->users_model->getToUserList();
                                         foreach ($touserList as $toUser){
                                             echo "<option value='$toUser->fin_user_id'>$toUser->fst_username</option>";
                                         }
@@ -164,26 +170,16 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         </div>
 
                         <div class="form-group">
-                            <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Status")?></label>
-                            <div class="col-xs-6 col-md-4">
-                                <select id="select-status" class="form-control select2" name="fst_status">
-                                    <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
-                                    <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
-                                    <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
-                                    <option valeu="NEED_REVISION"><?=lang("NEED REVISION")?></option>
-                                    <option valeu="COMPLETED"><?=lang("COMPLETED")?></option>
-                                    <option valeu="CLOSED"><?=lang("CLOSED")?></option>
-                                    <option valeu="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
-                                    <option valeu="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
-                                    <option valeu="VOID"><?=lang("VOID")?></option>
-                                </select>
+                            <label for="fst_memo" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
+                            <div class="col-xs-6 col-md-10">
+                                <textarea rows="4" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo"></textarea>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="fst_memo" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
-                            <div class="col-xs-6 col-md-10">
-                                <textarea rows="4" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo"></textarea>
+                            <div class="col-xs-6 col md-2 col-xs-offset-6 col-md-offset-2">
+                                <label class="checkbox-inline"><input id="fbl_void_view" type="checkbox" name="fbl_void_view" value="1"><?=lang("Void View")?></label></br>
+                                <div id="fbl_void_view_err" class="text-danger" style="padding-left:200px"></div>
                             </div>
                         </div>
                     </div>
@@ -199,7 +195,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
 <script type="text/javascript">
     $(function(){
-        <?php if($mode == "EDIT"){?>
+
+        <?php if($mode == "VIEW"){?>
             init_form($("#fin_ticket_id").val());
         <?php } ?>
 
@@ -242,7 +239,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     }
 
                     if (resp.status == "VALIDATION_FORM_FAILED"){
-                        //Show Error
+                        //Show Error\\
                         errors = resp.data;
                         for (key in errors) {
                             $("#" + key + "_err").html(errors[key]);
@@ -251,12 +248,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         data = resp.data;
                         $("#fin_ticket_id").val(data.insert_id);
 
-                        //Clear all previous error
+                        //Clear all previous error\\
                         $(".text-danger").html("");
 
-                        //Change to Edit Mode
-                        $("#frm-mode").val("EDIT"); //ADD|EDIT
+                        //Change to Edit Mode\\
+                        $("#frm-mode").val("VIEW"); //ADD|EDIT|VIEW\\
                         $('#fst_ticket_no').prop('readonly', true);
+
                     }
                 },
                 error: function (e) {
@@ -275,6 +273,47 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         $("#btnList").click(function(e){
             e.preventDefault();
             window.location.replace("<?=site_url()?>tr/ticket/lizt");
+        });
+
+        $("#btnDelete").confirmation({
+            title:"<?=lang("Hapus data ini ?")?>",
+            rootSelector: '#btnDelete',
+            placement: 'left',
+        });
+        $("#btnDelete").click(function(e){
+            e.preventDefault();
+            blockUIOnAjaxRequest("<h5>Deleting ....</h5>");
+            $.ajax({
+                url:"<?= site_url() ?>tr/ticket/delete/" + $("#fin_ticket_id").val(),
+            }).done(function(resp){
+                //consoleLog(resp):
+                $.unblockUI();
+                if (resp.message != "") {
+                    $.alert({
+                        title: 'Message',
+                        content: resp.message,
+                        buttons: {
+                            OK : function() {
+                                if (resp.status == "SUCCESS") {
+                                    window.location.href = "<?=site_url() ?>tr/ticket/lizt";
+                                    return;
+                                }
+                            },
+                        }
+                    });
+                }
+
+                if (resp.status == "SUCCESS") {
+                    data = resp.data;
+                    $("#fin_ticket_id").val(data.insert_id);
+
+                    //Clear all previous error
+                    $(".text-danger").html("");
+                    //Change to Edit Mode
+                    $("#frm-mode").val("VIEW"); //ADD|EDIT|VIEW\\
+                    $('#fst_ticket_no').prop('readonly', true);
+                }
+            });
         });
 
         $("#fdt_ticket_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s")?>")).datetimepicker("update");
@@ -307,19 +346,18 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
                 $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
-                $("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
-                $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
-                $("#fdt_ticket_expiry_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_expiry_extended_datetime));
+                //$("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
+                //$("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
 
                 var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, resp.ms_ticket.fin_ticket_type_id, true, true);
                 $('#select-ticketType').append(newOption).trigger('change');
                 
-                var newOption = new Option(resp.ms_ticket.fst_service_level_name, resp.ms_ticket.fin_service_level_id, true, true);
+                var newOption = new Option(resp.ms_ticket.fst_service_level_name, true);
                 $('#select-serviceLevel').append(newOption).trigger('change');
 
-                var newOption = new Option(resp.ms_ticket.fin_issued_by_user_id, true);
+                var newOption = new Option(resp.ms_ticket.useractive, true);
                 $('#select-users').append(newOption).trigger('change');
-                var newOption = new Option(resp.ms_ticket.fin_issued_to_user_id, true);
+                var newOption = new Option(resp.ms_ticket.fst_username, resp.ms_ticket.fin_user_id, true, true);
                 $('#select-toUser').append(newOption).trigger('change');
 
             },
@@ -330,6 +368,17 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             }
         });
     }
+
+    /*function showTransaction(element,isList){
+        //alert("Show");
+        t = $('#tblList').DataTable();
+        var trRow = element.parents('tr');
+        data = t.row(trRow).data();
+
+        url = "<?= site_url() ?>tr/ticket/viewDetail/" + data.fin_ticket_id;
+        window.open(url);
+    }*/
+
 </script>
 
 <!-- Select2 -->
