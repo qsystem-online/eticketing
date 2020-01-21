@@ -79,7 +79,7 @@ class Ticketstatus_model extends MY_MODEL {
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id,c.fin_level FROM trticket a 
             INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id
             INNER JOIN usersgroup c ON b.fin_group_id = c.fin_group_id
-            WHERE a.fst_status = 'NEED_APPROVAL'AND b.fin_department_id =".$deptActive." AND =?";
+            WHERE a.fst_status = 'NEED_APPROVAL'AND b.fin_department_id =".$deptActive." AND c.fin_level =?";
         $qr = $this->db->query($ssql,[$levelActive]);
         //echo $this->db->last_query();
         return $qr->result_array();
