@@ -20,8 +20,15 @@ class Ticketstatus_model extends MY_MODEL {
         $qr = $this->db->query($ssql,[$fin_ticket_id]);
         $rwTicketstatus = $qr->row();
 
+        $ssql = "select a.*,b.fst_username from trticket_log a
+        left join users b on a.fin_status_by_user_id = b.fin_user_id
+        where a.fin_ticket_id = ? order by a.fin_rec_id desc";
+        $qr = $this->db->query($ssql, [$fin_ticket_id]);
+        $rwTicketlog = $qr->result();
+
         $data = [
-            "ms_ticketstatus" => $rwTicketstatus
+            "ms_ticketstatus" => $rwTicketstatus,
+            "ms_ticketlog" => $rwTicketlog
         ];
 
         return $data;
@@ -65,9 +72,16 @@ class Ticketstatus_model extends MY_MODEL {
 
     public function get_NeeddApproval(){
         $user = $this->aauth->user();
-        $ssql = "select * from trticket 
-            where fst_status = 'NEED_APPROVAL' and fin_issued_by_user_id =? ";
-        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        $deptActive = $user->fin_department_id;
+        $levelActive = intval($user->fin_level) +1;
+        $levelActive = strval($levelActive);
+
+        $ssql = "SELECT a.*,b.fin_user_id,b.fin_department_id,c.fin_level FROM trticket a 
+            INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id
+            INNER JOIN usersgroup c ON b.fin_group_id = c.fin_group_id
+            WHERE a.fst_status = 'NEED_APPROVAL'AND b.fin_department_id =".$deptActive." AND c.fin_level =?";
+        $qr = $this->db->query($ssql,[$levelActive]);
+        //echo $this->db->last_query();
         return $qr->result_array();
 
     }

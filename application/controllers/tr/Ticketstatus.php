@@ -43,7 +43,9 @@ class Ticketstatus extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
         $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = "";
         $control_sidebar = null;
+        $this->data['CONTROL_SIDEBAR']= null;
         $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
         $this->data['MAIN_HEADER'] = $main_header;
         $this->data['MAIN_SIDEBAR'] = $main_sidebar;
@@ -76,7 +78,9 @@ class Ticketstatus extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
         $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = "";
         $control_sidebar = null;
+        $this->data['CONTROL_SIDEBAR']= null;
         $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
         $this->data['MAIN_HEADER'] = $main_header;
         $this->data['MAIN_SIDEBAR'] = $main_sidebar;
@@ -109,7 +113,9 @@ class Ticketstatus extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
         $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = "";
         $control_sidebar = null;
+        $this->data['CONTROL_SIDEBAR']= null;
         $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
         $this->data['MAIN_HEADER'] = $main_header;
         $this->data['MAIN_SIDEBAR'] = $main_sidebar;
@@ -142,7 +148,9 @@ class Ticketstatus extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
         $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = "";
         $control_sidebar = null;
+        $this->data['CONTROL_SIDEBAR']= null;
         $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
         $this->data['MAIN_HEADER'] = $main_header;
         $this->data['MAIN_SIDEBAR'] = $main_sidebar;
@@ -175,7 +183,9 @@ class Ticketstatus extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
         $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = "";
         $control_sidebar = null;
+        $this->data['CONTROL_SIDEBAR']= null;
         $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
         $this->data['MAIN_HEADER'] = $main_header;
         $this->data['MAIN_SIDEBAR'] = $main_sidebar;
@@ -208,7 +218,9 @@ class Ticketstatus extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
         $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = "";
         $control_sidebar = null;
+        $this->data['CONTROL_SIDEBAR']= null;
         $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
         $this->data['MAIN_HEADER'] = $main_header;
         $this->data['MAIN_SIDEBAR'] = $main_sidebar;
@@ -241,7 +253,9 @@ class Ticketstatus extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
         $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = "";
         $control_sidebar = null;
+        $this->data['CONTROL_SIDEBAR']= null;
         $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
         $this->data['MAIN_HEADER'] = $main_header;
         $this->data['MAIN_SIDEBAR'] = $main_sidebar;
@@ -274,7 +288,9 @@ class Ticketstatus extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
         $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = "";
         $control_sidebar = null;
+        $this->data['CONTROL_SIDEBAR']= null;
         $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
         $this->data['MAIN_HEADER'] = $main_header;
         $this->data['MAIN_SIDEBAR'] = $main_sidebar;
@@ -307,7 +323,9 @@ class Ticketstatus extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
         $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = "";
         $control_sidebar = null;
+        $this->data['CONTROL_SIDEBAR']= null;
         $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
         $this->data['MAIN_HEADER'] = $main_header;
         $this->data['MAIN_SIDEBAR'] = $main_sidebar;
@@ -340,7 +358,9 @@ class Ticketstatus extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
         $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = "";
         $control_sidebar = null;
+        $this->data['CONTROL_SIDEBAR']= null;
         $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
         $this->data['MAIN_HEADER'] = $main_header;
         $this->data['MAIN_SIDEBAR'] = $main_sidebar;
@@ -455,8 +475,8 @@ class Ticketstatus extends MY_Controller
 
         $data = [
             "fin_ticket_id" => $fin_ticket_id,
-            "fin_ticket_type_id" => $this->input->post("fin_ticket_type_id"),
-            "fin_service_level_id" => $this->input->post("fin_service_level_id"),
+            "fin_update_service_level_id" => $this->input->post("fin_service_level_id"),
+            "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_update_deadline_extended_datetime")),
             "fst_status" => $this->input->post("fst_update_status"),
             "fst_active" => 'A'
         ];
@@ -476,12 +496,13 @@ class Ticketstatus extends MY_Controller
 
         // Ticket Log
         $this->load->model("ticketlog_model");
+        $user_status = $this->aauth->get_user_id();
         $data = [
             "fin_ticket_id" => $fin_ticket_id,
             "fdt_status_datetime" => date("Y-m-d H:i:s"),
             "fst_status" => $this->input->post("fst_update_status"),
-            "fst_status_memo" => $this->input->post("fst_memo"),
-            "fin_status_by_user_id" => $this->input->post("fin_issued_by_user_id")
+            "fst_status_memo" => $this->input->post("fst_memo_update"),
+            "fin_status_by_user_id" => $user_status
         ];
         $insertId = $this->ticketlog_model->insert($data);
 

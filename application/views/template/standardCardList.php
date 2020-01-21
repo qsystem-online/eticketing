@@ -3,6 +3,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
 <!-- <link rel="stylesheet" href="<?=base_url()?>bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css"> -->
 <link rel="stylesheet" href="<?=COMPONENT_URL?>bower_components/datatables.net/datatables.min.css">
+<style type="text/css">
+    .border-0{
+        border: 0px;
+    }
+    td{
+        padding: 2px; !important
+    }
+    .form-group{
+		margin-bottom:10px;
+	}
+</style>
 <style>
 * {
   box-sizing: border-box;
@@ -12,12 +23,12 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Float four columns side by side */
+/* Float four columns side by side 
 .column {
   float: left;
   width: 25%;
   padding: 0 10px;
-}
+}*/
 
 /* Remove extra left and right margins, due to padding */
 .row {margin: 0 -5px;}
@@ -29,21 +40,21 @@ body {
   clear: both;
 }
 
-/* Responsive columns */
+/* Responsive columns 
 @media screen and (max-width: 600px) {
   .column {
     width: 100%;
     display: block;
     margin-bottom: 20px;
   }
-}
+}*/
 
 /* Style the counter cards */
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   padding: 16px;
-  text-align: center;
   background-color: #f1f1f1;
+  margin-bottom: 20px;
 }
 .card button {
   border: none;
@@ -59,6 +70,20 @@ body {
 
 .card button:hover {
   opacity: 0.7;
+}
+
+.card-title {
+  font-weight:bold;
+  text-align: center;
+}
+.sep {
+  height: 15px;
+  
+}
+
+.list-group {
+    font-style: Italic;
+    height: 100%;
 }
 </style>
 
@@ -120,10 +145,35 @@ body {
       <?php foreach($cards as $card): ?>
           <div class="column">
               <div class="card">
-              <h3 class="card-id"><?php echo $card['fst_ticket_no']; ?></h3>
-              <p><?php echo $card['fdt_ticket_datetime']; ?></p>
-              <p><?php echo Substr($card['fst_memo'],0,30); ?></p>
-              <p><button data-id='<?= $card["fin_ticket_id"]?>'>Detail</button></p>
+                <div class="card-body">
+                  <h5 class="card-title"><?php echo $card['fst_ticket_no']; ?></h5>
+                        <!--<h3 class="card-id"><php echo $card['fst_ticket_no']; ?></h3>-->
+                  <ul class="list-group">
+                    <li class="list-group-item list-group-item-success" style="padding-top: 10px;padding-bottom: 30px;">
+                        <!--<p><php echo $card['fdt_ticket_datetime']; ?></p>-->
+                    <div class ="col-md-6"> <i class="fa fa-user"></i> <?php echo $card['fst_ticket_no']; ?></div>
+                      <span class="badge badge-primary badge-pill">
+                        <div class= "col-md-6"><?php echo $card['fdt_ticket_datetime']; ?> <i class="fa fa-calendar"></i></div>
+                      </span>
+                    </li>
+                    <li class="list-group-item list-group-item-success"><i class="fa fa-sticky-note-o"style="font-size:20px;"> --</i><?php echo $card['fst_memo']; ?></li>
+                  </ul>
+                  </div>
+                  <!--<a href="#memo" class="btn btn-info" data-toggle="collapse">Read Memo</a>
+                  <div id="memo" class="collapse">
+                    <php
+                    $cutmemo = Substr($card['fst_memo'],0,200);
+                    $spasi = strrpos($cutmemo, ' ');
+                    $cardmemo =$spasi? Substr($cutmemo,0,$spasi) : Substr($cutmemo,0);
+                    $cardmemo .='.....';
+                    echo $cardmemo; ?></p>
+                  </div>
+                  <p><button data-id='<= $card["fin_ticket_id"]?>'>Detail</button></p>-->
+                  <div class="card-footer">
+                    <button type="button" class="detailbutton" data-id='<?= $card["fin_ticket_id"]?>'>Detail</button>
+                    <!--<p><button class="detailbutton" data-id='<?= $card["fin_ticket_id"]?>'>Detail</button></p>-->
+                  </div>
+                </div>
               </div>
           </div>
       <?php endforeach; ?>
@@ -140,7 +190,7 @@ $(document).ready(function() {
         });
     });
 
-    $("#recipe-card button").on("click",function(event){
+    $(".detailbutton").on("click",function(event){
       id = $(this).data("id");
       window.location.href = "<?=$edit_ajax_url?>" + id;
     });

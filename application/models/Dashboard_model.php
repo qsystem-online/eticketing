@@ -5,10 +5,16 @@ class Dashboard_model extends CI_Model {
     //Get Ticket Status List
     public function getTtlNeedApproval(){
         $user = $this->aauth->user();
+        $deptActive = $user->fin_department_id;
+        $levelActive = intval($user->fin_level) +1;
+        $levelActive = strval($levelActive);
 
-        $ssql = "select count(*) as ttl_need_approval from trticket 
-            where fst_status = 'NEED_APPROVAL' and fin_issued_by_user_id =? ";
-        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        $ssql ="select count(*) as ttl_need_approval from (SELECT a.*,b.fin_user_id,b.fin_department_id,c.fin_level FROM trticket a 
+        INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id
+        INNER JOIN usersgroup c ON b.fin_group_id = c.fin_group_id
+        WHERE a.fst_status = 'NEED_APPROVAL'AND b.fin_department_id =".$deptActive." AND c.fin_level =?)aa";
+        $qr = $this->db->query($ssql,[$levelActive]);
+        //echo $this->db->last_query();
         $rw = $qr->row();
         return $rw->ttl_need_approval;
 

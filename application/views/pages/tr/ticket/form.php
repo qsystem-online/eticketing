@@ -138,7 +138,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <div class="col-xs-6 col-md-4">
                                 <select id="select-users" class="form-control select2" name="fin_issued_by_user_id">
                                     <?php
-                                        $active_user = $this->session->userdata("active_user");
+                                        $active_user = $this->aauth->get_user_id();
                                         $usersList = $this->users_model->getAllList();
                                         foreach ($usersList as $users) {
                                             $isActive = ($users->fin_user_id == $active_user) ? "selected" : "";
@@ -153,7 +153,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <div class="col-xs-6 col-md-4">
                                 <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
                                     <?php
-                                        $touserList = $this->users_model->getToUserList();
+                                        $touserList = $this->users_model->getAllList();
                                         foreach ($touserList as $toUser){
                                             echo "<option value='$toUser->fin_user_id'>$toUser->fst_username</option>";
                                         }
@@ -181,8 +181,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         </div>
 
                         <div class="form-group">
-                            <label for="fst_memo" class="col-md-2 control-label"><?= lang("Memo") ?></label>
-                            <div class="col-md-10">
+                            <label for="fst_memo" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
+                            <div class="col-xs-6 col-md-10">
                                 <textarea rows="4" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo"></textarea>
                             </div>
                         </div>
