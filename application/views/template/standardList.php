@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <section class="content">
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-xs-12 col-md-12">
 			<div class="box box-info">
 				<div class="box-header with-border">
 				<h3 class="box-title"><?=$list_name?></h3>
@@ -150,17 +150,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				id = data.<?=$pKey?>;
 			}
 			window.location.replace("<?=$edit_ajax_url?>" + id);
-		});
-
-		$("#tblList").on("click",".btn-view",function(event){
-			id = $(this).data("<?=$pKey?>");
-			if (typeof id == "undefined") {
-				t = $('#tblList').DataTable();
-				var trRow = $(this).parents('tr');				
-				data = t.row(trRow).data();
-				id = data.<?=$pKey?>;
-			}
-			window.location.replace("<?=$view_ajax_url?>" + id);
 		});
 
 	});

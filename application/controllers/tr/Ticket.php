@@ -28,8 +28,8 @@ class ticket extends MY_Controller
         $this->list['pKey'] = "id";
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticket/fetch_list_data';
         $this->list['delete_ajax_url'] = site_url() . 'tr/ticket/delete/';
-        $this->list['edit_ajax_url'] = site_url() . 'tr/ticket/edit/';
-        $this->list['view_ajax_url'] = site_url() . 'tr/ticket/view/';
+        $this->list['edit_ajax_url'] = site_url() . 'tr/ticket/view/';
+        //$this->list['view_ajax_url'] = site_url() . 'tr/ticket/view/';
         $this->list['arrSearch'] = [
             'fin_ticket_id' => 'Ticket ID',
             'fst_ticket_no' => 'Ticket No.'
@@ -44,12 +44,11 @@ class ticket extends MY_Controller
             ['title' => 'Ticket ID.', 'width' => '10%', 'data' => 'fin_ticket_id'],
             ['title' => 'Ticket No.', 'width' => '15%', 'data' => 'fst_ticket_no'],
             ['title' => 'Ticket Datetime', 'width' => '15%', 'data' => 'fdt_ticket_datetime'],
-            ['title' => 'Deadline Datetime', 'width' => '15%', 'data' => 'fdt_deadline_extended_datetime'],
-            ['title' => 'Memo', 'width' => '35%', 'data' => 'fst_memo'],
+            ['title' => 'Memo', 'width' => '50%', 'data' => 'fst_memo'],
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center',
                 'render'=>"function(data,type,row){
                     action = \"<div style='font-size:16px'>\";
-                    action += \"<a class='btn-view' href='#' data-id='\" + row.fin_ticket_id + \"'><i style='font-size:16px;color:lime' class='fa fa-bars'></i></a>\";
+                    action += \"<a class='btn-edit' href='#' data-id='\" + row.fin_ticket_id + \"'><i style='font-size:16px;color:lime' class='fa fa-bars'></i></a>\";
 					action += \"</div>\";
 					return action;
                 }",
@@ -84,9 +83,9 @@ class ticket extends MY_Controller
         if ($mode == 'ADD'){
             $data["fin_ticket_id"] = 0;
             $data["fst_ticket_no"] = $this->ticket_model->GenerateTicketNo();
-        }else if ($mode == "EDIT"){
+        /*}else if ($mode == "EDIT"){
             $data["fin_ticket_id"] = $fin_ticket_id;
-            $data["fst_ticket_no"] = "";
+            $data["fst_ticket_no"] = "";*/
         }else if ($mode == "VIEW"){
             $data["fin_ticket_id"] = $fin_ticket_id;
             $data["fst_ticket_no"] = "";
@@ -109,10 +108,10 @@ class ticket extends MY_Controller
         $this->openForm("ADD", 0);
     }
 
-    public function Edit($fin_ticket_id)
+    /*public function Edit($fin_ticket_id)
     {
         $this->openForm("EDIT", $fin_ticket_id);
-    }
+    }*/
 
     public function view($finTicketId){
         $this->openForm("VIEW", $finTicketId);
@@ -260,7 +259,7 @@ class ticket extends MY_Controller
         $this->load->library("datatables");
         $this->datatables->setTableName("trticket");
 
-        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fdt_deadline_extended_datetime,fst_memo,'action' as action";
+        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fst_memo,'action' as action";
         $this->datatables->setSelectFields($selectFields);
 
         $Fields = $this->input->get('optionSearch');
@@ -275,7 +274,7 @@ class ticket extends MY_Controller
         foreach ($arrData as $data) {
             //action
             $data["action"]    = "<div style='font-size:16px'>
-					<a class='btn-view' href='#' data-id='" . $data["fin_ticket_id"] . "'><i style='font-size:16px;color:lime class='fa fa-bars'></i></a>
+					<a class='btn-edit' href='#' data-id='" . $data["fin_ticket_id"] . "'><i style='font-size:16px;color:lime class='fa fa-bars'></i></a>
 				</div>";
 
             $arrDataFormated[] = $data;

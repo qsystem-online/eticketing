@@ -169,23 +169,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             </div>
                         </div>
 
-                        <!--<div class="form-group">
-                            <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Status")?></label>
-                            <div class="col-xs-6 col-md-4">
-                                <select id="select-status" class="form-control select2" name="fst_status">
-                                    <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
-                                    <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
-                                    <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
-                                    <option value="NEED_REVISION"><?=lang("NEED REVISION")?></option>
-                                    <option value="COMPLETED"><?=lang("COMPLETED")?></option>
-                                    <option value="CLOSED"><?=lang("CLOSED")?></option>
-                                    <option value="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
-                                    <option value="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
-                                    <option value="VOID"><?=lang("VOID")?></option>
-                                </select>
-                            </div>
-                        </div> -->
-
                         <div class="form-group">
                             <label for="fst_memo" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
                             <div class="col-xs-6 col-md-10">
@@ -283,6 +266,47 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         $("#btnList").click(function(e){
             e.preventDefault();
             window.location.replace("<?=site_url()?>tr/ticket/lizt");
+        });
+
+        $("#btnDelete").confirmation({
+            title:"<?=lang("Hapus data ini ?")?>",
+            rootSelector: '#btnDelete',
+            placement: 'left',
+        });
+        $("#btnDelete").click(function(e){
+            e.preventDefault();
+            blockUIOnAjaxRequest("<h5>Deleting ....</h5>");
+            $.ajax({
+                url:"<?= site_url() ?>tr/ticket/delete/" + $("#fin_ticket_id").val(),
+            }).done(function(resp){
+                //consoleLog(resp):
+                $.unblockUI();
+                if (resp.message != "") {
+                    $.alert({
+                        title: 'Message',
+                        content: resp.message,
+                        buttons: {
+                            OK : function() {
+                                if (resp.status == "SUCCESS") {
+                                    window.location.href = "<?=site_url() ?>tr/ticket/lizt";
+                                    return;
+                                }
+                            },
+                        }
+                    });
+                }
+
+                if (resp.status == "SUCCESS") {
+                    data = resp.data;
+                    $("#fin_ticket_id").val(data.insert_id);
+
+                    //Clear all previous error
+                    $(".text-danger").html("");
+                    //Change to Edit Mode
+                    $("#frm-mode").val("VIEW"); //ADD|EDIT|VIEW\\
+                    $('#fst_ticket_no').prop('readonly', true);
+                }
+            });
         });
 
         $("#fdt_ticket_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s")?>")).datetimepicker("update");
