@@ -40,6 +40,15 @@ class Ticket_model extends MY_MODEL {
             )
         ];
 
+        $rules[] = [
+            'field' => 'fdt_acceptance_expiry_datetime',
+            'label' => 'Acceptance Expiry Datetime',
+            'rules' => 'required',
+            'errors' => array(
+                'required' => '%s tidak boleh kosong'
+            )
+        ];
+
         return $rules;
     }
 

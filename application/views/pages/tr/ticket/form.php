@@ -248,7 +248,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     }
 
                     if (resp.status == "VALIDATION_FORM_FAILED"){
-                        //Show Error
+                        //Show Error\\
                         errors = resp.data;
                         for (key in errors) {
                             $("#" + key + "_err").html(errors[key]);
@@ -257,8 +257,12 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         data = resp.data;
                         $("#fin_ticket_id").val(data.insert_id);
 
-                        //Clear all previous error
+                        //Clear all previous error\\
                         $(".text-danger").html("");
+
+                        //Change to Edit Mode\\
+                        $("#frm-mode").val("VIEW"); //ADD|EDIT|VIEW\\
+                        $('#fst_ticket_no').prop('readonly', true);
 
                     }
                 },
@@ -310,14 +314,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
                 $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
-                $("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
-                $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
-                $("#fdt_ticket_expiry_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_expiry_extended_datetime));
+                //$("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
+                //$("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
 
                 var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, resp.ms_ticket.fin_ticket_type_id, true, true);
                 $('#select-ticketType').append(newOption).trigger('change');
                 
-                var newOption = new Option(resp.ms_ticket.fst_service_level_name, resp.ms_ticket.fin_service_level_id, true, true);
+                var newOption = new Option(resp.ms_ticket.fst_service_level_name - fin_service_level_days, resp.ms_ticket.fin_service_level_id, true, true);
                 $('#select-serviceLevel').append(newOption).trigger('change');
 
                 var newOption = new Option(resp.ms_ticket.fin_issued_by_user_id, true);
@@ -334,18 +337,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         });
     }
 
-    /*function showTransaction(element, isList){
-        //alert("Show");
-        if (isList){
-            t = $('#tblList').DataTable();
-        }
-
-        var trRow = element.parents('tr');
-        data = t.row(trRow).data();
-
-        url = "<?= site_url() ?>tr/ticket/viewDetail/" + data.fin_ticket_id;
-        window.open(url);
-    }*/
 </script>
 
 <!-- Select2 -->

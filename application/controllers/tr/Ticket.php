@@ -44,7 +44,7 @@ class ticket extends MY_Controller
             ['title' => 'Ticket ID.', 'width' => '10%', 'data' => 'fin_ticket_id'],
             ['title' => 'Ticket No.', 'width' => '15%', 'data' => 'fst_ticket_no'],
             ['title' => 'Ticket Datetime', 'width' => '15%', 'data' => 'fdt_ticket_datetime'],
-            ['title' => 'Deadline Datetime', 'width' => '15%', 'data' => 'fdt_deadline_datetime'],
+            ['title' => 'Deadline Datetime', 'width' => '15%', 'data' => 'fdt_deadline_extended_datetime'],
             ['title' => 'Memo', 'width' => '35%', 'data' => 'fst_memo'],
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center',
                 'render'=>"function(data,type,row){
@@ -79,7 +79,7 @@ class ticket extends MY_Controller
         $main_header = $this->parser->parse('inc/main_header', [], true);
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $data["mode"] = $mode;
-        $data["title"] = $mode == "ADD" ? "Add Ticket" : "Update Ticket";
+        $data["title"] = $mode == "ADD" ? "Add Ticket" : "View Ticket";
         // tambah ini
         if ($mode == 'ADD'){
             $data["fin_ticket_id"] = 0;
@@ -260,7 +260,7 @@ class ticket extends MY_Controller
         $this->load->library("datatables");
         $this->datatables->setTableName("trticket");
 
-        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fdt_deadline_datetime,fst_memo,'action' as action";
+        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fdt_deadline_extended_datetime,fst_memo,'action' as action";
         $this->datatables->setSelectFields($selectFields);
 
         $Fields = $this->input->get('optionSearch');
