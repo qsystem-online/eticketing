@@ -59,7 +59,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                         <div class="form-group">
                             <label for="select-ticketType" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
-                            <div class="col-xs-6 col-md-3">
+                            <div class="col-xs-6 col-md-4">
                                 <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id">
                                     <?php
                                         $tickettypeList = $this->tickettype_model->get_data_ticketType();
@@ -71,7 +71,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div id="fin_ticket_type_id_err" class="text-danger"></div>
                             </div>
                         
-                            <label for="select_serviceLevel" class="col-xs-6 col-md-3 control-label"><?=lang("Service Level")?></label>
+                            <label for="select_serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
                             <div class="col-xs-6 col-md-4 personal-info">
                                 <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id">
                                     <?php
@@ -98,7 +98,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <!-- /.input group -->
                             </div>
 
-                            <label for="fdt_acceptance_expiry_datetime" class="col-xs-6 col-md-3 control-label"><?=lang("Acceptance Expiry Datetime")?></label>
+                            <label for="fdt_acceptance_expiry_datetime" class="col-xs-6 col-md-3 control-label"><?=lang("Acceptance Exp. Datetime")?></label>
                             <div class="col-xs-6 col-md-4">
                                 <div class="input-group date">
                                     <div class="input-group-addon">
@@ -128,19 +128,20 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
                                     <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
                                     <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
-                                    <option valeu="NEED_REVISION"><?=lang("NEED REVISION")?></option>
-                                    <option valeu="COMPLETED"><?=lang("COMPLETED")?></option>
-                                    <option valeu="CLOSED"><?=lang("CLOSED")?></option>
-                                    <option valeu="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
-                                    <option valeu="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
-                                    <option valeu="VOID"><?=lang("VOID")?></option>
+                                    <option value="NEED_REVISION"><?=lang("NEED REVISION")?></option>
+                                    <option value="COMPLETED"><?=lang("COMPLETED")?></option>
+                                    <option value="COMPLETION_REVISED"><?=lang("COMPLETION REVISED")?></option>
+                                    <option value="CLOSED"><?=lang("CLOSED")?></option>
+                                    <option value="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
+                                    <option value="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
+                                    <option value="VOID"><?=lang("VOID")?></option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="select-users" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
-                            <div class="col-xs-6 col-md-3">
+                            <div class="col-xs-6 col-md-4">
                                 <select id="select-users" class="form-control select2" name="fin_issued_by_user_id">
                                     <?php
                                         $active_user = $this->aauth->get_user_id();
@@ -154,7 +155,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div id="fin_issued_by_user_id_err" class="text-danger"></div>
                             </div>
 
-                            <label for="select-toUser" class="col-xs-6 col-md-3 control-label"><?=lang("Issued To")?></label>
+                            <label for="select-toUser" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
                             <div class="col-xs-6 col-md-4">
                                 <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
                                     <?php
@@ -175,12 +176,12 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
                                     <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
                                     <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
-                                    <option valeu="NEED_REVISION"><?=lang("NEED REVISION")?></option>
-                                    <option valeu="COMPLETED"><?=lang("COMPLETED")?></option>
-                                    <option valeu="CLOSED"><?=lang("CLOSED")?></option>
-                                    <option valeu="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
-                                    <option valeu="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
-                                    <option valeu="VOID"><?=lang("VOID")?></option>
+                                    <option value="NEED_REVISION"><?=lang("NEED REVISION")?></option>
+                                    <option value="COMPLETED"><?=lang("COMPLETED")?></option>
+                                    <option value="CLOSED"><?=lang("CLOSED")?></option>
+                                    <option value="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
+                                    <option value="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
+                                    <option value="VOID"><?=lang("VOID")?></option>
                                 </select>
                             </div>
                         </div> -->
