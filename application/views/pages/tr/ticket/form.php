@@ -175,6 +175,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <textarea rows="4" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo"></textarea>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-6 col md-2 col-xs-offset-6 col-md-offset-2">
+                                <label class="checkbox-inline"><input id="fbl_void_view" type="checkbox" name="fbl_void_view" value="1"><?=lang("Void View")?></label></br>
+                                <div id="fbl_void_view_err" class="text-danger" style="padding-left:200px"></div>
+                            </div>
+                        </div>
                     </div>
                     <!-- end box body -->
 
@@ -361,6 +368,16 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             }
         });
     }
+
+    /*function showTransaction(element,isList){
+        //alert("Show");
+        t = $('#tblList').DataTable();
+        var trRow = element.parents('tr');
+        data = t.row(trRow).data();
+
+        url = "<?= site_url() ?>tr/ticket/viewDetail/" + data.fin_ticket_id;
+        window.open(url);
+    }*/
 
 </script>
 

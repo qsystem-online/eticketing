@@ -55,32 +55,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <input type="hidden" id="frm-mode" value="<?=$mode?>">
 
                     <div class='form-group'>
-                    <label for="fin_user_id" class="col-xs-6 col-sm-2 control-label"><?=lang("User ID")?> #</label>
-						<div class="col-xs-6 col-sm-10">
+                    <label for="fin_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("User ID")?> #</label>
+						<div class="col-xs-6 col-md-10">
 							<input type="text" class="form-control" id="fin_user_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_user_id" value="<?=$fin_user_id?>" readonly>
 							<div id="fin_user_id_err" class="text-danger"></div>
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="fst_username" class="col-xs-6 col-sm-2 control-label"><?=lang("User Name")?> *</label>
-						<div class="col-xs-6 col-sm-10">
+						<label for="fst_username" class="col-xs-6 col-md-2 control-label"><?=lang("User Name")?> *</label>
+						<div class="col-xs-6 col-md-10">
 							<input type="text" class="form-control" id="fst_username" placeholder="<?=lang("Username")?>" name="fst_username" value="<?= set_value("fst_username") ?>">
 							<div id="fst_username_err" class="text-danger"></div>
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="fst_fullname" class="col-xs-6 col-sm-2 control-label"><?=lang("Full Name")?> *</label>
-						<div class="col-xs-6 col-sm-10">
+						<label for="fst_fullname" class="col-xs-6 col-md-2 control-label"><?=lang("Full Name")?> *</label>
+						<div class="col-xs-6 col-md-10">
 							<input type="text" class="form-control" id="fst_fullname" placeholder="<?=lang("Full Name")?>" name="fst_fullname">
 							<div id="fst_fullname_err" class="text-danger"></div>
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="fst_gender" class="col-xs-6 col-sm-2 control-label"><?=lang("Gender")?></label>
-						<div class="col-xs-6 col-sm-4">
+						<label for="fst_gender" class="col-xs-6 col-md-2 control-label"><?=lang("Gender")?></label>
+						<div class="col-xs-6 col-md-4">
 							<select class="form-control" id="fst_gender" name="fst_gender">
 								<option value='M'><?=lang("Male")?></option>
 								<option value='F'><?=lang("Female")?></option>
@@ -95,8 +95,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
 
 					<div class="form-group">
-						<label for="fdt_birthdate" class="col-xs-6 col-sm-2 control-label"><?=lang("Birth Date")?> *</label>
-						<div class="col-xs-6 col-sm-4">
+						<label for="fdt_birthdate" class="col-xs-6 col-md-2 control-label"><?=lang("Birth Date")?> *</label>
+						<div class="col-xs-6 col-md-4">
 							<div class="input-group date">
 								<div class="input-group-addon">
 									<i class="fa fa-calendar"></i>
@@ -106,8 +106,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<div id="fdt_birthdate_err" class="text-danger"></div>
 						</div>
 
-						<label for="fst_birthplace" class="col-xs-6 col-sm-2 control-label"><?=lang("Birth Place")?></label>
-						<div class="col-xs-6 col-sm-4">
+						<label for="fst_birthplace" class="col-xs-6 col-md-2 control-label"><?=lang("Birth Place")?></label>
+						<div class="col-xs-6 col-md-4">
 							<input type="text" class="form-control text-right" id="fst_birthplace" placeholder="<?=lang("Birth Place")?>" name="fst_birthplace">
 							<div id="fst_birthplace_err" class="text-danger"></div>
 						</div>
@@ -150,20 +150,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
 
 					<div class="form-group">
-						<label for="fst_birthplace" class="col-xs-6 col-sm-2 control-label"></label>
-						<div class="col-xs-6 col-sm-10">
+						<label for="fst_birthplace" class="col-xs-6 col-md-2 control-label"></label>
+						<div class="col-xs-6 col-md-10">
 							<img id="imgAvatar" style="border:1px solid #999;width:128px;" src="<?=site_url()?>assets/app/users/avatar/default.jpg"/>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="fst_birthplace" class="col-xs-6 col-sm-2 control-label"><?=lang("Avatar")?></label>
-						<div class="col-xs-6 col-sm-4">
+						<label for="fst_birthplace" class="col-xs-6 col-md-2 control-label"><?=lang("Avatar")?></label>
+						<div class="col-xs-6 col-md-4">
 							<input type="file" class="form-control" id="fst_avatar"  name="fst_avatar">
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="fbl_admin" class="col-xs-6 col-sm-2 control-label"><?=lang("Admin")?></label>
+						<label for="fbl_admin" class="col-xs-6 col-md-2 control-label"><?=lang("Admin")?></label>
 						<div class="col-xs-6 col-md-2">
 							<label class="checkbox-inline"><input id="fbl_admin" name='fbl_admin' type="checkbox" value="1"><?=lang("Admin")?></label>
 						</div>

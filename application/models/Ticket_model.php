@@ -87,4 +87,19 @@ class Ticket_model extends MY_MODEL {
         return $max_tr_no;
     }
 
+    /*public function showTransaction($fin_ticket_id){
+        $ssql = "select * from " . $this->tableName . " where fin_ticket_id = ?";
+        $qr = $this->db->query($ssql,[$fin_ticket_id]);
+        $rw = $qr->row();
+        
+        if($rw){
+            $this->load->model('ticket_model');
+            $action = $rw->fst_ticket_no;
+
+            if(is_callable(array($this->model, $action))){
+                $this->model->$action($rw->fin_transaction_id);
+            }
+        }
+    }*/
+
 }

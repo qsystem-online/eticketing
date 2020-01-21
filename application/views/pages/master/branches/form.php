@@ -35,16 +35,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <input type="hidden" id="frm-mode" value="<?= $mode ?>">
 
                         <div class='form-group'>
-                            <label for="fin_branch_id" class="col-xs-6 col-sm-2 control-label"><?= lang("Branch ID") ?> #</label>
-                            <div class="col-xs-6 col-sm-10">
+                            <label for="fin_branch_id" class="col-xs-6 col-md-2 control-label"><?= lang("Branch ID") ?> #</label>
+                            <div class="col-xs-6 col-md-10">
                                 <input type="text" class="form-control" id="fin_branch_id" placeholder="<?= lang("(Autonumber)") ?>" name="fin_branch_id" value="<?= $fin_branch_id ?>" readonly>
                                 <div id="fin_branch_id_err" class="text-danger"></div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="fst_branch_name" class="col-xs-6 col-sm-2 control-label"><?= lang("Branch Name") ?> *</label>
-                            <div class="col-xs-6 col-sm-10">
+                            <label for="fst_branch_name" class="col-xs-6 col-md-2 control-label"><?= lang("Branch Name") ?> *</label>
+                            <div class="col-xs-6 col-md-10">
                                 <input type="text" class="form-control" id="fst_branch_name" placeholder="<?= lang("Branch Name") ?>" name="fst_branch_name">
                                 <div id="fst_branch_name_err" class="text-danger"></div>
                             </div>
@@ -97,22 +97,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div id="fst_postalcode_err" class="text-danger"></div>
                             </div>
 
-                            <label for="fst_branch_phone" class="col-xs-6 col-sm-2 control-label"><?= lang("Phone") ?></label>
-                            <div class="col-xs-6 col-sm-4">
+                            <label for="fst_branch_phone" class="col-xs-6 col-md-2 control-label"><?= lang("Phone") ?></label>
+                            <div class="col-xs-6 col-md-4">
                                 <input type="text" class="form-control" id="fst_branch_phone" placeholder="<?= lang("Phone") ?>" name="fst_branch_phone">
                                 <div id="fst_branch_phone_err" class="text-danger"></div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="fst_notes" class="col-xs-6 col-sm-2 control-label"><?= lang("Notes") ?></label>
-                            <div class="col-xs-6 col-sm-10">
+                            <label for="fst_notes" class="col-xs-6 col-md-2 control-label"><?= lang("Notes") ?></label>
+                            <div class="col-xs-6 col-md-10">
                                 <input type="text" class="form-control" id="fst_notes" placeholder="<?= lang("Notes") ?>" name="fst_notes">
                                 <div id="fst_notes_err" class="text-danger"></div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <div class="col-md-2 col-md-offset-2">
+                            <div class="col-xs-6 col-md-2 col-xs-offset-6 col-md-offset-2">
                                 <label class="checkbox-inline"><input id="fbl_is_hq" type="checkbox" name="fbl_is_hq" value="1"><?= lang("HQ") ?></label><br>
                                 <div id="fbl_is_hq_err" class="text-danger" style="padding-left:200px"></div>
                             </div>

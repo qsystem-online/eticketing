@@ -147,6 +147,7 @@ class ticket extends MY_Controller
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
+            "fbl_void_view" => ($this->input->post("fbl_void_view") == null) ? 0 : 1,
             "fst_active" => 'A'
         ];
 
@@ -221,6 +222,7 @@ class ticket extends MY_Controller
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
+            "fbl_void_view" => ($this->input->post("fbl_void_view") == null) ? 0 : 1,
             "fst_active" => 'A'
         ];
 
@@ -336,5 +338,10 @@ class ticket extends MY_Controller
         $this->Cell(30, 10, 'Percobaan Header Dan Footer With Page Number', 0, 0, 'C');
         $this->Cell(0, 10, 'Halaman ' . $this->PageNo() . ' dari {nb}', 0, 0, 'R');
     }
+
+    /*public function viewDetail($fin_ticket_id){
+        $this->load->model('ticket_model');
+        $this->ticket_model->showTransaction($fin_ticket_id);
+    }*/
 
 }
