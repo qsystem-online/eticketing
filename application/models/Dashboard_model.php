@@ -45,7 +45,7 @@ class Dashboard_model extends CI_Model {
         $user = $this->aauth->user();
 
         $ssql = "select count(*) as ttl_need_revision from trticket 
-            where fst_status = 'NEED_REVISION' and fin_issued_by_user_id =? ";
+            where fst_status = 'NEED_REVISION' OR fst_status ='COMPLETION_REVISED' and fin_issued_by_user_id =? ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         $rw = $qr->row();
         return $rw->ttl_need_revision;
@@ -90,7 +90,7 @@ class Dashboard_model extends CI_Model {
         $user = $this->aauth->user();
 
         $ssql = "select count(*) as ttl_need_revision from trticket 
-            where fst_status = 'NEED_REVISION' and fin_issued_to_user_id =? ";
+            where fst_status = 'NEED_REVISION' OR fst_status ='COMPLETION_REVISED' and fin_issued_to_user_id =? ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         $rw = $qr->row();
         return $rw->ttl_need_revision;

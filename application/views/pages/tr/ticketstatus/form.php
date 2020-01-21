@@ -437,7 +437,7 @@ body {
 
                 if (resp.ms_ticketstatus.fst_status == "NEED_APPROVAL"){
                     //$('#fst_update_status').val("NEED_APPROVAL",true).prop(disabled="disabled");
-                    array_of_options = ['APPROVED/OPEN', 'VOID',]
+                    array_of_options = ['APPROVED/OPEN', 'VOID']
                     $.each(array_of_options, function(i, item) {
                         sel_op = ''; 
                         dis_op = ''; 
@@ -452,7 +452,7 @@ body {
 
                 if (resp.ms_ticketstatus.fst_status == "APPROVED/OPEN"){
                     //$('#fst_update_status').val("NEED_APPROVAL",true).prop(disabled="disabled");
-                    array_of_options = ['ACCEPTED', 'NEED_REVISION',]
+                    array_of_options = ['ACCEPTED', 'NEED_REVISION']
                     $.each(array_of_options, function(i, item) {
                         sel_op = ''; 
                         dis_op = ''; 
@@ -467,7 +467,7 @@ body {
                 }
 
                 if (resp.ms_ticketstatus.fst_status == "NEED_REVISION"){
-                    array_of_options = ['ACCEPTED', 'APPROVED/OPEN',]
+                    array_of_options = ['ACCEPTED', 'APPROVED/OPEN']
                     $.each(array_of_options, function(i, item) {
                         sel_op = ''; 
                         dis_op = ''; 
@@ -475,6 +475,21 @@ body {
                     })
                     if(resp.ms_ticketstatus.fin_issued_by_user_id != $userActive){
                         $("#btnSubmitAjax").hide();
+                    }
+                }
+
+                if (resp.ms_ticketstatus.fst_status == "COMPLETION_REVISED"){
+                    array_of_options = ['COMPLETED']
+                    $.each(array_of_options, function(i, item) {
+                        sel_op = ''; 
+                        dis_op = ''; 
+                        $('<option ' + sel_op + ' ' + dis_op + '/>').val(item).html(item).appendTo('#fst_update_status');
+                    })
+                    if(resp.ms_ticketstatus.fin_issued_to_user_id != $userActive){
+                        $("#btnSubmitAjax").hide();
+                    }else{
+                        $("#select_update_serviceLevel").prop("disabled",true);
+                        $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
                     }
                 }
 

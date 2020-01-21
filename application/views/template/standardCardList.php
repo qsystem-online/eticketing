@@ -61,7 +61,7 @@ body {
   outline: 0;
   padding: 12px;
   color: white;
-  background-color: #000;
+  /*background-color: #000;*/
   text-align: center;
   cursor: pointer;
   width: 100%;
@@ -151,7 +151,7 @@ body {
                   <ul class="list-group">
                     <li class="list-group-item list-group-item-success" style="padding-top: 10px;padding-bottom: 30px;">
                         <!--<p><php echo $card['fdt_ticket_datetime']; ?></p>-->
-                    <div class ="col-md-6"> <i class="fa fa-user"></i> <?php echo $card['fst_ticket_no']; ?></div>
+                    <div class ="col-md-6"> <i class="fa fa-user"></i> <?php echo $card['fst_username']; ?></div>
                       <span class="badge badge-primary badge-pill">
                         <div class= "col-md-6"><?php echo $card['fdt_ticket_datetime']; ?> <i class="fa fa-calendar"></i></div>
                       </span>
@@ -170,7 +170,7 @@ body {
                   </div>
                   <p><button data-id='<= $card["fin_ticket_id"]?>'>Detail</button></p>-->
                   <div class="card-footer">
-                    <button type="button" class="detailbutton" data-id='<?= $card["fin_ticket_id"]?>'>Detail</button>
+                    <button type="button" class="detailbutton btn-primary" data-id='<?= $card["fin_ticket_id"]?>'>Detail</button>
                     <!--<p><button class="detailbutton" data-id='<?= $card["fin_ticket_id"]?>'>Detail</button></p>-->
                   </div>
                 </div>
