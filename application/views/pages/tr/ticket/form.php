@@ -158,7 +158,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <div class="col-xs-6 col-md-4">
                                 <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
                                     <?php
-                                        $touserList = $this->users_model->getAllList();
+                                        $touserList = $this->users_model->getToUserList();
                                         foreach ($touserList as $toUser){
                                             echo "<option value='$toUser->fin_user_id'>$toUser->fst_username</option>";
                                         }
@@ -320,12 +320,12 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, resp.ms_ticket.fin_ticket_type_id, true, true);
                 $('#select-ticketType').append(newOption).trigger('change');
                 
-                var newOption = new Option(resp.ms_ticket.fst_service_level_name - fin_service_level_days, resp.ms_ticket.fin_service_level_id, true, true);
+                var newOption = new Option(resp.ms_ticket.fst_service_level_name, true);
                 $('#select-serviceLevel').append(newOption).trigger('change');
 
-                var newOption = new Option(resp.ms_ticket.fin_issued_by_user_id, true);
+                var newOption = new Option(resp.ms_ticket.useractive, true);
                 $('#select-users').append(newOption).trigger('change');
-                var newOption = new Option(resp.ms_ticket.fin_issued_to_user_id, true);
+                var newOption = new Option(resp.ms_ticket.fst_username, resp.ms_ticket.fin_user_id, true, true);
                 $('#select-toUser').append(newOption).trigger('change');
 
             },

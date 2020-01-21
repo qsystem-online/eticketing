@@ -199,6 +199,13 @@ class Users_model extends MY_Model
 
         return $rs;
 	}
+
+	public function getToUserList(){
+		$ssql = "select fin_user_id, fst_username from users where fst_active != 'D' order by fst_username";
+		$qr = $this->db->query($ssql, []);
+		$rs = $qr->result();
+		return $rs;
+	}
 	
 	public function getSalesList(){
 		$salesDeptId = getDbConfig("sales_department_id");
