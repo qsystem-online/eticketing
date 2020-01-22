@@ -12,9 +12,9 @@ class Dashboard_model extends CI_Model {
         $ssql ="select count(*) as ttl_need_approval from (SELECT a.*,b.fin_user_id,b.fin_department_id,c.fin_level FROM trticket a 
         INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id
         INNER JOIN usersgroup c ON b.fin_group_id = c.fin_group_id
-        WHERE a.fst_status = 'NEED_APPROVAL'AND b.fin_department_id =".$deptActive." AND c.fin_level =?)aa";
+        WHERE a.fst_status = 'NEED_APPROVAL' AND b.fin_department_id =".$deptActive." AND c.fin_level =?)aa";
         $qr = $this->db->query($ssql,[$levelActive]);
-        //echo $this->db->last_query();
+        echo $this->db->last_query();
         $rw = $qr->row();
         return $rw->ttl_need_approval;
 

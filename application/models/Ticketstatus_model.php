@@ -11,17 +11,19 @@ class Ticketstatus_model extends MY_MODEL {
     }
 
     public function getDataById($fin_ticket_id){
-        $ssql = "select a.*,b.fst_ticket_type_name,c.fst_service_level_name,d.fst_username as useractive,e.fst_username from ". $this->tableName ." a
+        $ssql = "select a.*,b.fst_ticket_type_name,c.fst_service_level_name,d.fst_username as useractive,e.fst_username,f.fin_level from ". $this->tableName ." a
         left join mstickettype b on a.fin_ticket_type_id = b.fin_ticket_type_id
         left join msservicelevel c on a.fin_service_level_id = c.fin_service_level_id
         left join users d on a.fin_issued_by_user_id = d.fin_user_id
         left join users e on a.fin_issued_to_user_id = e.fin_user_id
+        INNER JOIN usersgroup f ON d.fin_group_id = f.fin_group_id
         where fin_ticket_id = ?";
         $qr = $this->db->query($ssql,[$fin_ticket_id]);
         $rwTicketstatus = $qr->row();
 
-        $ssql = "select a.*,b.fst_username from trticket_log a
+        $ssql = "select a.*,b.fst_username,c.fin_level from trticket_log a
         left join users b on a.fin_status_by_user_id = b.fin_user_id
+        INNER JOIN usersgroup c ON b.fin_group_id = c.fin_group_id
         where a.fin_ticket_id = ? order by a.fin_rec_id desc";
         $qr = $this->db->query($ssql, [$fin_ticket_id]);
         $rwTicketlog = $qr->result();
@@ -109,7 +111,7 @@ class Ticketstatus_model extends MY_MODEL {
     public function get_IssuedNeedRevision(){
         $user = $this->aauth->user();
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
-            INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
+            INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id 
             where a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED' and a.fin_issued_by_user_id =? ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
@@ -119,7 +121,7 @@ class Ticketstatus_model extends MY_MODEL {
     public function get_IssuedCompleted(){
         $user = $this->aauth->user();
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
-            INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
+            INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id 
             where a.fst_status = 'COMPLETED' and a.fin_issued_by_user_id =? ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
@@ -129,7 +131,7 @@ class Ticketstatus_model extends MY_MODEL {
     public function get_ReceivedApproved(){
         $user = $this->aauth->user();
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
-            INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id 
+            INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
             where a.fst_status = 'APPROVED/OPEN' and a.fin_issued_to_user_id =? ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();

@@ -140,20 +140,20 @@ body {
 			<!-- /.box-footer -->		
 		</div>
 	</div>
-  <div class="row">
+  <!--<div class="row">-->
     <div class="col-md-12" id="recipe-card">
       <?php foreach($cards as $card): ?>
           <div class="column">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title"><?php echo $card['fst_ticket_no']; ?></h5>
+                  <h5 class="card-title"><?php echo $card['fst_ticket_no']; ?> <span class="badge badge-primary badge-pill"><?php echo $card['fst_status']; ?></span></h5>
                         <!--<h3 class="card-id"><php echo $card['fst_ticket_no']; ?></h3>-->
                   <ul class="list-group">
                     <li class="list-group-item list-group-item-success" style="padding-top: 10px;padding-bottom: 30px;">
                         <!--<p><php echo $card['fdt_ticket_datetime']; ?></p>-->
                     <div class ="col-md-6"> <i class="fa fa-user"></i> <?php echo $card['fst_username']; ?></div>
                       <span class="badge badge-primary badge-pill">
-                        <div class= "col-md-6"><?php echo $card['fdt_ticket_datetime']; ?> <i class="fa fa-calendar"></i></div>
+                        <div class= "col-md-6"><?php echo $card['fdt_ticket_datetime']; ?></div>
                       </span>
                     </li>
                     <li class="list-group-item list-group-item-success"><i class="fa fa-sticky-note-o"style="font-size:20px;"> --</i><?php echo $card['fst_memo']; ?></li>
@@ -169,16 +169,15 @@ body {
                     echo $cardmemo; ?></p>
                   </div>
                   <p><button data-id='<= $card["fin_ticket_id"]?>'>Detail</button></p>-->
-                  <div class="card-footer">
-                    <button type="button" class="detailbutton btn-primary" data-id='<?= $card["fin_ticket_id"]?>'>Detail</button>
-                    <!--<p><button class="detailbutton" data-id='<?= $card["fin_ticket_id"]?>'>Detail</button></p>-->
-                  </div>
+                <div class="card-footer">
+                  <button type="button" class="detailbutton btn-primary" data-id='<?= $card["fin_ticket_id"]?>'>Detail</button>
+                  <!--<p><button class="detailbutton" data-id='<?= $card["fin_ticket_id"]?>'>Detail</button></p>-->
                 </div>
               </div>
           </div>
       <?php endforeach; ?>
     </div>
-  </div>
+  <!--</div>-->
 </div>
 
 <script>
