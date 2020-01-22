@@ -29,7 +29,6 @@ class ticket extends MY_Controller
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticket/fetch_list_data';
         $this->list['delete_ajax_url'] = site_url() . 'tr/ticket/delete/';
         $this->list['edit_ajax_url'] = site_url() . 'tr/ticket/view/';
-        //$this->list['view_ajax_url'] = site_url() . 'tr/ticket/view/';
         $this->list['arrSearch'] = [
             'fin_ticket_id' => 'Ticket ID',
             'fst_ticket_no' => 'Ticket No.'
@@ -182,7 +181,7 @@ class ticket extends MY_Controller
         $this->json_output();
     }
 
-    public function ajx_edit_save()
+    public function ajx_view_save()
     {
         $fdt_ticket_datetime = dBDateTimeFormat($this->input->post("fdt_ticket_datetime"));
 

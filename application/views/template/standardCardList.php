@@ -105,12 +105,12 @@ body {
 
 <section class="content">
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-xs-12 col-md-12">
 			<div class="box box-info">
 				<div class="box-header with-border">
 				<h3 class="box-title"><?=$list_name?></h3>
-
-			</div>			
+        </div>
+			
 			<!-- /.box-header -->
 			<div class="box-body">
       <div align="right">
@@ -141,7 +141,7 @@ body {
 		</div>
 	</div>
   <!--<div class="row">-->
-    <div class="col-md-12" id="recipe-card">
+    <div class="col-xs-12 col-md-12" id="recipe-card">
       <?php foreach($cards as $card): ?>
           <div class="column">
               <div class="card">
@@ -158,8 +158,8 @@ body {
                     </li>
                     <li class="list-group-item list-group-item-success"><i class="fa fa-sticky-note-o"style="font-size:20px;"> --</i><?php echo $card['fst_memo']; ?></li>
                   </ul>
-                  </div>
-                  <!--<a href="#memo" class="btn btn-info" data-toggle="collapse">Read Memo</a>
+                </div>
+                <!--<a href="#memo" class="btn btn-info" data-toggle="collapse">Read Memo</a>
                   <div id="memo" class="collapse">
                     <php
                     $cutmemo = Substr($card['fst_memo'],0,200);
@@ -174,7 +174,7 @@ body {
                   <!--<p><button class="detailbutton" data-id='<?= $card["fin_ticket_id"]?>'>Detail</button></p>-->
                 </div>
               </div>
-          </div>
+            </div>
       <?php endforeach; ?>
     </div>
   <!--</div>-->

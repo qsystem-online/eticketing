@@ -177,7 +177,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         </div>
 
                         <div class="form-group">
-                            <div class="col-xs-6 col md-2 col-xs-offset-6 col-md-offset-2">
+                            <div class="col-xs-6 col-md-2 col-xs-offset-6 col-md-offset-2">
                                 <label class="checkbox-inline"><input id="fbl_void_view" type="checkbox" name="fbl_void_view" value="1"><?=lang("Void View")?></label></br>
                                 <div id="fbl_void_view_err" class="text-danger" style="padding-left:200px"></div>
                             </div>
@@ -209,7 +209,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             if (mode == "ADD"){
                 url = "<?= site_url() ?>tr/ticket/ajx_add_save";
             }else{
-                url = "<?= site_url() ?>tr/ticket/ajx_edit_save";
+                url = "<?= site_url() ?>tr/ticket/ajx_view_save";
             }
 
             App.blockUIOnAjaxRequest("Please wait while saving data.....");
@@ -345,7 +345,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 });
 
                 $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
-                $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
+                //$("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
                 //$("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
                 //$("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
 
