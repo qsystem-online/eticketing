@@ -38,18 +38,8 @@ class Ticketstatus_model extends MY_MODEL {
 
     public function getRules($mode = "ADD", $id = 0){
         $rules = [];
-
         $rules[] = [
-            'field' => 'fst_ticket_no',
-            'label' => 'Ticket No.',
-            'rules' => 'required',
-            'errors' => array(
-                'required' => '%s tidak boleh kosong'
-            )
-        ];
-
-        $rules[] = [
-            'field' => 'fst_memo',
+            'field' => 'fst_memo_update',
             'label' => 'Memo',
             'rules' => 'required',
             'errors' => array(

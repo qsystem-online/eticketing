@@ -112,6 +112,9 @@ body {
 
                 <!-- form start -->
                     <form id="frmTicketStatus" class="form-horizontal" action="<?= site_url() ?>tr/ticketstatus/add" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
+                        <input type="hidden" id="frm-mode" value="<?=$mode?>">
+                        <input type="hidden" class="form-control" id="fin_ticket_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_id" value="<?=$fin_ticket_id?>" readonly>
                         <div class="form-group">
                             <label for="fst_update_status" class="col-xs-6 col-md-2 control-label"><?=lang("Update Status")?></label>
                             <div class="col-xs-6 col-md-10">
@@ -167,9 +170,6 @@ body {
 
 								<div class="tab-pane" id="ticket_info">	
                                 <form id="frmTicketInfo" class="form-horizontal">							
-									<input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
-									<input type="hidden" id="frm-mode" value="<?=$mode?>">
-									<input type="hidden" class="form-control" id="fin_ticket_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_id" value="<?=$fin_ticket_id?>" readonly>
 
                                         <div class="form-group">
                                             <label for="fst_ticket_no" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket No.")?> #</label>
@@ -288,7 +288,6 @@ body {
                                                 </select>
                                             </div>
                                         </div>
-
 									<div class="form-group">
 										<label for="fst_memo" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
 										<div class="col-xs-6 col-md-10">
