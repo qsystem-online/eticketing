@@ -105,12 +105,12 @@ body {
 
 <section class="content">
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-xs-12 col-md-12">
 			<div class="box box-info">
 				<div class="box-header with-border">
 				<h3 class="box-title"><?=$list_name?></h3>
-
-			</div>			
+        </div>
+			
 			<!-- /.box-header -->
 			<div class="box-body">
       <div align="right">
@@ -141,12 +141,12 @@ body {
 		</div>
 	</div>
   <div class="row">
-    <div class="col-md-12" id="recipe-card">
+    <div class="col-xs-12 col-md-12" id="recipe-card">
       <?php foreach($cards as $card): ?>
           <div class="column">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title"><?php echo $card['fst_ticket_no']; ?></h5>
+                <h5 class="card-title"><?php echo $card['fst_ticket_no']; ?></h5>
                         <!--<h3 class="card-id"><php echo $card['fst_ticket_no']; ?></h3>-->
                   <ul class="list-group">
                     <li class="list-group-item list-group-item-success" style="padding-top: 10px;padding-bottom: 30px;">
@@ -158,8 +158,8 @@ body {
                     </li>
                     <li class="list-group-item list-group-item-success"><i class="fa fa-sticky-note-o"style="font-size:20px;"> --</i><?php echo $card['fst_memo']; ?></li>
                   </ul>
-                  </div>
-                  <!--<a href="#memo" class="btn btn-info" data-toggle="collapse">Read Memo</a>
+                </div>
+                <!--<a href="#memo" class="btn btn-info" data-toggle="collapse">Read Memo</a>
                   <div id="memo" class="collapse">
                     <php
                     $cutmemo = Substr($card['fst_memo'],0,200);
@@ -169,13 +169,11 @@ body {
                     echo $cardmemo; ?></p>
                   </div>
                   <p><button data-id='<= $card["fin_ticket_id"]?>'>Detail</button></p>-->
-                  <div class="card-footer">
-                    <button type="button" class="detailbutton btn-primary" data-id='<?= $card["fin_ticket_id"]?>'>Detail</button>
-                    <!--<p><button class="detailbutton" data-id='<?= $card["fin_ticket_id"]?>'>Detail</button></p>-->
-                  </div>
+                <div class="card-footer">
+                  <button type="button" class="detailbutton btn-primary" data-id='<?= $card["fin_ticket_id"]?>'>Detail</button>
                 </div>
               </div>
-          </div>
+            </div>
       <?php endforeach; ?>
     </div>
   </div>

@@ -25,12 +25,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="col-xs-12 col-md-12">
 			<div class="box box-info">
 				<div class="box-header with-border">
-				<h3 class="box-title"><?=$list_name?></h3>
-				<div class="box-tools">
-					<a id="btnNew" data-toggle="confirmation" href="<?=$addnew_ajax_url?>" class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> New Record</a>
+					<h3 class="box-title"><?=$list_name?></h3>
+					<div class="box-tools">
+						<a id="btnNew" data-toggle="confirmation" href="<?=$addnew_ajax_url?>" class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> New Record</a>
+					</div>
 				</div>
 
-			</div>			
 			<!-- /.box-header -->
 			<div class="box-body">
 				<div align="right">
@@ -55,9 +55,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="box-footer">
 			</div>
 			<!-- /.box-footer -->		
+			</div>
 		</div>
 	</div>
-</div>
 <?php
 	if(isset($mdlEditForm)){
 		echo $mdlEditForm;
