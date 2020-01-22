@@ -369,16 +369,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         });
     }
 
-    /*function showTransaction(element,isList){
-        //alert("Show");
-        t = $('#tblList').DataTable();
-        var trRow = element.parents('tr');
-        data = t.row(trRow).data();
-
-        url = "<?= site_url() ?>tr/ticket/viewDetail/" + data.fin_ticket_id;
-        window.open(url);
-    }*/
-
 </script>
 
 <!-- Select2 -->
