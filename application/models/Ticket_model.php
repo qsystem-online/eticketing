@@ -49,6 +49,15 @@ class Ticket_model extends MY_MODEL {
             )
         ];
 
+        $rules[] = [
+            'field' => 'fst_status',
+            'label' => 'Status',
+            'rules' => 'required',
+            'errors' => array(
+                'required' => '%s tidak boleh kosong'
+            )
+        ];
+
         return $rules;
     }
 

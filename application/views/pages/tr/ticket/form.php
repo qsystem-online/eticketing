@@ -360,6 +360,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 var newOption = new Option(resp.ms_ticket.fst_username, resp.ms_ticket.fin_user_id, true, true);
                 $('#select-toUser').append(newOption).trigger('change');
 
+                var newOption = new Option(resp.ms_ticket.fst_status, true);
+                $('#select-status').append(newOption).trigger('change');
+
             },
 
             error: function (e) {
