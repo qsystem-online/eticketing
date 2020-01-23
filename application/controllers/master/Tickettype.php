@@ -42,9 +42,9 @@ class Tickettype extends MY_Controller
             ['title' => 'Assignment or Notice', 'width' => '25%', 'data' => 'fst_assignment_or_notice', 'className' => 'text-center',
                 'render' =>"function(data,type,row){
                     if(data == 'A'){
-                        return 'Assignment';
+                        return 'ASSIGNMENT';
                     }else if(data == 'N'){
-                        return 'Notice';
+                        return 'NOTICE';
                     }
                 }"
             ],
