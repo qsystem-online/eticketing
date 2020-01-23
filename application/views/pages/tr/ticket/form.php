@@ -349,7 +349,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 //$("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
                 //$("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
 
-                var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, resp.ms_ticket.fin_ticket_type_id, true, true);
+                var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, true);
                 $('#select-ticketType').append(newOption).trigger('change');
                 
                 var newOption = new Option(resp.ms_ticket.fst_service_level_name, true);
@@ -357,7 +357,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 var newOption = new Option(resp.ms_ticket.useractive, true);
                 $('#select-users').append(newOption).trigger('change');
-                var newOption = new Option(resp.ms_ticket.fst_username, resp.ms_ticket.fin_user_id, true, true);
+                var newOption = new Option(resp.ms_ticket.fst_username, true);
                 $('#select-toUser').append(newOption).trigger('change');
 
                 var newOption = new Option(resp.ms_ticket.fst_status, true);
