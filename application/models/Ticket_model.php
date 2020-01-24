@@ -12,7 +12,7 @@ class Ticket_model extends MY_MODEL {
 
     public function getDataById($fin_ticket_id){
         $activeUser = $this->aauth->is_login();
-        $ssql = "select a.*,b.fst_ticket_type_name,c.fst_service_level_name,c.fin_service_level_days,d.fst_username as useractive,e.fst_username from ". $this->tableName ." a
+        $ssql = "select a.*,b.fst_ticket_type_name,b.fst_assignment_or_notice,c.fst_service_level_name,c.fin_service_level_days,d.fst_username as useractive,e.fst_username from ". $this->tableName ." a
         left join mstickettype b on a.fin_ticket_type_id = b.fin_ticket_type_id
         left join msservicelevel c on a.fin_service_level_id = c.fin_service_level_id
         left join users d on a.fin_issued_by_user_id = d.fin_user_id
@@ -86,5 +86,10 @@ class Ticket_model extends MY_MODEL {
         
         return $max_tr_no;
     }
+
+    /*public function GenerateDeadline($trDatetime = null){
+        $trDeadlineDatetime = ($trDatetime == null) ? datetime ("Y-m-d H:i:s"): $trDatetime;
+        $notice = strtotime($trDeadlineDatetime)
+    }*/
 
 }
