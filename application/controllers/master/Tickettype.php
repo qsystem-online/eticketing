@@ -39,12 +39,12 @@ class Tickettype extends MY_Controller
         $this->list['columns'] = [
             ['title' => 'Ticket Type ID', 'width' => '25%', 'data' => 'fin_ticket_type_id'],
             ['title' => 'Ticket Type Name', 'width' => '40%', 'data' => 'fst_ticket_type_name'],
-            ['title' => 'Assignment or Notice', 'width' => '25%', 'data' => 'fst_assignment_or_notice', 'className' => 'text-center',
+            ['title' => 'Assignment or Notice', 'width' => '25%', 'data' => 'fst_assignment_or_notice',
                 'render' =>"function(data,type,row){
-                    if(data == 'A'){
-                        return 'Assignment';
-                    }else if(data == 'N'){
-                        return 'Notice';
+                    if(data == 'ASSIGNMENT'){
+                        return 'ASSIGNMENT';
+                    }else if(data == 'NOTICE'){
+                        return 'NOTICE';
                     }
                 }"
             ],
