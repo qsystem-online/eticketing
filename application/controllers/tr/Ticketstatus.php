@@ -476,6 +476,7 @@ class Ticketstatus extends MY_Controller
         $data = [
             "fin_ticket_id" => $fin_ticket_id,
             "fin_update_service_level_id" => $this->input->post("fin_service_level_id"),
+            "fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_update_deadline_extended_datetime")),
             "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_update_deadline_extended_datetime")),
             "fst_status" => $this->input->post("fst_update_status"),
             "fst_active" => 'A'

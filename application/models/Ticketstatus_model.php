@@ -11,7 +11,7 @@ class Ticketstatus_model extends MY_MODEL {
     }
 
     public function getDataById($fin_ticket_id){
-        $ssql = "select a.*,b.fst_ticket_type_name,c.fst_service_level_name,d.fst_username as useractive,e.fst_username,f.fin_level from ". $this->tableName ." a
+        $ssql = "select a.*,b.fst_ticket_type_name,c.fst_service_level_name,c.fin_service_level_days,d.fst_username as useractive,e.fst_username,f.fin_level from ". $this->tableName ." a
         left join mstickettype b on a.fin_ticket_type_id = b.fin_ticket_type_id
         left join msservicelevel c on a.fin_service_level_id = c.fin_service_level_id
         left join users d on a.fin_issued_by_user_id = d.fin_user_id
@@ -43,7 +43,15 @@ class Ticketstatus_model extends MY_MODEL {
             'label' => 'Memo',
             'rules' => 'required',
             'errors' => array(
-                'required' => '%s tidak boleh kosong'
+                'required' => '%s Required!!!'
+            )
+            ];
+        $rules[] = [
+            'field' => 'fst_update_status',
+            'label' => 'New Status',
+            'rules' => 'required',
+            'errors' => array(
+                'required' => '%s not selected'
             )
             ];
 
@@ -102,7 +110,7 @@ class Ticketstatus_model extends MY_MODEL {
         $user = $this->aauth->user();
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id 
-            where a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED' and a.fin_issued_by_user_id =? ";
+            where (a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED') and a.fin_issued_by_user_id =? ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 
@@ -131,7 +139,7 @@ class Ticketstatus_model extends MY_MODEL {
     public function get_ReceivedAccepted(){
         $user = $this->aauth->user();
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
-            INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id 
+            INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
             where a.fst_status = 'ACCEPTED' and a.fin_issued_to_user_id =? ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
@@ -141,8 +149,8 @@ class Ticketstatus_model extends MY_MODEL {
     public function get_ReceivedNeedRevision(){
         $user = $this->aauth->user();
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
-            INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id 
-            where a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED' and a.fin_issued_to_user_id =? ";
+            INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
+            where (a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED') and a.fin_issued_to_user_id =? ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 
@@ -151,7 +159,7 @@ class Ticketstatus_model extends MY_MODEL {
     public function get_ReceivedCompleted(){
         $user = $this->aauth->user();
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
-            INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id 
+            INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
             where a.fst_status = 'COMPLETED' and a.fin_issued_to_user_id =? ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();

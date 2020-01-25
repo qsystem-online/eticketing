@@ -86,6 +86,9 @@ body {
     font-style: Italic;
     height: 100%;
 }
+.btn {
+  margin-bottom: 20px;
+}
 </style>
 
 <section class="content-header">
@@ -109,18 +112,20 @@ body {
                     <?php } ?>
                 </div>
                 <!-- end box header -->
-
-                <!-- form start -->
+                <div class="box-body">
+                    <!-- form start -->
                     <form id="frmTicketStatus" class="form-horizontal" action="<?= site_url() ?>tr/ticketstatus/add" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
                         <input type="hidden" id="frm-mode" value="<?=$mode?>">
                         <input type="hidden" class="form-control" id="fin_ticket_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_id" value="<?=$fin_ticket_id?>" readonly>
+                        <input type="hidden" class="form-control" id="fin_service_level_days" name="fin_service_level_days" readonly>
                         <div class="form-group">
                             <label for="fst_update_status" class="col-xs-6 col-md-2 control-label"><?=lang("Update Status")?></label>
                             <div class="col-xs-6 col-md-10">
                                 <select class="form-control" id="fst_update_status" name="fst_update_status">
                                 </select>
-                        </div>
+                                <div id="fst_update_status_err" class="text-danger"></div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="fdt_update_deadline_extended_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Deadline Datetime")?></label>
@@ -135,7 +140,7 @@ body {
                             </div>
                             <label for="select_update_serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
                             <div class="col-xs-6 col-md-5 personal-info">
-                                <select id="select_update_serviceLevel" class="form-control select2" name="fin_update_service_level_id" style="width: 100%">
+                                <select id="select_update_serviceLevel" class="form-control select2" name="fin_service_level_id" style="width: 100%">
                                     <?php
                                         $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
                                         foreach ($servicelevelList as $serviceLevel) {
@@ -150,162 +155,160 @@ body {
                             <label for="fst_memo_update" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
                             <div class="col-xs-6 col-md-10">
                                 <textarea rows="4" style="width:100%" class="form-control" id="fst_memo_update" placeholder="<?= lang("Memo new status") ?>" name="fst_memo_update"></textarea>
+                                <div id="fst_memo_update_err" class="text-danger"></div>
                             </div>
                         </div>
-                        <div class="btn-group btn-group-sm pull-right">
-                            <a id="btnSubmitAjax" href="#" class="btn btn-primary">Update Status</a>
-                        </div>
-                    </form>	
-                    <div class="box-body">
-						<div class="nav-tabs-custom" style="display:unset">
-							<ul class="nav nav-tabs">
-                                <li class="active"><a href="#ticket_log" data-toggle="tab" aria-expanded="true"><?= lang("Ticket Log")?></a></li>
-								<li class=""><a href="#ticket_info" data-toggle="tab" aria-expanded="true"><?= lang("Ticket Info")?></a></li>
-							</ul>
-							<div class="tab-content">
-                                <div class="tab-pane active" id="ticket_log">
-                                    <div class="col-md-12" id="ticketlog_card">
+                        <button type="button"  id="btnSubmitAjax" href="#" class="btn btn-primary btn-block">Update</button>
+                    </form>
+                    
+                    <div class="nav-tabs-custom" style="display:unset">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#ticket_log" data-toggle="tab" aria-expanded="true"><?= lang("Ticket Log")?></a></li>
+                            <li class=""><a href="#ticket_info" data-toggle="tab" aria-expanded="true"><?= lang("Ticket Info")?></a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="ticket_log">
+                                <div class="col-md-12" id="ticketlog_card">
+                                </div>
+                            </div> <!-- /.tab-pane -->  
+
+                            <div class="tab-pane" id="ticket_info">	
+                            <form id="frmTicketInfo" class="form-horizontal">							
+                                <div class="form-group">
+                                    <label for="fst_ticket_no" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket No.")?> #</label>
+                                    <div class="col-xs-6 col-md-10">
+                                        <input type="text" class="form-control" id="fst_ticket_no" placeholder="<?=lang("Ticket No.")?>" name="fst_ticket_no" readonly>
+                                        <div id="fst_ticket_no_err" class="text-danger"></div>
                                     </div>
-								</div> <!-- /.tab-pane -->  
+                                </div>
+                                <div class="form-group">
+                                    <label for="select-ticketType" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
+                                    <div class="col-xs-6 col-md-4">
+                                        <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id" style="width: 100%" disabled>
+                                            <?php
+                                                $tickettypeList = $this->tickettype_model->get_data_ticketType();
+                                                foreach ($tickettypeList as $ticketType) {
+                                                    echo "<option value='$ticketType->fin_ticket_type_id'>$ticketType->fst_ticket_type_name</option>";
+                                                }
+                                            ?>
+                                        </select>
+                                        <div id="fin_ticket_type_id_err" class="text-danger"></div>
+                                    </div>
+                                
+                                    <label for="select_serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
+                                    <div class="col-xs-6 col-md-4 personal-info">
+                                        <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id" style="width: 100%" disabled>
+                                            <?php
+                                                $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
+                                                foreach ($servicelevelList as $serviceLevel) {
+                                                    echo "<option value='$serviceLevel->fin_service_level_id'>$serviceLevel->fst_service_level_name - $serviceLevel->fin_service_level_days HARI </option>";
+                                                }
+                                            ?>
+                                        </select>
+                                        <div id="fin_service_level_id_err" class="text-danger"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fdt_ticket_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Datetime")?></label>
+                                    <div class="col-xs-6 col-md-3">
+                                        <div class="input-group date">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            <input type="text" class="form-control text-right datetimepicker" id="fdt_ticket_datetime" name="fdt_ticket_datetime" disabled/>								
+                                        </div>
+                                        <div id="fdt_ticket_datetime_err" class="text-danger"></div>
+                                        <!-- /.input group -->
+                                    </div>
 
-								<div class="tab-pane" id="ticket_info">	
-                                <form id="frmTicketInfo" class="form-horizontal">							
+                                    <label for="fdt_acceptance_expiry_datetime" class="col-xs-6 col-md-4 control-label"><?=lang("Acceptance Expiry Datetime")?></label>
+                                    <div class="col-xs-6 col-md-3">
+                                        <div class="input-group date">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            <input type="text" class="form-control text-right datetimepicker" id="fdt_acceptance_expiry_datetime" name="fdt_acceptance_expiry_datetime" disabled/>
+                                        </div>
+                                        <div id="fdt_acceptance_expiry_datetime_err" class="text-danger"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="fdt_deadline_extended_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Deadline Datetime")?></label>
+                                    <div class="col-xs-6 col-md-3">
+                                        <div class="input-group date">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime" disabled/>
+                                        </div>
+                                        <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="select-users" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
+                                    <div class="col-xs-6 col-md-4">
+                                        <select id="select-users" class="form-control select2" name="fin_issued_by_user_id" style="width: 100%" disabled>
+                                            <?php
+                                                $active_user = $this->aauth->get_user_id();
+                                                $usersList = $this->users_model->getAllList();
+                                                foreach ($usersList as $users) {
+                                                    $isActive = ($users->fin_user_id == $active_user) ? "selected" : "";
+                                                    echo "<option value=" . $users->fin_user_id . " $isActive >" . $users->fst_username . "</option>";
+                                                }
+                                            ?>
+                                        </select>
+                                        <div id="fin_issued_by_user_id_err" class="text-danger"></div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label for="fst_ticket_no" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket No.")?> #</label>
-                                            <div class="col-xs-6 col-md-10">
-                                                <input type="text" class="form-control" id="fst_ticket_no" placeholder="<?=lang("Ticket No.")?>" name="fst_ticket_no" readonly>
-                                                <div id="fst_ticket_no_err" class="text-danger"></div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="select-ticketType" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
-                                            <div class="col-xs-6 col-md-4">
-                                                <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id" style="width: 100%" disabled>
-                                                    <?php
-                                                        $tickettypeList = $this->tickettype_model->get_data_ticketType();
-                                                        foreach ($tickettypeList as $ticketType) {
-                                                            echo "<option value='$ticketType->fin_ticket_type_id'>$ticketType->fst_ticket_type_name</option>";
-                                                        }
-                                                    ?>
-                                                </select>
-                                                <div id="fin_ticket_type_id_err" class="text-danger"></div>
-                                            </div>
-                                        
-                                            <label for="select_serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
-                                            <div class="col-xs-6 col-md-4 personal-info">
-                                                <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id" style="width: 100%" disabled>
-                                                    <?php
-                                                        $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
-                                                        foreach ($servicelevelList as $serviceLevel) {
-                                                            echo "<option value='$serviceLevel->fin_service_level_id'>$serviceLevel->fst_service_level_name - $serviceLevel->fin_service_level_days HARI </option>";
-                                                        }
-                                                    ?>
-                                                </select>
-                                                <div id="fin_service_level_id_err" class="text-danger"></div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="fdt_ticket_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Datetime")?></label>
-                                            <div class="col-xs-6 col-md-3">
-                                                <div class="input-group date">
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </div>
-                                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_ticket_datetime" name="fdt_ticket_datetime" disabled/>								
-                                                </div>
-                                                <div id="fdt_ticket_datetime_err" class="text-danger"></div>
-                                                <!-- /.input group -->
-                                            </div>
+                                    <label for="select-toUser" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
+                                    <div class="col-xs-6 col-md-4">
+                                        <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id" style="width: 100%" disabled>
+                                            <?php
+                                                $touserList = $this->users_model->getAllList();
+                                                foreach ($touserList as $toUser){
+                                                    echo "<option value='$toUser->fin_user_id'>$toUser->fst_username</option>";
+                                                }
+                                            ?>
+                                        </select>
+                                        <div id="fin_issued_to_user_id_err" class="text-danger"></div>
+                                    </div>
+                                </div>
 
-                                            <label for="fdt_acceptance_expiry_datetime" class="col-xs-6 col-md-4 control-label"><?=lang("Acceptance Expiry Datetime")?></label>
-                                            <div class="col-xs-6 col-md-3">
-                                                <div class="input-group date">
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </div>
-                                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_acceptance_expiry_datetime" name="fdt_acceptance_expiry_datetime" disabled/>
-                                                </div>
-                                                <div id="fdt_acceptance_expiry_datetime_err" class="text-danger"></div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label for="fdt_deadline_extended_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Deadline Datetime")?></label>
-                                            <div class="col-xs-6 col-md-3">
-                                                <div class="input-group date">
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </div>
-                                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime" disabled/>
-                                                </div>
-                                                <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="select-users" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
-                                            <div class="col-xs-6 col-md-4">
-                                                <select id="select-users" class="form-control select2" name="fin_issued_by_user_id" style="width: 100%" disabled>
-                                                    <?php
-                                                        $active_user = $this->aauth->get_user_id();
-                                                        $usersList = $this->users_model->getAllList();
-                                                        foreach ($usersList as $users) {
-                                                            $isActive = ($users->fin_user_id == $active_user) ? "selected" : "";
-                                                            echo "<option value=" . $users->fin_user_id . " $isActive >" . $users->fst_username . "</option>";
-                                                        }
-                                                    ?>
-                                                </select>
-                                                <div id="fin_issued_by_user_id_err" class="text-danger"></div>
-                                            </div>
-
-                                            <label for="select-toUser" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
-                                            <div class="col-xs-6 col-md-4">
-                                                <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id" style="width: 100%" disabled>
-                                                    <?php
-                                                        $touserList = $this->users_model->getAllList();
-                                                        foreach ($touserList as $toUser){
-                                                            echo "<option value='$toUser->fin_user_id'>$toUser->fst_username</option>";
-                                                        }
-                                                    ?>
-                                                </select>
-                                                <div id="fin_issued_to_user_id_err" class="text-danger"></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Last Status")?></label>
-                                            <div class="col-xs-6 col-md-4">
-                                                <select id="select-status" class="form-control" name="fst_status" style="width: 100%" disabled>
-                                                    <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
-                                                    <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
-                                                    <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
-                                                    <option valeu="NEED_REVISION"><?=lang("NEED REVISION")?></option>
-                                                    <option valeu="COMPLETED"><?=lang("COMPLETED")?></option>
-                                                    <option valeu="CLOSED"><?=lang("CLOSED")?></option>
-                                                    <option valeu="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
-                                                    <option valeu="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
-                                                    <option valeu="VOID"><?=lang("VOID")?></option>
-                                                </select>
-                                            </div>
-                                        </div>
-									<div class="form-group">
-										<label for="fst_memo" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
-										<div class="col-xs-6 col-md-10">
-											<textarea rows="4" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo" readonly></textarea>
-										</div>
-									</div>			
-								</div>
-                                </form>	
-								<!-- /.tab-pane -->
-							</div>				
-							<!-- /.tab-pane -->
-							<!-- /.tab-content -->
-						</div>
-                        	   
+                                <div class="form-group">
+                                    <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Last Status")?></label>
+                                    <div class="col-xs-6 col-md-4">
+                                        <select id="select-status" class="form-control" name="fst_status" style="width: 100%">
+                                            <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
+                                            <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
+                                            <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
+                                            <option valeu="NEED_REVISION"><?=lang("NEED REVISION")?></option>
+                                            <option valeu="COMPLETED"><?=lang("COMPLETED")?></option>
+                                            <option valeu="CLOSED"><?=lang("CLOSED")?></option>
+                                            <option valeu="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
+                                            <option valeu="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
+                                            <option valeu="VOID"><?=lang("VOID")?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fst_memo" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
+                                    <div class="col-xs-6 col-md-10">
+                                        <textarea rows="4" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo" readonly></textarea>
+                                    </div>
+                                </div>			
+                            </div>
+                            </form>	
+                            <!-- /.tab-pane -->
+                        </div>				
+                        <!-- /.tab-pane -->
+                        <!-- /.tab-content -->
                     </div>
-                    <!-- end box body -->
-                    <div class="box-footer"></div>
-                    <!-- end box-footer -->
+                            
+                </div>
+                <!-- end box body -->
+                <div class="box-footer"></div>
+                <!-- end box-footer -->
             </div>
         </div>
 </section>
@@ -313,8 +316,6 @@ body {
 <script type="text/javascript">
     var $userActive ="<?= $this->aauth->get_user_id()?>";
     var $levelActive ="<?= $this->aauth->user('fin_user_id')->fin_level +1?>";
-    //alert($levelActive);
-    //var $levelActive = '3';
     $(function(){
         <?php if($mode == "EDIT"){?>
             init_form($("#fin_ticket_id").val());
@@ -322,14 +323,12 @@ body {
 
         $("#btnSubmitAjax").click(function(event){
             event.preventDefault();
+            //$("#fdt_update_deadline_extended_datetime").prop("disabled",false);
             data = $("#frmTicketStatus").serializeArray();
 
             mode = $("#frm-mode").val();
-            if (mode == "ADD"){
-                url = "<?= site_url() ?>tr/ticketstatus/ajx_add_save";
-            }else{
-                url = "<?= site_url() ?>tr/ticketstatus/ajx_update_status";
-            }
+
+            url = "<?= site_url() ?>tr/ticketstatus/ajx_update_status";
 
             App.blockUIOnAjaxRequest("Please wait while update ticket status.....");
             $.ajax({
@@ -384,6 +383,20 @@ body {
         });
 
         $("#fdt_ticket_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s")?>")).datetimepicker("update");
+
+        $("#fst_update_status").change(function(event){
+            event.preventDefault();
+            var leveldays = $('#fin_service_level_days').val();
+            var days = parseInt(leveldays);
+            var d = new Date();
+            d.setDate(d.getDate() + days);
+            $("#select-status").each(function(index){
+                if ($(this).val() == "APPROVED/OPEN"){
+                    $("#fdt_update_deadline_extended_datetime").val(dateTimeFormat(d));
+                }
+            });
+            
+        });
     })
 
     function init_form(fin_ticket_id){
@@ -424,10 +437,10 @@ body {
                 var newOption = new Option(resp.ms_ticketstatus.fst_ticket_type_name, resp.ms_ticketstatus.fin_ticket_type_id, true, true);
                 $('#select-ticketType').append(newOption).trigger('change');
                 
-                var newOption = new Option(resp.ms_ticketstatus.fst_service_level_name, resp.ms_ticketstatus.fin_service_level_id, true, true);
+                var newOption = new Option(resp.ms_ticketstatus.fst_service_level_name, true);
                 $('#select-serviceLevel').append(newOption).trigger('change');
 
-                var newOption = new Option(resp.ms_ticketstatus.fst_service_level_name, resp.ms_ticketstatus.fin_service_level_id, true, true);
+                var newOption = new Option(resp.ms_ticketstatus.fst_service_level_name, true);
                 $('#select_update_serviceLevel').append(newOption).trigger('change');
 
                 var newOption = new Option(resp.ms_ticketstatus.fin_issued_by_user_id, true);
@@ -447,15 +460,21 @@ body {
                         $("#frmTicketStatus").hide();
                     }else{
                         $("#select_update_serviceLevel").prop("disabled",true);
+                        $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
                     }
                 }
 
                 if (resp.ms_ticketstatus.fst_status == "APPROVED/OPEN"){
                     //$('#fst_update_status').val("NEED_APPROVAL",true).prop(disabled="disabled");
-                    array_of_options = ['ACCEPTED', 'NEED_REVISION']
+                    array_of_options = ['SELECT...','ACCEPTED', 'NEED_REVISION']
                     $.each(array_of_options, function(i, item) {
-                        sel_op = ''; 
-                        dis_op = ''; 
+                        if(i==0) { 
+                            sel_op = 'selected'; 
+                            dis_op = 'disabled';
+                        } else { 
+                            sel_op = ''; 
+                            dis_op = ''; 
+                        }
                         $('<option ' + sel_op + ' ' + dis_op + '/>').val(item).html(item).appendTo('#fst_update_status');
                     })
                     if(resp.ms_ticketstatus.fin_issued_to_user_id != $userActive){
@@ -475,6 +494,9 @@ body {
                     })
                     if(resp.ms_ticketstatus.fin_issued_by_user_id != $userActive){
                         $("#frmTicketStatus").hide();
+                    }else{
+                        $("#select_update_serviceLevel").prop("disabled",false);
+                        $("#fdt_update_deadline_extended_datetime").prop("disabled",false);
                     }
                 }
 
@@ -488,8 +510,8 @@ body {
                     if(resp.ms_ticketstatus.fin_issued_to_user_id != $userActive){
                         $("#frmTicketStatus").hide();
                     }else{
-                        $("#select_update_serviceLevel").prop("disabled",true);
-                        $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
+                        $("#select_update_serviceLevel").prop("disabled",false);
+                        $("#fdt_update_deadline_extended_datetime").prop("disabled",false);
                     }
                 }
 
@@ -522,6 +544,19 @@ body {
                         $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
                     }
                 }
+
+                /*array_of_options = ['Choose Tagging', 'Option A', 'Option B', 'Option C']
+
+                $.each(array_of_options, function(i, item) {
+                    if(i==0) { 
+                        sel_op = 'selected'; 
+                        dis_op = 'disabled';
+                    } else { 
+                        sel_op = ''; 
+                        dis_op = ''; 
+                    }
+                    $('<option ' + sel_op + ' ' + dis_op + '/>').val(item).html(item).appendTo('#tagging');
+                })*/
                 //populate Ticket Log
                 $.each(resp.ms_ticketlog, function(name, val) {
                     console.log(val);
@@ -543,7 +578,7 @@ body {
                         cardlog +=  '</div>';
                         cardlog +='<div class="card-footer">';
                         //cardlog +='<button type="button" class="btn" data-toggle="modal" data-target="#modal_logmemo" id="right-panel-link">MEMO</button>';
-                        cardlog +='<li class="list-group-item list-group-item-success"><i class="fa fa-sticky-note-o"style="font-size:20px;"> --</i>'+val.fst_status_memo+'</li>';
+                        cardlog +='<li class="list-group-item list-group-item-light"><i class="fa fa-sticky-note-o"style="font-size:20px;"> --</i>'+val.fst_status_memo+'</li>';
                         cardlog +=  '</div>';
                         cardlog +=  '</div>';
                         cardlog +=  '</div>';
@@ -558,7 +593,21 @@ body {
                 console.log("ERROR : ", e);
             }
         });
+
     }
+</script>
+
+<script type="text/javascript">
+
+    /*$(function(){
+        var days = $("#fin_service_level_days").val();
+        var d = new Date();
+        d.setDate(d.getDate() + days);
+        $('#fst_update_status').change(function(){
+            $("#fdt_update_deadline_extended_datetime").val(dateTimeFormat(d));
+        });
+    });*/
+	
 </script>
 
 <!-- Select2 -->
