@@ -51,10 +51,16 @@ body {
 }*/
 
 /* Style the counter cards */
-.card {
+.card-issued {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   padding: 16px;
   background-color: #f1f1f1;
+  margin-bottom: 20px;
+}
+.card-received {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  background-color: #3c8dbc;
   margin-bottom: 20px;
 }
 .card button {
@@ -75,7 +81,7 @@ body {
 
 .card-title {
   font-weight:bold;
-  text-align: center;
+  /*text-align: center;*/
 }
 .sep {
   height: 15px;
@@ -558,22 +564,60 @@ body {
                     $('<option ' + sel_op + ' ' + dis_op + '/>').val(item).html(item).appendTo('#tagging');
                 })*/
                 //populate Ticket Log
+                var issuedBy = resp.ms_ticketstatus.fin_issued_by_user_id;
+                //alert(issuedBy);
                 $.each(resp.ms_ticketlog, function(name, val) {
                     console.log(val);
                     //event.preventDefault();
-                    var cardlog = '<div class="column col-md-12">';
-                            cardlog += '<div class="card">';
+                    if(val.fin_status_by_user_id == issuedBy){
+                        var cardlog = '<div class="column col-md-12">';
+                            cardlog += '<div class="card-issued">';
                             cardlog += '<div class="card-body">';
-                                cardlog += '<h5 class="card-title">'+val.fst_status+'</h5>';
+                                cardlog += '<p class="card-title">';
+                                cardlog += '<div class ="col-md-4"><strong><i class="fa fa-user"></i>'+val.fst_username+'</strong></div>';
+                                cardlog += '<span class="badge badge-primary badge-pill">';
+                                cardlog += '<div class ="col-md-4">'+val.fdt_status_datetime+'</div></span>';
+                                //cardlog += '<span class="badge badge-primary badge-pill">';
+                                cardlog += '<div class ="col-md-4"><span class="badge badge-primary badge-pill">'+val.fst_status+'</span></div>';
+                                cardlog += '</p>';
                                 cardlog += '<ul class="list-group">';
-                                cardlog += '<li class="list-group-item list-group-item-success" style="padding-top: 10px;padding-bottom: 30px;">';
+                                //cardlog += '<li class="list-group-item list-group-item-success" style="padding-top: 10px;padding-bottom: 30px;">';
                                 //cardlog +='<li class="list-group-item list-group-item-success"><i class="fa fa-clock-o"style="font-size:20px;"></i>'+val.fdt_status_datetime+'</li>';
                                 //cardlog +='<li class="list-group-item list-group-item-success"><i class="fa fa-user"style="font-size:20px;"></i>'+val.fst_username+'</li>';
-                                    cardlog += '<div class ="col-md-6"> <i class="fa fa-user"></i> '+val.fst_username+'</div>';
-                                    cardlog += '<span class="badge badge-primary badge-pill">';
-                                    cardlog += '<div class= "col-md-6">'+val.fdt_status_datetime+'</div>';
-                                    cardlog += '</span>';
-                                cardlog +='</li>';
+                                    //cardlog += '<div class ="col-md-6"> <i class="fa fa-user"></i> '+val.fst_username+'</div>';
+                                    //cardlog += '<span class="badge badge-primary badge-pill">';
+                                    //cardlog += '<div class= "col-md-6">'+val.fdt_status_datetime+'</div>';
+                                    //cardlog += '</span>';
+                                //cardlog +='</li>';
+                            cardlog +=  '</ul>';
+                        cardlog +=  '</div>';
+                        cardlog +='<div class="card-footer">';
+                        //cardlog +='<button type="button" class="btn" data-toggle="modal" data-target="#modal_logmemo" id="right-panel-link">MEMO</button>';
+                        cardlog +='<li class="list-group-item list-group-item-light"><i class="fa fa-sticky-note-o"style="font-size:20px;">:</i>'+val.fst_status_memo+'</li>';
+                        cardlog +=  '</div>';
+                        cardlog +=  '</div>';
+                        cardlog +=  '</div>';
+                    $("#ticketlog_card").append(cardlog);
+                    }else{
+                        var cardlog = '<div class="column col-md-12">';
+                            cardlog += '<div class="card-received">';
+                            cardlog += '<div class="card-body">';
+                                //cardlog += '<p class="card-title">'+val.fst_status+'</p>';
+                                //cardlog += '<ul class="list-group">';
+                                //cardlog += '<li class="list-group-item list-group-item-success" style="padding-top: 10px;padding-bottom: 30px;">';
+                                    //cardlog += '<div class ="col-md-6"> <i class="fa fa-user"></i> '+val.fst_username+'</div>';
+                                    //cardlog += '<span class="badge badge-primary badge-pill">';
+                                    //cardlog += '<div class= "col-md-6">'+val.fdt_status_datetime+'</div>';
+                                    //cardlog += '</span>';
+                                //cardlog +='</li>';
+                                cardlog += '<p class="card-title">';
+                                cardlog += '<div class ="col-md-4"><strong><i class="fa fa-user"></i>'+val.fst_username+'</strong></div>';
+                                cardlog += '<span class="badge badge-primary badge-pill">';
+                                cardlog += '<div class ="col-md-4">'+val.fdt_status_datetime+'</div></span>';
+                                //cardlog += '<span class="badge badge-primary badge-pill">';
+                                cardlog += '<div class ="col-md-4"><span class="badge badge-primary badge-pill">'+val.fst_status+'</span></div>';
+                                cardlog += '</p>';
+                                cardlog += '<ul class="list-group">';
                             cardlog +=  '</ul>';
                         cardlog +=  '</div>';
                         cardlog +='<div class="card-footer">';
@@ -583,7 +627,7 @@ body {
                         cardlog +=  '</div>';
                         cardlog +=  '</div>';
                     $("#ticketlog_card").append(cardlog);
-                    //$("#logMemo").append(val.fst_status_memo);
+                    }
                 })
 
             },
