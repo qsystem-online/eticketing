@@ -17,62 +17,63 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="col-xs-12 col-md-12">
             <div class="box box-info">
 				<div class="box-header with-border">
-				<h3 class="box-title title"><?=$title?></h3>
-				<div class="btn-group btn-group-sm  pull-right">					
-					<a id="btnNew" class="btn btn-primary" href="#" title="<?=lang("Tambah Baru")?>"><i class="fa fa-plus" aria-hidden="true"></i></a>
-					<a id="btnSubmitAjax" class="btn btn-primary" href="#" title="<?=lang("Simpan")?>"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
-					<a id="btnDelete" class="btn btn-primary" href="#" title="<?=lang("Hapus")?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
-					<a id="btnList" class="btn btn-primary" href="#" title="<?=lang("Daftar Transaksi")?>"><i class="fa fa-list" aria-hidden="true"></i></a>												
+					<h3 class="box-title title"><?=$title?></h3>
+					<div class="btn-group btn-group-sm  pull-right">					
+						<a id="btnNew" class="btn btn-primary" href="#" title="<?=lang("Tambah Baru")?>"><i class="fa fa-plus" aria-hidden="true"></i></a>
+						<a id="btnSubmitAjax" class="btn btn-primary" href="#" title="<?=lang("Simpan")?>"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
+						<a id="btnDelete" class="btn btn-primary" href="#" title="<?=lang("Hapus")?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
+						<a id="btnList" class="btn btn-primary" href="#" title="<?=lang("Daftar Transaksi")?>"><i class="fa fa-list" aria-hidden="true"></i></a>												
+					</div>
 				</div>
+            	<!-- end box header -->
+
+            	<!-- form start -->
+				<form id="frmUsersGroup" class="form-horizontal" action="<?=site_url()?>system/usersgroup/add" method="POST" enctype="multipart/form-data">				
+					<div class="box-body">
+						<input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">
+						<input type="hidden" id="frm-mode" value="<?=$mode?>">
+
+						<div class='form-group'>
+						<label for="fin_group_id" class="col-xs-6 col-md-3 control-label"><?=lang("Group ID")?> #</label>
+							<div class="col-xs-6 col-md-9">
+								<input type="text" class="form-control" id="fin_group_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_group_id" value="<?=$fin_group_id?>" readonly>
+								<div id="fin_group_id_err" class="text-danger"></div>
+
+							</div>
+						</div>
+
+						<div class="form-group">
+						<label for="fst_group_name" class="col-xs-6 col-md-3 control-label"><?=lang("Group Name")?> *</label>
+							<div class="col-xs-6 col-md-9">
+								<input type="text" class="form-control" id="fst_group_name" placeholder="<?=lang("Group Name")?>" name="fst_group_name">
+								<div id="fst_group_name_err" class="text-danger"></div>
+							</div>
+						</div>
+
+						<div class="form-group">
+						<label for="fin_level" class="col-xs-6 col-md-3 control-label"><?=lang("Level")?></label>
+							<div class="col-xs-6 col-md-3">
+								<select id="fin_level" class="form-control select2" name="fin_level">
+								<option value="" disabled selected>-- <?=lang("select")?> --</option>
+									<option value='0'><?= lang("Top Management")?></option>
+									<option value='1'><?= lang("Upper Management")?></option>
+									<option value='2'><?= lang("Middle Management")?></option>
+									<option value='3'><?= lang("Supervisors")?></option>
+									<option value='4'><?= lang("Line Workers")?></option>
+									<option value='5'><?= lang("Public")?></option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<!-- end box body -->
+
+					<div class="box-footer text-right">
+						
+					</div>
+					<!-- end box-footer -->
+				</form>
 			</div>
-            <!-- end box header -->
-
-            <!-- form start -->
-            <form id="frmUsersGroup" class="form-horizontal" action="<?=site_url()?>system/usersgroup/add" method="POST" enctype="multipart/form-data">				
-				<div class="box-body">
-					<input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">
-                    <input type="hidden" id="frm-mode" value="<?=$mode?>">
-
-                    <div class='form-group'>
-                    <label for="fin_group_id" class="col-xs-6 col-md-3 control-label"><?=lang("Group ID")?> #</label>
-						<div class="col-xs-6 col-md-9">
-							<input type="text" class="form-control" id="fin_group_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_group_id" value="<?=$fin_group_id?>" readonly>
-							<div id="fin_group_id_err" class="text-danger"></div>
-
-						</div>
-					</div>
-
-					<div class="form-group">
-                    <label for="fst_group_name" class="col-xs-6 col-md-3 control-label"><?=lang("Group Name")?> *</label>
-						<div class="col-xs-6 col-md-9">
-							<input type="text" class="form-control" id="fst_group_name" placeholder="<?=lang("Group Name")?>" name="fst_group_name">
-							<div id="fst_group_name_err" class="text-danger"></div>
-						</div>
-					</div>
-
-                    <div class="form-group">
-                    <label for="fin_level" class="col-xs-6 col-md-3 control-label"><?=lang("Level")?></label>
-						<div class="col-xs-6 col-md-3">
-							<select class="form-control" id="fin_level" name="fin_level">
-								<option value='0'><?= lang("Top Management")?></option>
-								<option value='1'><?= lang("Upper Management")?></option>
-                                <option value='2'><?= lang("Middle Management")?></option>
-                                <option value='3'><?= lang("Supervisors")?></option>
-                                <option value='4'><?= lang("Line Workers")?></option>
-                                <option value='5'><?= lang("Public")?></option>
-							</select>
-						</div>
-					</div>
-                </div>
-				<!-- end box body -->
-
-                <div class="box-footer text-right">
-                    
-                </div>
-                <!-- end box-footer -->
-            </form>
         </div>
-    </div>
 </section>
 
 <script type="text/javascript">
@@ -238,17 +239,3 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <!-- Select2 -->
 <script src="<?=COMPONENT_URL?>bower_components/select2/dist/js/select2.full.js"></script>
-
-<script type="text/javascript">
-    $(function(){
-        $(".select2-container").addClass("form-control"); 
-        $(".select2-selection--single , .select2-selection--multiple").css({
-            "border":"0px solid #000",
-            "padding":"0px 0px 0px 0px"
-        });         
-        $(".select2-selection--multiple").css({
-            "margin-top" : "-5px",
-            "background-color":"unset"
-        });
-    });
-</script>

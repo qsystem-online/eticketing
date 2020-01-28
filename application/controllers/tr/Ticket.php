@@ -309,6 +309,17 @@ class ticket extends MY_Controller
         $this->json_output();
     }
 
+    public function get_ticketType(){
+        $term = $this->input->get("term");
+        $ssql = "SELECT fin_ticket_type_id,fst_ticket_type_name,fst_assignment_or_notice FROM mstickettype WHERE fst_assignment_or_notice LIKE ? ORDER BY fst_ticket_type_name";
+        $qr = $this->db->query($ssql,['%'.$term.'%']);
+        $rs = $qr->result();
+
+        $this->ajxResp["status"] = "SUCCESS";
+        $this->ajxResp["data"] = $rs;
+        $this->json_output();
+    }
+
     public function get_ticket()
     {
         $term = $this->input->get("term");
