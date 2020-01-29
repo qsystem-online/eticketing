@@ -31,6 +31,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <a href="<?= site_url() ?>tr/ticketstatus/AR" class="small-box-footer">More info <i class="fa fa-pencil"></i></a>
             </div>
         </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3>{ttlIssuedRejected}</h3>
+                    <p><?=lang("Rejected")?></p>
+                </div>
+                <div class="icon">			  
+                    <i class="ion ion-compose"></i>
+                </div>
+                <a href="<?= site_url() ?>tr/ticketstatus/rejected" class="small-box-footer">More info <i class="fa fa-pencil"></i></a>
+            </div>
+        </div>
     </div>
     <li><a href="#"><i class="fa fa-dashboard"></i> <?= lang("My Ticket Issued") ?></a></li>
     <div class="row">   

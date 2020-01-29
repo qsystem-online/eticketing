@@ -19,6 +19,18 @@ class Dashboard_model extends CI_Model {
         return $rw->ttl_need_approval;
 
     }
+
+    public function getTtlIssuedRejected(){
+        $user = $this->aauth->user();
+
+        $ssql = "select count(*) as ttl_approved from trticket 
+            where fst_status = 'REJECTED' and fin_issued_by_user_id =? ";
+        $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        $rw = $qr->row();
+        return $rw->ttl_approved;
+
+    }
+
     public function getTtlIssuedApproved(){
         $user = $this->aauth->user();
 
