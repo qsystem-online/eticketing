@@ -69,6 +69,9 @@ class ticket extends MY_Controller
     private function openForm($mode = "ADD", $fin_ticket_id = 0)
     {
         $this->load->library("menus");
+        $this->load->model("ticket_model");
+        $this->load->model("tickettype_model");
+        $this->load->model("servicelevel_model");
 
         if ($this->input->post("submit") != "") {
             $this->add_save();

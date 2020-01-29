@@ -65,7 +65,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <?php
                                         $tickettypeList = $this->tickettype_model->get_data_ticketType();
                                         foreach ($tickettypeList as $ticketType) {
-                                            echo "<option value='$ticketType->fin_ticket_type_id - $ticketType->fst_assignment_or_notice'>$ticketType->fst_ticket_type_name</option>";
+                                            echo "<option value='$ticketType->fin_ticket_type_id'>$ticketType->fst_ticket_type_name</option>";
                                         }
                                     ?>
                                 </select>
@@ -328,7 +328,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             $("#select-serviceLevel").prop("disabled", false);
 
             $("#select-ticketType").each(function(index){
-                if($(this).val() == "3 - NOTICE"){
+                if($(this).val() == "3"){
                     $("#select-serviceLevel").val(null);
                     $("#select-serviceLevel").prop("disabled", true);
                     $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>"));
