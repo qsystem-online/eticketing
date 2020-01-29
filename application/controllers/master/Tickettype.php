@@ -255,7 +255,7 @@ class Tickettype extends MY_Controller
     public function get_TicketType()
     {
         $term = $this->input->get("term");
-        $ssql = "select * from mstickettype where fst_ticket_type_name like ? order by fst_ticket_type_name";
+        $ssql = "SELECT * FROM mstickettype WHERE fst_assignment_or_notice LIKE ? ORDER BY fst_ticket_type_name";
         $qr = $this->db->query($ssql, ['%' . $term . '%']);
         $rs = $qr->result();
 

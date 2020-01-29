@@ -60,12 +60,12 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         <div class="form-group">
                             <label for="select-ticketType" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
                             <div class="col-xs-6 col-md-4">
-                                <select id="select-ticketType" class="form-control select2 type" name="fin_ticket_type_id">
-                                    <option value="0">-- <?=lang("select")?> --</option>
+                                <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id">
+                                    <option value="" disabled selected>-- <?=lang("select")?> --</option>
                                     <?php
                                         $tickettypeList = $this->tickettype_model->get_data_ticketType();
                                         foreach ($tickettypeList as $ticketType) {
-                                            echo "<option value='$ticketType->fin_ticket_type_id'>$ticketType->fst_ticket_type_name - $ticketType->fst_assignment_or_notice</option>";
+                                            echo "<option value='$ticketType->fin_ticket_type_id - $ticketType->fst_assignment_or_notice'>$ticketType->fst_ticket_type_name</option>";
                                         }
                                     ?>
                                 </select>
@@ -74,8 +74,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         
                             <label for="select-serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
                             <div class="col-xs-6 col-md-4">
-                                <select id="select-serviceLevel" class="form-control select2 level" name="fin_service_level_id">
-                                    <option value="0">-- <?=lang("select")?> --</option>
+                                <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id">
+                                    <option value="" disabled selected>-- <?=lang("select")?> --</option>
                                     <?php
                                         $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
                                         foreach ($servicelevelList as $serviceLevel) {
@@ -94,7 +94,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_ticket_datetime" name="fdt_ticket_datetime" disabled/>								
+                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_ticket_datetime" name="fdt_ticket_datetime" readonly/>								
                                 </div>
                                 <div id="fdt_ticket_datetime_err" class="text-danger"></div>
                                 <!-- /.input group -->
@@ -113,13 +113,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         </div>
                         
                         <div class="form-group">
-                            <label for="fdt_deadline_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Deadline Datetime")?></label>
+                            <label for="fdt_deadline_extended_datetime" class="col-xs-6 col-md-2 control-label"><?=lang("Deadline Datetime")?></label>
                             <div class="col-xs-6 col-md-3">
                                 <div class="input-group date">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime" disabled/>
+                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime" />
                                 </div>
                                 <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
                             </div>
@@ -136,6 +136,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <option value="CLOSED"><?=lang("CLOSED")?></option>
                                     <option value="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
                                     <option value="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
+                                    <option value="REJECTED"><?=lang("REJECTED")?></option>
                                     <option value="VOID"><?=lang("VOID")?></option>
                                 </select>
                             </div>
@@ -307,18 +308,36 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 if (resp.status == "SUCCESS") {
                     data = resp.data;
-                    $("#fin_ticket_id").val(data.insert_id);
+                    //$("#fin_ticket_id").val(data.insert_id);
 
                     //Clear all previous error
                     $(".text-danger").html("");
-                    //Change to Edit Mode
+                    /*Change to Edit Mode
                     $("#frm-mode").val("VIEW"); //ADD|EDIT|VIEW\\
-                    $('#fst_ticket_no').prop('readonly', true);
+                    $('#fst_ticket_no').prop('readonly', true);*/
                 }
             });
         });
 
         $("#fdt_ticket_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s")?>")).datetimepicker("update");
+
+        $("#select-ticketType").change(function(event){
+            event.preventDefault();
+            var value = $(this).val();
+            alert (value);
+            $("#select-serviceLevel").prop("disabled", false);
+
+            $("#select-ticketType").each(function(index){
+                if($(this).val() == "3 - NOTICE"){
+                    $("#select-serviceLevel").val(null);
+                    $("#select-serviceLevel").prop("disabled", true);
+                    $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>"));
+                }else{
+                    $("#fdt_deadline_extended_datetime").val(null);
+                }
+            });
+        });
+
     })
 
     function init_form(fin_ticket_id){
@@ -347,9 +366,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 });
 
                 $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
-                //$("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
+                $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
                 //$("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
-                //$("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
+                $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
 
                 var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, true);
                 $('#select-ticketType').append(newOption).trigger('change');
