@@ -62,6 +62,12 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <div class="col-xs-6 col-md-4">
                                 <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id">
                                     <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                    <?php
+                                        $tickettypeList = $this->tickettype_model->get_data_ticketType();
+                                        foreach ($tickettypeList as $ticketType) {
+                                            echo "<option value='$ticketType->fst_assignment_or_notice'>$ticketType->fst_ticket_type_name</option>";
+                                        }
+                                    ?>
                                 </select>
                                 <div id="fin_ticket_type_id_err" class="text-danger"></div>
                             </div>
@@ -314,38 +320,14 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
         $("#fdt_ticket_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s")?>")).datetimepicker("update");
 
-        $("#select-ticketType").select2({
-            width: '100%',
-            ajax: {
-                url: '<?=site_url()?>tr/ticket/get_ticketType',
-                dataType: 'json',
-                delay: 250,
-                processResults: function (data){
-                    items = [];
-                    data = data.data;
-                    $.each(data,function(index,value,type){
-                        items.push({
-                            "id" : value.fin_ticket_type_id,
-                            "text" : value.fst_ticket_type_name
-                        });
-                    });
-                    console.log(items);
-                    return {
-                        results: items
-                    };
-                },
-                cache: true,
-            }
-        });
-
         $("#select-ticketType").change(function(event){
             event.preventDefault();
-            /*var value = $(this).val();
-            alert (value);*/
+            var value = $(this).val();
+            alert (value);
             $("#select-serviceLevel").prop("disabled", false);
 
             $("#select-ticketType").each(function(index){
-                if($(this).val() == "3"){
+                if($(this).val() == "NOTICE"){
                     $("#select-serviceLevel").val(0);
                     $("#select-serviceLevel").prop("disabled", true);
                     $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>"));
