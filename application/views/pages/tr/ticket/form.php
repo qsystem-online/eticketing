@@ -136,6 +136,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <option value="CLOSED"><?=lang("CLOSED")?></option>
                                     <option value="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
                                     <option value="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
+                                    <option value="REJECTED"><?=lang("REJECTED")?></option>
                                     <option value="VOID"><?=lang("VOID")?></option>
                                 </select>
                             </div>
