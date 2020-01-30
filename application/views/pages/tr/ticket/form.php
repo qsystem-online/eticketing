@@ -278,7 +278,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         });
 
         $("#btnDelete").confirmation({
-            title:"<?=lang("Hapus data ini ?")?>",
+            title:"<?=lang("Void data ini ?")?>",
             rootSelector: '#btnDelete',
             placement: 'left',
         });
@@ -286,7 +286,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             e.preventDefault();
             blockUIOnAjaxRequest("<h5>Deleting ....</h5>");
             $.ajax({
-                url:"<?= site_url() ?>tr/ticket/delete/" + $("#fin_ticket_id").val(),
+                url:"<?= site_url() ?>tr/ticket/void/" + $("#fin_ticket_id").val(),
             }).done(function(resp){
                 //consoleLog(resp):
                 $.unblockUI();
@@ -322,8 +322,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
         $("#select-ticketType").change(function(event){
             event.preventDefault();
-            var value = $(this).find(':selected').data('notice');
-            alert (value);
             $("#select-serviceLevel").prop("disabled", false);
 
             $("#select-ticketType").each(function(index){
