@@ -125,8 +125,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                             <label for="fst_status" class="col-xs-6 col-md-3 control-label"><?=lang("Status")?></label>
                             <div class="col-xs-6 col-md-4">
-                                <select id="select-status" class="form-control select2" name="fst_status">
-                                    <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
+                                <select id="select-status" class="form-control select2" name="fst_status" disabled="true">
+                                    <option value="NEED_APPROVAL" selected><?=lang("NEED APPROVAL")?></option>
                                     <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
                                     <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
                                     <option value="NEED_REVISION"><?=lang("NEED REVISION")?></option>
@@ -138,6 +138,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <option value="REJECTED"><?=lang("REJECTED")?></option>
                                     <option value="VOID"><?=lang("VOID")?></option>
                                 </select>
+                                <input type="hidden" name="fst_status" value="NEED_APPROVAL"/>
                             </div>
                         </div>
 
