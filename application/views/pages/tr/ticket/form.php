@@ -118,7 +118,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime" />
+                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime" disabled/>
                                 </div>
                                 <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
                             </div>

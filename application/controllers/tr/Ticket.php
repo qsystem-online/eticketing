@@ -121,7 +121,8 @@ class ticket extends MY_Controller
 
     public function ajx_add_save()
     {
-        $fdt_ticket_datetime = datetime("Y-m-d H:i:s");
+        $fdt_ticket_datetime = date("Y-m-d H:i:s");
+        $fdt_deadline_extended_datetime = date("Y-m-d H:i:s");
         $fst_ticket_no = $this->ticket_model->GenerateTicketNo();
 
         $this->load->model('ticket_model');
@@ -144,7 +145,7 @@ class ticket extends MY_Controller
             "fin_ticket_type_id" => $this->input->post("fin_ticket_type_id"),
             "fin_service_level_id" => $this->input->post("fin_service_level_id"),
             "fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_datetime")),
-            "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
+            "fdt_deadline_extended_datetime" => $fdt_deadline_extended_datetime,
             "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fst_status" => $this->input->post("fst_status"),
