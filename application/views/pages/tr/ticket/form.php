@@ -284,9 +284,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         });
         $("#btnDelete").click(function(e){
             e.preventDefault();
-            blockUIOnAjaxRequest("<h5>Deleting ....</h5>");
+            blockUIOnAjaxRequest("<h5>Void ....</h5>");
             $.ajax({
-                url:"<?= site_url() ?>tr/ticket/void/" + $("#fin_ticket_id").val(),
+                url:"<?= site_url() ?>tr/ticket/delete/" + $("#fin_ticket_id").val(),
             }).done(function(resp){
                 //consoleLog(resp):
                 $.unblockUI();
@@ -297,7 +297,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         buttons: {
                             OK : function() {
                                 if (resp.status == "SUCCESS") {
-                                    window.location.href = "<?=site_url() ?>tr/ticket/lizt";
+                                    window.location.href = "<?=site_url() ?>tr/ticket/add";
                                     return;
                                 }
                             },

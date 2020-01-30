@@ -300,7 +300,7 @@ class ticket extends MY_Controller
         $this->db->trans_complete();
 
         $this->ajxResp["status"] = "SUCCESS";
-		$this->ajxResp["message"] = lang("Data dihapus !");
+		$this->ajxResp["message"] = lang("Data void !");
 		//$this->ajxResp["data"]["insert_id"] = $insertId;
 		$this->json_output();
 	}
