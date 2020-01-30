@@ -89,6 +89,41 @@ class Ticketstatus extends MY_Controller
         $this->parser->parse('template/main', $this->data);
     }
 
+    public function rejected()
+    {
+        $this->load->library('menus');
+        $this->list['page_name'] = "Ticket Status";
+        $this->list['list_name'] = "Ticket Status List";
+        $this->list['pKey'] = "id";
+        $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
+        $this->list['edit_ajax_url'] = site_url() . 'tr/ticketstatus/Update/';
+        $this->list['arrSearch'] = [
+            'fin_ticket_id' => 'Ticket ID',
+            'fst_ticket_no' => 'Ticket Number',
+            'fst_memo' => 'Ticket Memo'
+        ];
+
+        $this->list['breadcrumbs'] = [
+            ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
+            ['title' => 'List', 'link' => NULL, 'icon' => ''],
+        ];
+        $this->list["cards"] = $this->ticketstatus_model->get_IssuedRejected();
+        $main_header = $this->parser->parse('inc/main_header', [], true);
+        $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
+        $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
+        $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = "";
+        $control_sidebar = null;
+        $this->data['CONTROL_SIDEBAR']= null;
+        $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
+        $this->data['MAIN_HEADER'] = $main_header;
+        $this->data['MAIN_SIDEBAR'] = $main_sidebar;
+        $this->data['PAGE_CONTENT'] = $page_content;
+        $this->data['MAIN_FOOTER'] = $main_footer;
+        $this->parser->parse('template/main', $this->data);
+    }
+
     public function I01()
     {
         $this->load->library('menus');
@@ -472,15 +507,37 @@ class Ticketstatus extends MY_Controller
             $this->json_output();
             return;
         }
-
+        $days = $this->input->post("fin_service_level_days");
+        $now = date("Y-m-d H:i:s");
+        $now = date_create($now);
+        date_add($now,date_interval_create_from_date_string("$days days"));
+        $ticketdeadline_datetime = date_format($now,"Y-m-d H:i:s");
+        //echo ($ticketdeadline_datetime);
         $data = [
             "fin_ticket_id" => $fin_ticket_id,
-            "fin_update_service_level_id" => $this->input->post("fin_service_level_id"),
-            "fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_update_deadline_extended_datetime")),
-            "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_update_deadline_extended_datetime")),
+            //"fin_service_level_id" => $this->input->post("fin_service_level_id"),
+            //"fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_update_deadline_datetime")),
+            //"fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_update_deadline_datetime")),
             "fst_status" => $this->input->post("fst_update_status"),
             "fst_active" => 'A'
         ];
+
+        $last_status = $ticket->fst_status;
+        $deadline_date = $ticket->fdt_deadline_extended_datetime;
+        $user_received = $ticket->fin_issued_to_user_id;
+        $user_issued = $ticket->fin_issued_by_user_id;
+        $user = $this->aauth->user();
+        $user_active = $user->fin_user_id;
+        //echo($deadline_date);
+
+        if ($last_status =='APPROVED/OPEN' && $deadline_date == "" && $user_received == $user_active){
+            $data["fdt_deadline_datetime"]= $ticketdeadline_datetime;
+            $data["fdt_deadline_extended_datetime"]= $ticketdeadline_datetime;
+        }else if($last_status =='NEED_REVISION' && $user_issued == $user_active){
+            $data["fdt_deadline_datetime"]= dBDateTimeFormat($this->input->post("fdt_update_deadline_datetime"));
+            $data["fdt_deadline_extended_datetime"]= dBDateTimeFormat($this->input->post("fdt_update_deadline_datetime"));
+            $data["fin_service_level_id"]= $this->input->post("fin_service_level_id");
+        }
 
         $this->db->trans_start();
 
@@ -501,10 +558,15 @@ class Ticketstatus extends MY_Controller
         $data = [
             "fin_ticket_id" => $fin_ticket_id,
             "fdt_status_datetime" => date("Y-m-d H:i:s"),
-            "fst_status" => $this->input->post("fst_update_status"),
+            //"fst_status" => $this->input->post("fst_update_status"),
             "fst_status_memo" => $this->input->post("fst_memo_update"),
             "fin_status_by_user_id" => $user_status
         ];
+        if($last_status =='NEED_REVISION'){
+            $data["fst_status"]= 'REVISED';
+        }else{
+            $data["fst_status"] = $this->input->post("fst_update_status");
+        }
         $insertId = $this->ticketlog_model->insert($data);
 
         $this->db->trans_complete();

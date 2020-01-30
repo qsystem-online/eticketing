@@ -140,7 +140,7 @@ body {
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_update_deadline_extended_datetime" name="fdt_update_deadline_extended_datetime"/>
+                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_update_deadline_extended_datetime" name="fdt_update_deadline_datetime">
                                 </div>
                                 <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
                             </div>
@@ -284,16 +284,18 @@ body {
                                 <div class="form-group">
                                     <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Last Status")?></label>
                                     <div class="col-xs-6 col-md-4">
-                                        <select id="select-status" class="form-control" name="fst_status" style="width: 100%">
+                                        <select id="select-status" class="form-control" name="fst_status" style="width: 100%" disabled>
                                             <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
                                             <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
                                             <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
-                                            <option value="NEED_REVISION"><?=lang("NEED REVISION")?></option>
-                                            <option value="COMPLETED"><?=lang("COMPLETED")?></option>
-                                            <option value="CLOSED"><?=lang("CLOSED")?></option>
-                                            <option value="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
-                                            <option value="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
-                                            <option value="VOID"><?=lang("VOID")?></option>
+                                            <option valeu="NEED_REVISION"><?=lang("NEED_REVISION")?></option>
+                                            <option valeu="COMPLETED"><?=lang("COMPLETED")?></option>
+                                            <option valeu="COMPLETION_REVISED"><?=lang("COMPLETION_REVISED")?></option>
+                                            <option valeu="CLOSED"><?=lang("CLOSED")?></option>
+                                            <option valeu="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
+                                            <option valeu="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
+                                            <option valeu="VOID"><?=lang("VOID")?></option>
+                                            <option valeu="REJECTED"><?=lang("REJECTED")?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -354,7 +356,7 @@ body {
                             buttons: {
                                 OK : function(){
                                     if (resp.status == "SUCCESS"){
-                                        $("#btnNew").trigger("click");
+                                        window.location.href = "<?=site_url() ?>home";
                                         return;
                                     }
                                 },
@@ -394,10 +396,12 @@ body {
             event.preventDefault();
             var leveldays = $('#fin_service_level_days').val();
             var days = parseInt(leveldays);
+            //alert(leveldays);
             var d = new Date();
             d.setDate(d.getDate() + days);
+            var dtdeadline = $("#fdt_update_deadline_extended_datetime").val();
             $("#select-status").each(function(index){
-                if ($(this).val() == "APPROVED/OPEN"){
+                if ($(this).val() == "APPROVED/OPEN" && dtdeadline == ""){
                     $("#fdt_update_deadline_extended_datetime").val(dateTimeFormat(d));
                 }
             });
@@ -430,15 +434,14 @@ body {
                     }
                 });
 
-                $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_ticket_datetime));
-                $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_acceptance_expiry_datetime));
-                $("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_deadline_datetime));
-                $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_deadline_extended_datetime));
                 if (resp.ms_ticketstatus.fdt_deadline_extended_datetime != null){
+                    $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_ticket_datetime));
+                    $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_acceptance_expiry_datetime));
                     $("#fdt_update_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_deadline_extended_datetime));
+                    $("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_deadline_datetime));
+                    $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_deadline_extended_datetime));
+                    $("#fdt_ticket_expiry_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_ticket_expiry_extended_datetime));
                 }
-                //$("#fdt_update_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_deadline_extended_datetime));
-                $("#fdt_ticket_expiry_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_ticket_expiry_extended_datetime));
 
                 var newOption = new Option(resp.ms_ticketstatus.fst_ticket_type_name, resp.ms_ticketstatus.fin_ticket_type_id, true, true);
                 $('#select-ticketType').append(newOption).trigger('change');
@@ -456,7 +459,7 @@ body {
 
                 if (resp.ms_ticketstatus.fst_status == "NEED_APPROVAL"){
                     //$('#fst_update_status').val("NEED_APPROVAL",true).prop(disabled="disabled");
-                    array_of_options = ['APPROVED/OPEN', 'VOID']
+                    array_of_options = ['APPROVED/OPEN', 'REJECTED']
                     $.each(array_of_options, function(i, item) {
                         sel_op = ''; 
                         dis_op = ''; 
@@ -468,6 +471,10 @@ body {
                         $("#select_update_serviceLevel").prop("disabled",true);
                         $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
                     }
+                }
+
+                if (resp.ms_ticketstatus.fst_status == "REJECTED" && resp.ms_ticketstatus.fin_issued_to_user_id != $userActive){
+                    $("#frmTicketStatus").hide();
                 }
 
                 if (resp.ms_ticketstatus.fst_status == "APPROVED/OPEN"){
@@ -492,7 +499,7 @@ body {
                 }
 
                 if (resp.ms_ticketstatus.fst_status == "NEED_REVISION"){
-                    array_of_options = ['ACCEPTED', 'APPROVED/OPEN']
+                    array_of_options = ['APPROVED/OPEN']
                     $.each(array_of_options, function(i, item) {
                         sel_op = ''; 
                         dis_op = ''; 
@@ -550,19 +557,6 @@ body {
                         $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
                     }
                 }
-
-                /*array_of_options = ['Choose Tagging', 'Option A', 'Option B', 'Option C']
-
-                $.each(array_of_options, function(i, item) {
-                    if(i==0) { 
-                        sel_op = 'selected'; 
-                        dis_op = 'disabled';
-                    } else { 
-                        sel_op = ''; 
-                        dis_op = ''; 
-                    }
-                    $('<option ' + sel_op + ' ' + dis_op + '/>').val(item).html(item).appendTo('#tagging');
-                })*/
                 //populate Ticket Log
                 var issuedBy = resp.ms_ticketstatus.fin_issued_by_user_id;
                 //alert(issuedBy);
