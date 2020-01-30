@@ -330,10 +330,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     $("#select-serviceLevel").val(null);
                     $("#select-serviceLevel").prop("disabled", true);
                     $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>"));
-                    $("#fdt_deadline_extended_datetime").prop("disabled", true);
                 }else{
                     $("#fdt_deadline_extended_datetime").val(null);
-                    $("#fdt_deadline_extended_datetime").prop("disabled", false);
                 }
             });
         });
