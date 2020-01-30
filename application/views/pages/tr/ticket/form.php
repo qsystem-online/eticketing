@@ -31,14 +31,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             <div class="box box-info">
                 <div class="box-header with-border">
                     <h3 class="box-title title"><?= $title ?></h3>
-                    <?php if ($mode != "VIEW") { ?>
                     <div class="btn-group btn-group-sm pull-right">
-                        <a id="btnNew" class="btn btn-primary" href="#" title="<?=lang("Tambah Baru")?>"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                        <a id="btnSubmitAjax" class="btn btn-primary" href="#" title="<?=lang("Simpan")?>"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
                         <a id="btnDelete" class="btn btn-primary" href="#" title="<?=lang("Void")?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        <a id="btnNew" class="btn btn-primary" href="#" title="<?=lang("Tambah Baru")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                        <a id="btnSubmitAjax" class="btn btn-primary" href="#" title="<?=lang("Simpan")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
+                        <!--<a id="btnDelete" class="btn btn-primary" href="#" title="<?=lang("Void")?>"><i class="fa fa-trash" aria-hidden="true"></i></a>-->
                         <a id="btnList" class="btn btn-primary" href="#" title="<?=lang("Daftar Transaksi")?>"><i class="fa fa-list" aria-hidden="true"></i></a>
                     </div>
-                    <?php } ?>
                 </div>
                 <!-- end box header -->
 
@@ -48,7 +47,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
 						<input type="hidden" id="frm-mode" value="<?=$mode?>">
                         <input type="hidden" class="form-control" id="fin_ticket_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_id" value="<?=$fin_ticket_id?>" readonly>
-
+                        
                         <div class="form-group">
                             <label for="fst_ticket_no" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket No.")?> #</label>
                             <div class="col-xs-6 col-md-10">
@@ -65,7 +64,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <?php
                                         $tickettypeList = $this->tickettype_model->get_data_ticketType();
                                         foreach ($tickettypeList as $ticketType) {
-                                            echo "<option value='$ticketType->fin_ticket_type_id'>$ticketType->fst_ticket_type_name</option>";
+                                            echo "<option value='$ticketType->fin_ticket_type_id' data-notice='$ticketType->fst_assignment_or_notice'>$ticketType->fst_ticket_type_name</option>";
                                         }
                                     ?>
                                 </select>
@@ -323,12 +322,12 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
         $("#select-ticketType").change(function(event){
             event.preventDefault();
-            var value = $(this).val();
+            var value = $(this).find(':selected').data('notice');
             alert (value);
             $("#select-serviceLevel").prop("disabled", false);
 
             $("#select-ticketType").each(function(index){
-                if($(this).val() == "3"){
+                if($(this).find(':selected').data('notice') == "NOTICE"){
                     $("#select-serviceLevel").val(null);
                     $("#select-serviceLevel").prop("disabled", true);
                     $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>"));
