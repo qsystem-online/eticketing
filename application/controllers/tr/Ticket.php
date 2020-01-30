@@ -121,7 +121,7 @@ class ticket extends MY_Controller
 
     public function ajx_add_save()
     {
-        $fdt_ticket_datetime = dBDateTimeFormat($this->input->post("fdt_ticket_datetime"));
+        $fdt_ticket_datetime = datetime("Y-m-d H:i:s");
         $fst_ticket_no = $this->ticket_model->GenerateTicketNo();
 
         $this->load->model('ticket_model');
