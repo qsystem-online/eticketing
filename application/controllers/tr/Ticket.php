@@ -85,9 +85,6 @@ class ticket extends MY_Controller
         if ($mode == 'ADD'){
             $data["fin_ticket_id"] = 0;
             $data["fst_ticket_no"] = $this->ticket_model->GenerateTicketNo();
-        /*}else if ($mode == "EDIT"){
-            $data["fin_ticket_id"] = $fin_ticket_id;
-            $data["fst_ticket_no"] = "";*/
         }else if ($mode == "VIEW"){
             $data["fin_ticket_id"] = $fin_ticket_id;
             $data["fst_ticket_no"] = "";
@@ -122,7 +119,6 @@ class ticket extends MY_Controller
     public function ajx_add_save()
     {
         $fdt_ticket_datetime = date("Y-m-d H:i:s");
-        $fdt_deadline_extended_datetime = date("Y-m-d H:i:s");
         $fst_ticket_no = $this->ticket_model->GenerateTicketNo();
 
         $this->load->model('ticket_model');
@@ -145,12 +141,12 @@ class ticket extends MY_Controller
             "fin_ticket_type_id" => $this->input->post("fin_ticket_type_id"),
             "fin_service_level_id" => $this->input->post("fin_service_level_id"),
             "fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_datetime")),
-            "fdt_deadline_extended_datetime" => $fdt_deadline_extended_datetime,
+            "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
             "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
-            "fbl_void_view" => ($this->input->post("fbl_void_view") == null) ? 0 : 1,
+            //"fbl_rejected_view" => ($this->input->post("fbl_rejected_view") == null) ? 0 : 1,
             "fst_active" => 'A'
         ];
 
@@ -225,7 +221,7 @@ class ticket extends MY_Controller
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
-            "fbl_void_view" => ($this->input->post("fbl_void_view") == null) ? 0 : 1,
+            //"fbl_rejected_view" => ($this->input->post("fbl_rejected_view") == null) ? 0 : 1,
             "fst_active" => 'A'
         ];
 
