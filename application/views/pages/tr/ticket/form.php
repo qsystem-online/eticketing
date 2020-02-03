@@ -281,7 +281,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div class="tab-pane active" id="ticket_view">
                                     <div class="box-header with-border">
                                         <div class="btn-group btn-group-md pull-right">
-                                            <a id="btnVoid" class="btn btn-primary" href="#" title="<?=lang("Void")?>" style="display:<?= $mode == "ADD" ? "none" : "inline-block" ?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                            <a id="btnVoid" class="btn btn-primary" href="#" title="<?=lang("Void")?>" style="display:<?= $mode == "ADD" ? "none" : "inline-block" ?>"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
                                             <a id="btnLizt" class="btn btn-primary" href="#" title="<?=lang("Daftar Transaksi")?>" style="display:<?= $mode == "ADD" ? "none" : "inline-block" ?>"><i class="fa fa-list" aria-hidden="true"></i></a>
                                         </div>
                                     </div>
