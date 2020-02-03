@@ -94,29 +94,4 @@ class Ticket_model extends MY_MODEL {
         
         return $max_tr_no;
     }
-
-    /*public function getNotifyDeadline($notifyDeadline){
-        $notifyDeadline = getDbConfig("notify_deadline");
-        $ssql ="select fst_value from config where fst_key = ? and fbl_active = true";
-        $qr = $this->db->query($ssql,[$notifyDeadline]);
-        $rw = $qr->row();
-        if ($rw){
-            return $rw->fst_value;
-        }
-        return null;
-    }
-
-    // utils helper
-    /*if (!function_exists('getDbConfig')){
-        function getDbConfig($key){
-            $CI = & get_instance();
-            $ssql ="select fst_value from config where fst_key = ? and fbl_active = true";
-            $qr = $CI->db->query($ssql,[$key]);
-            $rw = $qr->row();
-            if ($rw){
-                return $rw->fst_value;
-            }
-            return null;
-        }
-    }*/
 }
