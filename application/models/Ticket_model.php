@@ -57,6 +57,15 @@ class Ticket_model extends MY_MODEL {
             )
         ];
 
+        $rules[] = [
+            'field' => 'fdt_acceptance_expiry_datetime',
+            'label' => 'Acceptance Expiry Datetime',
+            'rules' => 'required',
+            'errors' => array(
+                'required' => '%s tidak boleh kosong'
+            )
+        ];
+
         return $rules;
     }
 
@@ -94,4 +103,23 @@ class Ticket_model extends MY_MODEL {
         
         return $max_tr_no;
     }
+
+    /*public function getTicket(){
+        $notify = getDbConfig("notify_deadline");
+        $ssql = "select * from trticket where fst_ticket_no = ? and fdt_deadline_extended_datetime + $notify order by fst_ticket_no";
+        $qr = $this->db->query($ssql,[$notify]);
+        $rs = $qr->result();
+        return $rs;
+    }
+
+    /*function getDbConfig($key){
+        $CI = & get_instance();
+        $ssql ="select fst_value from config where fst_key = ? and fbl_active = true";
+        $qr = $CI->db->query($ssql,[$key]);
+        $rw = $qr->row();
+        if ($rw){
+            return $rw->fst_value;
+        }
+        return null;
+    }*/
 }
