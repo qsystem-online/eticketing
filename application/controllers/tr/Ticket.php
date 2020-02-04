@@ -41,9 +41,9 @@ class ticket extends MY_Controller
         ];
         $this->list['columns'] = [
             ['title' => 'Ticket ID.', 'width' => '10%', 'data' => 'fin_ticket_id'],
-            ['title' => 'Ticket No.', 'width' => '15%', 'data' => 'fst_ticket_no'],
-            ['title' => 'Ticket Datetime', 'width' => '15%', 'data' => 'fdt_ticket_datetime'],
-            ['title' => 'Memo', 'width' => '50%', 'data' => 'fst_memo'],
+            ['title' => 'Ticket No.', 'width' => '20%', 'data' => 'fst_ticket_no'],
+            ['title' => 'Ticket Datetime', 'width' => '20%', 'data' => 'fdt_ticket_datetime'],
+            ['title' => 'Memo', 'width' => '40%', 'data' => 'fst_memo'],
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center',
                 'render'=>"function(data,type,row){
                     action = \"<div style='font-size:16px'>\";
@@ -69,6 +69,9 @@ class ticket extends MY_Controller
     private function openForm($mode = "ADD", $fin_ticket_id = 0)
     {
         $this->load->library("menus");
+        $this->load->model("ticket_model");
+        $this->load->model("tickettype_model");
+        $this->load->model("servicelevel_model");
 
         if ($this->input->post("submit") != "") {
             $this->add_save();
@@ -77,14 +80,11 @@ class ticket extends MY_Controller
         $main_header = $this->parser->parse('inc/main_header', [], true);
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $data["mode"] = $mode;
-        $data["title"] = $mode == "ADD" ? "Add Ticket" : "View Ticket";
+        $data["title"] = $mode == "ADD" ? "Add Ticket" : "Ticket";
         // tambah ini
         if ($mode == 'ADD'){
             $data["fin_ticket_id"] = 0;
             $data["fst_ticket_no"] = $this->ticket_model->GenerateTicketNo();
-        /*}else if ($mode == "EDIT"){
-            $data["fin_ticket_id"] = $fin_ticket_id;
-            $data["fst_ticket_no"] = "";*/
         }else if ($mode == "VIEW"){
             $data["fin_ticket_id"] = $fin_ticket_id;
             $data["fst_ticket_no"] = "";
@@ -118,7 +118,7 @@ class ticket extends MY_Controller
 
     public function ajx_add_save()
     {
-        $fdt_ticket_datetime = dBDateTimeFormat($this->input->post("fdt_ticket_datetime"));
+        $fdt_ticket_datetime = date("Y-m-d H:i:s");
         $fst_ticket_no = $this->ticket_model->GenerateTicketNo();
 
         $this->load->model('ticket_model');
@@ -146,7 +146,7 @@ class ticket extends MY_Controller
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
-            "fbl_void_view" => ($this->input->post("fbl_void_view") == null) ? 0 : 1,
+            //"fbl_rejected_view" => ($this->input->post("fbl_rejected_view") == null) ? 0 : 1,
             "fst_active" => 'A'
         ];
 
@@ -221,7 +221,7 @@ class ticket extends MY_Controller
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
-            "fbl_void_view" => ($this->input->post("fbl_void_view") == null) ? 0 : 1,
+            //"fbl_rejected_view" => ($this->input->post("fbl_rejected_view") == null) ? 0 : 1,
             "fst_active" => 'A'
         ];
 
@@ -239,12 +239,13 @@ class ticket extends MY_Controller
 
         // Ticket Log
         $this->load->model("ticketlog_model");
+        $user_status = $this->aauth->get_user_id();
         $data = [
             "fin_ticket_id" => $fin_ticket_id,
             "fdt_status_datetime" => $fdt_ticket_datetime,
             "fst_status" => $this->input->post("fst_status"),
             "fst_status_memo" => $this->input->post("fst_memo"),
-            "fin_status_by_user_id" => $this->input->post("fin_issued_by_user_id")
+            "fin_status_by_user_id" => $user_status
         ];
         $insertId = $this->ticketlog_model->insert($data);
 
@@ -285,6 +286,7 @@ class ticket extends MY_Controller
     }
 
     public function fetch_data($fin_ticket_id){
+        $this->load->model("ticketstatus_model");
         $this->load->model("ticket_model");
         $data = $this->ticket_model->getDataById($fin_ticket_id);
 		
@@ -297,7 +299,7 @@ class ticket extends MY_Controller
         $this->db->trans_complete();
 
         $this->ajxResp["status"] = "SUCCESS";
-		$this->ajxResp["message"] = lang("Data dihapus !");
+		$this->ajxResp["message"] = lang("Data void !");
 		//$this->ajxResp["data"]["insert_id"] = $insertId;
 		$this->json_output();
 	}
