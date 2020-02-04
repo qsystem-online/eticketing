@@ -95,6 +95,7 @@ body {
 .btn {
   margin-bottom: 20px;
 }
+
 </style>
 
 <section class="content-header">
@@ -112,15 +113,11 @@ body {
             <div class="box box-info">
                 <div class="box-header with-border">
                     <h3 class="box-title title"><?= $title ?></h3>
-                    <?php if ($mode != "VIEW") { ?>
-                        <div class="btn-group btn-group-sm pull-right">
-                        </div>
-                    <?php } ?>
                 </div>
                 <!-- end box header -->
                 <div class="box-body">
                     <!-- form start -->
-                    <form id="frmTicketStatus" class="form-horizontal" action="<?= site_url() ?>tr/ticketstatus/add" method="POST" enctype="multipart/form-data">
+                    <form id="frmTicketStatus" class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
                         <input type="hidden" id="frm-mode" value="<?=$mode?>">
                         <input type="hidden" class="form-control" id="fin_ticket_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_id" value="<?=$fin_ticket_id?>" readonly>
@@ -320,6 +317,7 @@ body {
             </div>
         </div>
 </section>
+</div>
 
 <script type="text/javascript">
     var $userActive ="<?= $this->aauth->get_user_id()?>";
@@ -574,7 +572,8 @@ body {
                                 //cardlog += '<span class="badge badge-primary badge-pill">';
                                 cardlog += '<div class ="col-md-4"><span class="badge badge-primary badge-pill">'+val.fst_status+'</span></div>';
                                 cardlog += '</p>';
-                                cardlog += '<ul class="list-group">';
+                                //cardlog += '<hr>';
+                                //cardlog += '<ul class="list-group">';
                                 //cardlog += '<li class="list-group-item list-group-item-success" style="padding-top: 10px;padding-bottom: 30px;">';
                                 //cardlog +='<li class="list-group-item list-group-item-success"><i class="fa fa-clock-o"style="font-size:20px;"></i>'+val.fdt_status_datetime+'</li>';
                                 //cardlog +='<li class="list-group-item list-group-item-success"><i class="fa fa-user"style="font-size:20px;"></i>'+val.fst_username+'</li>';
@@ -583,12 +582,16 @@ body {
                                     //cardlog += '<div class= "col-md-6">'+val.fdt_status_datetime+'</div>';
                                     //cardlog += '</span>';
                                 //cardlog +='</li>';
-                            cardlog +=  '</ul>';
+                                //cardlog +=  '</ul>';
                         cardlog +=  '</div>';
-                        cardlog +='<div class="card-footer">';
+                        //cardlog +='<div class="card-footer">';
                         //cardlog +='<button type="button" class="btn" data-toggle="modal" data-target="#modal_logmemo" id="right-panel-link">MEMO</button>';
-                        cardlog +='<li class="list-group-item list-group-item-light"><i class="fa fa-sticky-note-o"style="font-size:20px;">:</i>'+val.fst_status_memo+'</li>';
-                        cardlog +=  '</div>';
+                        //cardlog +='<li class="list-group-item list-group-item-light"><i class="fa fa-sticky-note-o"style="font-size:20px;">:</i>'+val.fst_status_memo+'</li>';
+                        //cardlog +=  '</div>';
+                        cardlog += '<div class="direct-chat-msg">';
+                            cardlog += '<div class="direct-chat-text">'+val.fst_status_memo+'</div>';
+                        cardlog += '</div>';
+                        
                         cardlog +=  '</div>';
                         cardlog +=  '</div>';
                     $("#ticketlog_card").append(cardlog);
@@ -611,13 +614,18 @@ body {
                                 //cardlog += '<span class="badge badge-primary badge-pill">';
                                 cardlog += '<div class ="col-md-4"><span class="badge badge-primary badge-pill">'+val.fst_status+'</span></div>';
                                 cardlog += '</p>';
-                                cardlog += '<ul class="list-group">';
-                            cardlog +=  '</ul>';
+                                //cardlog += '<hr>';
+                                //cardlog += '<ul class="list-group">';
+                                //cardlog +=  '</ul>';
                         cardlog +=  '</div>';
-                        cardlog +='<div class="card-footer">';
+                        //cardlog +='<div class="card-footer">';
                         //cardlog +='<button type="button" class="btn" data-toggle="modal" data-target="#modal_logmemo" id="right-panel-link">MEMO</button>';
-                        cardlog +='<li class="list-group-item list-group-item-light"><i class="fa fa-sticky-note-o"style="font-size:20px;"> --</i>'+val.fst_status_memo+'</li>';
-                        cardlog +=  '</div>';
+                        //cardlog +='<li class="list-group-item list-group-item-light"><i class="fa fa-sticky-note-o"style="font-size:20px;"> --</i>'+val.fst_status_memo+'</li>';
+                        //cardlog +=  '</div>';
+                        cardlog += '<div class="direct-chat-msg">';
+                            cardlog += '<div class="direct-chat-text">'+val.fst_status_memo+'</div>';
+                        cardlog += '</div>';
+
                         cardlog +=  '</div>';
                         cardlog +=  '</div>';
                     $("#ticketlog_card").append(cardlog);
