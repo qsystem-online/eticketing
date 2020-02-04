@@ -106,12 +106,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <label for="select-user_issuedBy" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-user_issuedBy" class="form-control select2" name="fin_issued_by_user_id" style="width: 100%">
+                                        <option selected="selected" valeu="ALL"><?=lang("ALL")?></option>
                                             <?php
                                                 $active_user = $this->aauth->get_user_id();
                                                 $usersList = $this->users_model->getAllList();
                                                 foreach ($usersList as $users) {
-                                                    $isActive = ($users->fin_user_id == $active_user) ? "selected" : "";
-                                                    echo "<option value=" . $users->fin_user_id . " $isActive >" . $users->fst_username . "</option>";
+                                                    //$isActive = ($users->fin_user_id == $active_user) ? "selected" : "";
+                                                    //echo "<option value=" . $users->fin_user_id . " $isActive >" . $users->fst_username . "</option>";
+                                                    echo "<option value='$users->fin_user_id'>$users->fst_username</option>";
                                                 }
                                             ?>
                                         </select>
@@ -121,6 +123,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <label for="select-user_issuedTo" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-user_issuedTo" class="form-control select2" name="fin_issued_to_user_id" style="width: 100%">
+                                        <option selected="selected" valeu="ALL"><?=lang("ALL")?></option>
                                             <?php
                                                 $touserList = $this->users_model->getAllList();
                                                 foreach ($touserList as $toUser){
@@ -143,10 +146,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <option valeu="COMPLETED"><?=lang("COMPLETED")?></option>
                                             <option valeu="COMPLETION_REVISED"><?=lang("COMPLETION_REVISED")?></option>
                                             <option valeu="CLOSED"><?=lang("CLOSED")?></option>
-                                            <option valeu="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
-                                            <option valeu="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
+                                            <option valeu="ACCEPTANCE_EXPIRED"><?=lang("ACCEPTANCE_EXPIRED")?></option>
+                                            <option valeu="TICKET_EXPIRED"><?=lang("TICKET_EXPIRED")?></option>
                                             <option valeu="VOID"><?=lang("VOID")?></option>
                                             <option valeu="REJECTED"><?=lang("REJECTED")?></option>
+                                            <option selected="selected" valeu="ALL"><?=lang("ALL")?></option>
                                         </select>
                                     </div>
                                 </div>

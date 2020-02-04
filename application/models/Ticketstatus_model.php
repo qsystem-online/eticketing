@@ -227,14 +227,27 @@ class Ticketstatus_model extends MY_MODEL {
         if ($status == 'null'){
             $status ="";
         }
+
         $ssql = "SELECT a.*,c.fst_username as issuedBy,d.fst_ticket_type_name,e.fst_service_level_name,e.fin_service_level_days,f.fst_username as issuedTo
                 FROM trticket a 
                 LEFT JOIN users c on a.fin_issued_by_user_id = c.fin_user_id
                 LEFT JOIN mstickettype d on a.fin_ticket_type_id = d.fin_ticket_type_id
                 LEFT JOIN msservicelevel e on a.fin_service_level_id = e.fin_service_level_id
                 LEFT JOIN users f on a.fin_issued_to_user_id = f.fin_user_id
-                WHERE a.fdt_ticket_datetime >='$ticketdate_awal' AND a.fdt_ticket_datetime >='$ticketdate_akhir' AND a.fin_issued_by_user_id like ? AND a.fin_issued_to_user_id like ? AND a.fst_status like ? ";
-        $query = $this->db->query($ssql,['%'.$issuedBy.'%','%'.$issuedTo.'%','%'.$status.'%']);
+                WHERE a.fdt_ticket_datetime >='$ticketdate_awal' AND a.fdt_ticket_datetime >='$ticketdate_akhir' ";
+                if ($issuedBy != 'ALL'){
+                    $ssql .= " AND a.fin_issued_by_user_id ='$issuedBy'";
+                }
+                if ($issuedTo != 'ALL'){
+                    $ssql .= " AND a.fin_issued_to_user_id ='$issuedTo'";
+                }
+                if ($status == 'ALL'){
+                    $ssql .= "ORDER BY a.fst_status";
+                }else{
+                    $ssql .= " AND a.fst_status ='$status' ORDER BY a.fst_status";
+                }
+
+        $query = $this->db->query($ssql,[]);
         //echo $this->db->last_query();
         //die();
         $rs = $query->result();

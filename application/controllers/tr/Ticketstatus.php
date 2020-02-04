@@ -764,6 +764,8 @@ class Ticketstatus extends MY_Controller
         $spreadsheet->getActiveSheet()->getStyle("A7:".$col."7")->getFont()->setSize(12);
 
         $iRow0 = 3;
+        $iRow1 = 4;
+        $iRow2 = 5;
         $iRow = 8;
         $no = 1;
 
@@ -777,6 +779,8 @@ class Ticketstatus extends MY_Controller
 
             $sheet->setCellValue("A$iRow", $no++);
             $sheet->setCellValue("B$iRow0", $ticketdate_awal." s/d ".$ticketdate_akhir);
+            $sheet->setCellValue("B$iRow1", $issuedBy);
+            $sheet->setCellValue("B$iRow2", $issuedTo);
             //$sheet->setCellValue("A$iRow", $no++);
             $sheet->setCellValue("B$iRow", $rw->fst_ticket_no);
             $sheet->setCellValue("C$iRow", $rw->fdt_ticket_datetime);
