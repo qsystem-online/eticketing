@@ -16,11 +16,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <!--<h3 class="box-title title"><?=$title?></h3>-->
         </div>
     </div>
-    <li><a href="#"><i class="fa fa-dashboard"></i> <?= lang("Approval") ?></a></li>
+    <li><a href="#"><i class="fa fa-sign-in"></i> <?= lang("Approval") ?></a></li>
     <div class="row">
         <div class="col-lg-3 col-xs-6">
             <!-- small box -->
-            <div class="small-box bg-red">
+            <div class="small-box bg-olive">
                 <div class="inner">
                     <h3>{ttlNeedApproval}</h3>
                     <p><?=lang("Approval Request")?></p>
@@ -33,19 +33,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
         <div class="col-lg-3 col-xs-6">
             <!-- small box -->
-            <div class="small-box bg-red">
+            <div class="small-box bg-olive">
                 <div class="inner">
                     <h3>{ttlIssuedRejected}</h3>
                     <p><?=lang("Rejected")?></p>
                 </div>
                 <div class="icon">			  
-                    <i class="ion ion-compose"></i>
+                    <i class="fa fa-ban"></i>
                 </div>
-                <a href="<?= site_url() ?>tr/ticketstatus/rejected" class="small-box-footer">More info <i class="fa fa-pencil"></i></a>
+                <a href="<?= site_url() ?>tr/ticketstatus/rejected" class="small-box-footer">More info <i class="fa fa-ban"></i></a>
             </div>
         </div>
     </div>
-    <li><a href="#"><i class="fa fa-dashboard"></i> <?= lang("My Ticket Issued") ?></a></li>
+    <li><a href="#"><i class="fa fa-ticket"></i> <?= lang("My Ticket Issued") ?></a></li>
     <div class="row">   
         <div class="col-lg-3 col-xs-6">
             <!-- small box -->
@@ -55,9 +55,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <p><?=lang("Ticket Issued Open")?></p>
                 </div>
                 <div class="icon">
-                    <i class="ion ion-android-checkbox-outline"></i>
+                    <i class="fa fa-ticket"></i>
                 </div>
-                <a href="<?= site_url() ?>tr/ticketstatus/I01" class="small-box-footer">More info <i class="fa fa-check" aria-hidden="true"></i></a>
+                <a href="<?= site_url() ?>tr/ticketstatus/I01" class="small-box-footer">More info <i class="fa fa-ticket" aria-hidden="true"></i></a>
             </div>
         </div>
         <div class="col-lg-3 col-xs-6">
@@ -68,9 +68,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <p><?= lang(" Ticket Issued Accepted")?></p>
                 </div>
                 <div class="icon">			  
-                    <i class="fa fa-recycle"></i>
+                    <i class="fa fa-hourglass-start"></i>
                 </div>
-                <a href="<?= site_url() ?>tr/ticketstatus/I02" class="small-box-footer">More info <i class="fa fa-recycle"></i></a>
+                <a href="<?= site_url() ?>tr/ticketstatus/I02" class="small-box-footer">More info <i class="fa fa-hourglass-start"></i></a>
             </div>
         </div>
         <div class="col-lg-3 col-xs-6">
@@ -100,7 +100,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
         </div>
     </div>
-    <li><a href="#"><i class="fa fa-dashboard"></i> <?= lang("My Ticket Received") ?></a></li>
+    <li><a href="#"><i class="fa fa-ticket"></i> <?= lang("My Ticket Received") ?></a></li>
     <div class="row">
         <div class="col-lg-3 col-xs-6">
             <!-- small box -->
@@ -110,9 +110,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <p><?=lang("Ticket Received Open")?></p>
                 </div>
                 <div class="icon">
-                    <i class="ion ion-android-checkbox-outline"></i>
+                    <i class="fa fa-ticket"></i>
                 </div>
-                <a href="<?= site_url() ?>tr/ticketstatus/R01" class="small-box-footer">More info <i class="fa fa-check" aria-hidden="true"></i></a>
+                <a href="<?= site_url() ?>tr/ticketstatus/R01" class="small-box-footer">More info <i class="fa fa-ticket" aria-hidden="true"></i></a>
             </div>
         </div>
         <div class="col-lg-3 col-xs-6">
@@ -123,9 +123,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <p><?= lang(" Ticket Received Accepted")?></p>
                 </div>
                 <div class="icon">			  
-                    <i class="fa fa-recycle"></i>
+                    <i class="fa fa-hourglass-start"></i>
                 </div>
-                <a href="<?= site_url() ?>tr/ticketstatus/R02" class="small-box-footer">More info <i class="fa fa-recycle"></i></a>
+                <a href="<?= site_url() ?>tr/ticketstatus/R02" class="small-box-footer">More info <i class="fa fa-hourglass-start"></i></a>
             </div>
         </div>
         <div class="col-lg-3 col-xs-6">

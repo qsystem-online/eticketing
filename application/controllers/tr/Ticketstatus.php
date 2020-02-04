@@ -57,7 +57,7 @@ class Ticketstatus extends MY_Controller
     public function AR()
     {
         $this->load->library('menus');
-        $this->list['page_name'] = "Ticket Status";
+        $this->list['page_name'] = "Approval Request";
         $this->list['list_name'] = "Ticket Status List";
         $this->list['pKey'] = "id";
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
@@ -92,7 +92,7 @@ class Ticketstatus extends MY_Controller
     public function rejected()
     {
         $this->load->library('menus');
-        $this->list['page_name'] = "Ticket Status";
+        $this->list['page_name'] = "Rejected";
         $this->list['list_name'] = "Ticket Status List";
         $this->list['pKey'] = "id";
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
@@ -127,7 +127,7 @@ class Ticketstatus extends MY_Controller
     public function I01()
     {
         $this->load->library('menus');
-        $this->list['page_name'] = "Ticket Status";
+        $this->list['page_name'] = "Ticket Issued Open";
         $this->list['list_name'] = "Ticket Status List";
         $this->list['pKey'] = "id";
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
@@ -162,7 +162,7 @@ class Ticketstatus extends MY_Controller
     public function I02()
     {
         $this->load->library('menus');
-        $this->list['page_name'] = "Ticket Status";
+        $this->list['page_name'] = "Ticket Issued Accepted";
         $this->list['list_name'] = "Ticket Status List";
         $this->list['pKey'] = "id";
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
@@ -197,7 +197,7 @@ class Ticketstatus extends MY_Controller
     public function I03()
     {
         $this->load->library('menus');
-        $this->list['page_name'] = "Ticket Status";
+        $this->list['page_name'] = "Need Revision";
         $this->list['list_name'] = "Ticket Status List";
         $this->list['pKey'] = "id";
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
@@ -232,7 +232,7 @@ class Ticketstatus extends MY_Controller
     public function I04()
     {
         $this->load->library('menus');
-        $this->list['page_name'] = "Ticket Status";
+        $this->list['page_name'] = "Ticket Issued Completed";
         $this->list['list_name'] = "Ticket Status List";
         $this->list['pKey'] = "id";
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
@@ -404,6 +404,30 @@ class Ticketstatus extends MY_Controller
         $this->parser->parse('template/main', $this->data);
     }
 
+    public function ticket_report()
+    {
+		$this->load->library("menus");
+
+		$main_header = $this->parser->parse('inc/main_header', [], true);
+        $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
+        $mdlPrint = $this->parser->parse('template/mdlPrint.php', [], true);
+        $data["mdlPrint"] = $mdlPrint;
+
+		$data["title"] = "Ticket Report";
+		//$data["fin_user_id"] = $fin_user_id;
+
+		$page_content = $this->parser->parse('report/ticket_report', $data, true);
+		$main_footer = $this->parser->parse('inc/main_footer', [], true);
+
+		$control_sidebar = NULL;
+		$this->data["MAIN_HEADER"] = $main_header;
+		$this->data["MAIN_SIDEBAR"] = $main_sidebar;
+		$this->data["PAGE_CONTENT"] = $page_content;
+		$this->data["MAIN_FOOTER"] = $main_footer;
+		$this->data["CONTROL_SIDEBAR"] = $control_sidebar;
+		$this->parser->parse('template/main', $this->data);
+    }
+
     private function openForm($mode = "ADD", $fin_ticket_id = 0)
     {
         $this->load->library("menus");
@@ -526,9 +550,8 @@ class Ticketstatus extends MY_Controller
         $deadline_date = $ticket->fdt_deadline_extended_datetime;
         $user_received = $ticket->fin_issued_to_user_id;
         $user_issued = $ticket->fin_issued_by_user_id;
-        $user = $this->aauth->user();
-        $user_active = $user->fin_user_id;
-        //echo($deadline_date);
+        $user_active = $this->aauth->get_user_id();
+        //echo($user_active);
 
         if ($last_status =='APPROVED/OPEN' && $deadline_date == "" && $user_received == $user_active){
             $data["fdt_deadline_datetime"]= $ticketdeadline_datetime;
@@ -608,6 +631,7 @@ class Ticketstatus extends MY_Controller
     public function fetch_data($fin_ticket_id)
     {
         $this->load->model("ticketstatus_model");
+        $this->ticketstatus_model->update_rejectedview($fin_ticket_id);
         $data = $this->ticketstatus_model->getDataById($fin_ticket_id);
 
         //$this->load->library("datatables");		
@@ -631,6 +655,156 @@ class Ticketstatus extends MY_Controller
         $result = $this->ticketstatus_model->getAllList();
         $this->ajxResp["data"] = $result;
         $this->json_output();
+    }
+
+    public function get_print_ticketReport($ticketdate_awal,$ticketdate_akhir,$issuedBy,$issuedTo,$status) {
+        $layout = $this->input->post("layoutColumn");
+        $arrLayout = json_decode($layout);
+        //$issuedBy = urldecode($issuedBy);
+        //$issuedTo = urldecode($issuedTo);
+        
+        /*var_dump($arrLayout);
+        echo "PRINT......";
+        
+        foreach($arrLayout as $layout){
+            if($layout->column == "fin_cust_pricing_group_id"){
+                if($layout->hidden == true){
+                    echo $hidden;
+                }else{
+                    echo $show;
+                }
+            }
+        }
+        //die();*/
+        
+        $this->load->model("ticketstatus_model");
+        $this->load->library("phpspreadsheet");
+        
+        $spreadsheet = $this->phpspreadsheet->load(FCPATH . "assets/templates/template_ticket_report.xlsx");
+        $sheet = $spreadsheet->getActiveSheet();
+        
+		$sheet->getPageSetup()->setFitToWidth(1);
+		$sheet->getPageSetup()->setFitToHeight(0);
+		$sheet->getPageMargins()->setTop(1);
+		$sheet->getPageMargins()->setRight(0.5);
+		$sheet->getPageMargins()->setLeft(0.5);
+        $sheet->getPageMargins()->setBottom(1);
+
+        //AUTO SIZE COLUMN
+        $sheet->getColumnDimension("A")->setAutoSize(true);
+        $sheet->getColumnDimension("B")->setAutoSize(true);
+        $sheet->getColumnDimension("C")->setAutoSize(true);
+        $sheet->getColumnDimension("D")->setAutoSize(true);
+        $sheet->getColumnDimension("E")->setAutoSize(true);
+        $sheet->getColumnDimension("F")->setAutoSize(true);
+        $sheet->getColumnDimension("G")->setAutoSize(true);
+        $sheet->getColumnDimension("H")->setAutoSize(true);
+        $sheet->getColumnDimension("I")->setAutoSize(true);
+        $sheet->getColumnDimension("J")->setAutoSize(true);
+        $sheet->getColumnDimension("K")->setAutoSize(true);
+
+        // SUBTITLE
+        $sheet->mergeCells('B4:D4');
+        $sheet->mergeCells('B5:D5');
+        $sheet->mergeCells('B3:D3');
+
+        //HEADER COLUMN
+        $sheet->setCellValue("A7", "No.");
+        $sheet->setCellValue("B7", "Ticket No");
+        $sheet->setCellValue("C7", "Datetime");
+        $sheet->setCellValue("D7", "Issued By");
+        $sheet->setCellValue("E7", "Issued To");
+        $sheet->setCellValue("F7", "Ticket Type Name");
+        $sheet->setCellValue("G7", "Memo");
+        $sheet->setCellValue("H7", "Deadline");
+        $sheet->setCellValue("I7", "Expiry");
+        $sheet->setCellValue("J7", "Status");
+        $sheet->setCellValue("K7", "Days");
+
+        $i =10;
+		$col = $this->phpspreadsheet->getNameFromNumber($i);
+
+        //TITLE
+        $sheet->mergeCells('A1:'.$col.'1');
+        $sheet->setCellValue("A1", "DAFTAR TICKET");
+
+        //FORMAT NUMBER
+        //$spreadsheet->getActiveSheet()->getStyle('D8:'.$col.'500')->getNumberFormat()->setFormatCode('#,##0.00');
+        
+        //COLOR HEADER COLUMN
+        $spreadsheet->getActiveSheet()->getStyle('A7:'.$col.'7')
+            ->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+            ->getStartColor()->setRGB('99FFFF');
+
+        //FONT HEADER CENTER
+        $spreadsheet->getActiveSheet()->getStyle('A7:'.$col.'7')
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+        //FONT ITALIC
+        $italycArray = [
+            'font' => [
+                'italic' => true,
+            ],
+        ];
+
+        //FONT BOLD
+        $styleArray = [
+            'font' => [
+                'bold' => true,
+            ],
+        ];
+        $sheet->getStyle('A7:'.$col.'7')->applyFromArray($styleArray);
+        $sheet->getStyle('B3:N3')->applyFromArray($styleArray);
+        $sheet->getStyle('B4:N4')->applyFromArray($styleArray);
+        $sheet->getStyle('B5:N5')->applyFromArray($styleArray);
+
+        //FONT SIZE
+        $spreadsheet->getActiveSheet()->getStyle("A1")->getFont()->setSize(18);
+        $spreadsheet->getActiveSheet()->getStyle("A3:".$col."3")->getFont()->setSize(12);
+        $spreadsheet->getActiveSheet()->getStyle("A7:".$col."7")->getFont()->setSize(12);
+
+        $iRow0 = 3;
+        $iRow = 8;
+        $no = 1;
+
+        //DATE & TIME
+        $sheet->setCellValue('H3', '=NOW()');
+        $sheet->mergeCells('H3:'.$col.'3');
+        $sheet->setCellValue('I4', '=NOW()');
+        $sheet->mergeCells('I4:'.$col.'4');
+        $printTicket = $this->ticketstatus_model->get_PrintTicketReport($ticketdate_awal,$ticketdate_akhir,$issuedBy,$issuedTo,$status);
+        foreach ($printTicket as $rw) {
+
+            $sheet->setCellValue("A$iRow", $no++);
+            $sheet->setCellValue("B$iRow0", $ticketdate_awal." s/d ".$ticketdate_akhir);
+            //$sheet->setCellValue("A$iRow", $no++);
+            $sheet->setCellValue("B$iRow", $rw->fst_ticket_no);
+            $sheet->setCellValue("C$iRow", $rw->fdt_ticket_datetime);
+            $sheet->setCellValue("D$iRow", $rw->issuedBy);
+            $sheet->setCellValue("E$iRow", $rw->issuedTo);
+            $sheet->setCellValue("F$iRow", $rw->fst_ticket_type_name);
+            $sheet->setCellValue("G$iRow", $rw->fst_memo);
+            $sheet->setCellValue("H$iRow", $rw->fdt_deadline_datetime);
+            $sheet->setCellValue("I$iRow", $rw->fdt_deadline_datetime);
+            $sheet->setCellValue("J$iRow", $rw->fst_status);
+            $sheet->setCellValue("K$iRow", $rw->fin_service_level_days);
+            $iRow++;
+            
+        }
+
+        //BORDER
+        $styleArray = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DASHED
+                ],
+            ],
+        ];
+        $iRow = $iRow - 1;
+        $sheet->getStyle('A7:'.$col.$iRow)->applyFromArray($styleArray);
+        
+        //FILE NAME WITH DATE
+        $this->phpspreadsheet->save("ticket_report_" . date("Ymd") . ".xls" ,$spreadsheet);
     }
 
 

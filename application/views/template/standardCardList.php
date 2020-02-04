@@ -149,7 +149,7 @@ body {
                             <div class= "col-md-6"><?php echo $card['fdt_ticket_datetime']; ?></div>
                           </span>
                         </li>
-                        <!--<li class="list-group-item list-group-item-success"><i class="fa fa-sticky-note-o"style="font-size:20px;"> --</i><php echo $card['fst_memo']; ?></li>-->
+                        <li class="list-group-item list-group-item-success"><i class="fa fa-thumb-tack"style="font-size:20px;"> -</i><?php echo $card['fst_memo']; ?></li>
                       </ul>
                     </div>
                     <!--<a href="#memo" class="btn btn-info" data-toggle="collapse">Read Memo</a>
@@ -163,8 +163,8 @@ body {
                       </div>
                       <p><button data-id='<= $card["fin_ticket_id"]?>'>Detail</button></p>-->
                     <div class="card-footer">
-                      <p><i class="fa fa-sticky-note-o"style="font-size:20px;"> </i><?php echo $card['fst_memo']; ?></p>
-                      <button type="button" class="detailbutton btn-primary" data-id='<?= $card["fin_ticket_id"]?>'>Detail</button>
+                      <!--<p><i class="fa fa-sticky-note-o"style="font-size:20px;"> </i><php echo $card['fst_memo']; ?></p>-->
+                      <button type="button" class="detailbutton btn-primary" data-id='<?= $card["fin_ticket_id"]?>'>More info <i class="fa fa-arrow-circle-right"></i></button>
                       <!--<p><button class="detailbutton" data-id='<= $card["fin_ticket_id"]?>'>Detail</button></p>-->
                     </div>
                   </div>

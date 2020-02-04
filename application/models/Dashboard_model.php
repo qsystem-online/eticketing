@@ -24,7 +24,7 @@ class Dashboard_model extends CI_Model {
         $user = $this->aauth->user();
 
         $ssql = "select count(*) as ttl_approved from trticket 
-            where fst_status = 'REJECTED' and fin_issued_by_user_id =? ";
+            where fst_status = 'REJECTED' and fin_issued_by_user_id =? and fbl_rejected_view =0 ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         $rw = $qr->row();
         return $rw->ttl_approved;
@@ -33,10 +33,15 @@ class Dashboard_model extends CI_Model {
 
     public function getTtlIssuedApproved(){
         $user = $this->aauth->user();
+        $now = date("Y-m-d H:i:s",strtotime(' 23:59:59'));
+        $now = date_create($now);
+        date_add($now,date_interval_create_from_date_string("0 days"));
+        $expiryaccepted = date_format($now,"Y-m-d H:i:s");
 
         $ssql = "select count(*) as ttl_approved from trticket 
-            where fst_status = 'APPROVED/OPEN' and fin_issued_by_user_id =? ";
+            where fst_status = 'APPROVED/OPEN' and fin_issued_by_user_id =? and fdt_acceptance_expiry_datetime >'$expiryaccepted' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        //echo $this->db->last_query();
         $rw = $qr->row();
         return $rw->ttl_approved;
 
@@ -44,9 +49,13 @@ class Dashboard_model extends CI_Model {
 
     public function getTtlIssuedAccepted(){
         $user = $this->aauth->user();
+        $now = date("Y-m-d H:i:s",strtotime(' 23:59:59'));
+        $now = date_create($now);
+        date_add($now,date_interval_create_from_date_string("0 days"));
+        $expirydeadline = date_format($now,"Y-m-d H:i:s");
 
         $ssql = "select count(*) as ttl_need_revision from trticket 
-            where fst_status = 'ACCEPTED' and fin_issued_by_user_id =? ";
+            where fst_status = 'ACCEPTED' and fin_issued_by_user_id =? and fdt_deadline_extended_datetime >'$expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         $rw = $qr->row();
         return $rw->ttl_need_revision;
@@ -55,9 +64,13 @@ class Dashboard_model extends CI_Model {
 
     public function getTtlIssuedNeedRevision(){
         $user = $this->aauth->user();
+        $now = date("Y-m-d H:i:s",strtotime(' 23:59:59'));
+        $now = date_create($now);
+        date_add($now,date_interval_create_from_date_string("0 days"));
+        $expirydeadline = date_format($now,"Y-m-d H:i:s");
 
         $ssql = "select count(*) as ttl_need_revision from trticket 
-            where (fst_status = 'NEED_REVISION' OR fst_status ='COMPLETION_REVISED') and fin_issued_by_user_id =? ";
+            where (fst_status = 'NEED_REVISION' OR fst_status ='COMPLETION_REVISED') and fin_issued_by_user_id =? and fdt_deadline_extended_datetime >'$expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         //echo $this->db->last_query();
         $rw = $qr->row();
@@ -68,9 +81,13 @@ class Dashboard_model extends CI_Model {
     
     public function getTtlIssuedCompleted(){
         $user = $this->aauth->user();
+        $now = date("Y-m-d H:i:s",strtotime(' 23:59:59'));
+        $now = date_create($now);
+        date_add($now,date_interval_create_from_date_string("0 days"));
+        $expirydeadline = date_format($now,"Y-m-d H:i:s");
 
         $ssql = "select count(*) as ttl_need_revision from trticket 
-            where fst_status = 'COMPLETED' and fin_issued_by_user_id =? ";
+            where fst_status = 'COMPLETED' and fin_issued_by_user_id =? and fdt_deadline_extended_datetime >'$expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         $rw = $qr->row();
         return $rw->ttl_need_revision;
@@ -79,9 +96,13 @@ class Dashboard_model extends CI_Model {
 
     public function getTtlReceivedApproved(){
         $user = $this->aauth->user();
+        $now = date("Y-m-d H:i:s",strtotime(' 23:59:59'));
+        $now = date_create($now);
+        date_add($now,date_interval_create_from_date_string("0 days"));
+        $expiryaccepted = date_format($now,"Y-m-d H:i:s");
 
         $ssql = "select count(*) as ttl_approved from trticket 
-            where fst_status = 'APPROVED/OPEN' and fin_issued_to_user_id =? ";
+            where fst_status = 'APPROVED/OPEN' and fin_issued_to_user_id =? and fdt_acceptance_expiry_datetime >'$expiryaccepted' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         $rw = $qr->row();
         return $rw->ttl_approved;
@@ -90,10 +111,15 @@ class Dashboard_model extends CI_Model {
 
     public function getTtlReceivedAccepted(){
         $user = $this->aauth->user();
+        $now = date("Y-m-d H:i:s",strtotime(' 23:59:59'));
+        $now = date_create($now);
+        date_add($now,date_interval_create_from_date_string("0 days"));
+        $expirydeadline = date_format($now,"Y-m-d H:i:s");
 
         $ssql = "select count(*) as ttl_need_revision from trticket 
-            where fst_status = 'ACCEPTED' and fin_issued_to_user_id =? ";
+            where fst_status = 'ACCEPTED' and fin_issued_to_user_id =? and fdt_deadline_extended_datetime >='$expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        //echo $this->db->last_query();
         $rw = $qr->row();
         return $rw->ttl_need_revision;
 
@@ -101,9 +127,13 @@ class Dashboard_model extends CI_Model {
 
     public function getTtlReceivedNeedRevision(){
         $user = $this->aauth->user();
+        $now = date("Y-m-d H:i:s",strtotime(' 23:59:59'));
+        $now = date_create($now);
+        date_add($now,date_interval_create_from_date_string("0 days"));
+        $expirydeadline = date_format($now,"Y-m-d H:i:s");
 
         $ssql = "select count(*) as ttl_need_revision from trticket 
-            where (fst_status = 'NEED_REVISION' OR fst_status ='COMPLETION_REVISED') and fin_issued_to_user_id =? ";
+            where (fst_status = 'NEED_REVISION' OR fst_status ='COMPLETION_REVISED') and fin_issued_to_user_id =? and fdt_deadline_extended_datetime >'$expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         $rw = $qr->row();
         return $rw->ttl_need_revision;
@@ -113,9 +143,13 @@ class Dashboard_model extends CI_Model {
     
     public function getTtlReceivedCompleted(){
         $user = $this->aauth->user();
+        $now = date("Y-m-d H:i:s",strtotime(' 23:59:59'));
+        $now = date_create($now);
+        date_add($now,date_interval_create_from_date_string("0 days"));
+        $expirydeadline = date_format($now,"Y-m-d H:i:s");
 
         $ssql = "select count(*) as ttl_need_revision from trticket 
-            where fst_status = 'COMPLETED' and fin_issued_to_user_id =? ";
+            where fst_status = 'COMPLETED' and fin_issued_to_user_id =? and fdt_deadline_extended_datetime >'$expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         $rw = $qr->row();
         return $rw->ttl_need_revision;

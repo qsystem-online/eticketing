@@ -6,6 +6,7 @@ class Login extends CI_Controller
 	public $data = [];
 	public function index()
 	{
+		$this->load->model("ticketstatus_model");
 		$this->load->model("users_model");
 		$username = $this->input->post("username");
 		$password = $this->input->post("password");
@@ -21,9 +22,13 @@ class Login extends CI_Controller
 					$this->session->set_userdata("active_user", $this->users_model->getDataById($rw->fin_user_id)["user"]);
 					$this->session->set_userdata("active_branch_id", $rw->ActiveBranch);
 					$this->session->set_userdata("last_login_session", time());
+					unset($this->aauth);
+					$this->load->library('aauth');
+					$this->ticketstatus_model->update_ticketExpiry();
 					if ($this->session->userdata("last_uri")) {
 						redirect(site_url() . $this->session->userdata("last_uri"), 'refresh');
 					} else {
+						//$this->data["message"] = $strIvalidLogin;
 						redirect(site_url() . 'home', 'refresh');
 					}
 				} else {
