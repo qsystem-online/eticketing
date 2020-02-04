@@ -238,8 +238,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <option value="COMPLETED"><?=lang("COMPLETED")?></option>
                                             <option value="COMPLETION_REVISED"><?=lang("COMPLETION REVISED")?></option>
                                             <option value="CLOSED"><?=lang("CLOSED")?></option>
-                                            <option value="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
-                                            <option value="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
+                                            <option value="ACCEPTANCE_EXPIRED"><?=lang("ACCEPTANCE EXPIRED")?></option>
+                                            <option value="TICKET_EXPIRED"><?=lang("TICKET EXPIRED")?></option>
                                             <option value="REJECTED"><?=lang("REJECTED")?></option>
                                             <option value="VOID"><?=lang("VOID")?></option>
                                         </select>
@@ -419,8 +419,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                         <option value="COMPLETED"><?=lang("COMPLETED")?></option>
                                                         <option value="COMPLETION_REVISED"><?=lang("COMPLETION REVISED")?></option>
                                                         <option value="CLOSED"><?=lang("CLOSED")?></option>
-                                                        <option value="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
-                                                        <option value="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
+                                                        <option value="ACCEPTANCE_EXPIRED"><?=lang("ACCEPTANCE EXPIRED")?></option>
+                                                        <option value="TICKET_EXPIRED"><?=lang("TICKET EXPIRED")?></option>
                                                         <option value="REJECTED"><?=lang("REJECTED")?></option>
                                                         <option value="VOID"><?=lang("VOID")?></option>
                                                     </select>
