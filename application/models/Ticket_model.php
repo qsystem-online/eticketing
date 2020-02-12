@@ -18,7 +18,7 @@ class Ticket_model extends MY_MODEL {
         left join msservicelevel c on a.fin_service_level_id = c.fin_service_level_id
         left join users d on a.fin_issued_by_user_id = d.fin_user_id
         left join users e on a.fin_issued_to_user_id = e.fin_user_id
-        left join departments f on a.fin_department_id = f.fin_department_id
+        left join departments f on a.fin_to_department_id = f.fin_department_id
         left join users g on a.fin_approved_by_user_id = g.fin_user_id
         where a.fin_ticket_id = ?";
         $qr = $this->db->query($ssql,[$fin_ticket_id]);

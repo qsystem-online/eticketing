@@ -149,8 +149,8 @@ class ticket extends MY_Controller
     {
         $fdt_ticket_datetime = date("Y-m-d H:i:s");
         $fst_ticket_no = $this->ticket_model->GenerateTicketNo();
-        /*$deadlineDatetime = $this->ticket_model->getNotifyDeadline();
-        $notifyDeadline = getDbConfig("notify_deadline");
+
+       /* $notifyDeadline = getDbConfig("notify_deadline");
         
         $now = date("Y-m-d H:i:s");
         $now = date_create($now);
@@ -181,12 +181,20 @@ class ticket extends MY_Controller
             "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fin_approved_by_user_id" => $this->input->post("fin_approved_by_user_id"),
-            "fin_department_id" => $this->input->post("fin_department_id"),
-            "fst_status" => $this->input->post("fst_status"),
+            "fin_to_department_id" => $this->input->post("fin_to_department_id"),
+            //"fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
             //"fbl_rejected_view" => ($this->input->post("fbl_rejected_view") == null) ? 0 : 1,
             "fst_active" => 'A'
         ];
+
+        $fbl_need_approval = $this->input->post("fbl_need_approval");
+
+        if ($fbl_need_approval == "0" ){
+            $data["fst_status"] = "APPROVED/OPEN";
+        }else{
+            $data["fst_status"] = "NEED_APPROVAL";
+        }
 
         //save data
         $this->db->trans_start();
@@ -210,6 +218,11 @@ class ticket extends MY_Controller
             "fst_status_memo" => $this->input->post("fst_memo"),
             "fin_status_by_user_id" => $this->input->post("fin_issued_by_user_id")
         ];
+        if($fbl_need_approval == "0"){
+            $data["fst_status"]= "APPROVED/OPEN";
+        }else{
+            $data["fst_status"] = "NEED_APPROVAL";
+        }
         $insertId = $this->ticketlog_model->insert($data);
 
         $this->db->trans_complete();
@@ -220,6 +233,8 @@ class ticket extends MY_Controller
     }
 
     public function ajx_view_save(){
+
+        $fdt_ticket_datetime = dBDateTimeFormat($this->input->post("fdt_ticket_datetime"));
 
         $this->load->model('ticket_model');
         $fin_ticket_id = $this->input->post("fin_ticket_id");
@@ -233,7 +248,7 @@ class ticket extends MY_Controller
             return;
         }
 
-        $this->form_validation->set_rules($this->ticket_model->getRules("EDIT", $fin_ticket_id));
+        $this->form_validation->set_rules($this->ticket_model->getRules("VIEW", $fin_ticket_id));
         $this->form_validation->set_error_delimiters('<div class="text-danger">* ', '</div>');
         if ($this->form_validation->run() == FALSE) {
             //print_r($this->form_validation->error_array());
@@ -247,7 +262,7 @@ class ticket extends MY_Controller
         $data = [
             "fin_ticket_id" => $fin_ticket_id,
             "fst_ticket_no" => $this->input->post("fst_ticket_no"),
-            "fdt_ticket_datetime" => dBDateTimeFormat($this->input->post("fdt_ticket_datetime")),
+            "fdt_ticket_datetime" => $fdt_ticket_datetime,
             "fdt_acceptance_expiry_datetime" => dBDateTimeFormat($this->input->post("fdt_acceptance_expiry_datetime")),
             "fin_ticket_type_id" => $this->input->post("fin_ticket_type_id"),
             "fin_service_level_id" => $this->input->post("fin_service_level_id"),
@@ -256,7 +271,7 @@ class ticket extends MY_Controller
             "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fin_approved_by_user_id" => $this->input->post("fin_approved_by_user_id"),
-            "fin_department_id" => $this->input->post("fin_department_id"),
+            "fin_to_department_id" => $this->input->post("fin_to_department_id"),
             "fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
             //"fbl_rejected_view" => ($this->input->post("fbl_rejected_view") == null) ? 0 : 1,

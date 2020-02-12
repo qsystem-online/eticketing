@@ -109,6 +109,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
                                 <input type="hidden" id="frm-mode" value="<?=$mode?>">
                                 <input type="hidden" class="form-control" id="fin_ticket_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_id" value="<?=$fin_ticket_id?>" readonly>
+                                <input type="hidden" class="form-control" id="fbl_need_approval" name="fbl_need_approval" readonly>
                                 
                                 <div class="form-group">
                                     <label for="fst_ticket_no" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket No.")?> #</label>
@@ -218,10 +219,10 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="fin_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
+                                    <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
                                     <div class="col-xs-6 col-md-4">
-                                        <select id="select-department" class="form-control select2" name="fin_department_id">
-                                            <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                        <select id="select-department" class="form-control select2" name="fin_to_department_id">
+                                            <option value="All">-- <?=lang("All")?> --</option>
                                             <?php
                                                 $deptidList = $this->msdepartments_model->getAllList();
                                                 foreach ($deptidList as $deptId) {
@@ -229,7 +230,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                 }
                                             ?>
                                         </select>
-                                        <div id="fin_department_id" class="text-danger"></div>
+                                        <div id="fin_to_department_id" class="text-danger"></div>
                                     </div>
                                 </div>
 
@@ -264,7 +265,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <option value="REJECTED"><?=lang("REJECTED")?></option>
                                             <option value="VOID"><?=lang("VOID")?></option>
                                         </select>
-                                    <!--<input type="hidden" name="fst_status" value=""/>-->
                                     </div>
                                 </div>
 
@@ -419,10 +419,10 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             </div>
                                             
                                             <div class="form-group">
-                                                <label for="fin_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
+                                                <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
                                                 <div class="col-xs-6 col-md-4">
-                                                    <select id="select-department" class="form-control select2" name="fin_department_id" disabled>
-                                                        <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                                    <select id="select-department" class="form-control select2" name="fin_to_department_id" disabled>
+                                                        <option value="">-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $deptidList = $this->msdepartments_model->getAllList();
                                                             foreach ($deptidList as $deptId) {
@@ -624,44 +624,44 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
         $("#fdt_ticket_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s")?>")).datetimepicker("update");
 
-        /*function getDeadlineExtended(){
-            tglTicket = $("#fdt_ticket_datetime").val();
-            tglDeadlineExt = moment(tglTicket,DATETIMEPICKER_FORMAT_MOMENT);
-            $("#fdt_deadline_extended_datetime").val(tglDeadlineExt.format(DATETIMEPICKER_FORMAT_MOMENT));
-        }*/
+        mode = $("#frm-mode").val();
+        if(mode == "ADD"){
+            $("#select-ticketType").change(function(event){
+                event.preventDefault();
+                $("#select-serviceLevel").prop("disabled", false);
 
-        $("#select-ticketType").change(function(event){
+                $("#select-ticketType").each(function(index){
+                    if($(this).find(":selected").data("notice") == "NOTICE"){
+                        $("#select-serviceLevel").val(null).prop("disabled", true);
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>"));
+                    }else if($(this).find(":selected").data("notice") == "ASSIGNMENT"){
+                        $("#fdt_deadline_extended_datetime").val(null);
+                    }else if($(this).find(":selected").data("notice") == "INFO"){
+                        $("#fdt_deadline_extended_datetime").val(null);
+                    }
+                });
+            });
+        }
+
+        mode = $("#frm-mode").val();
+        if(mode == "ADD"){
+            $("#select-ticketType").change(function(event){
             event.preventDefault();
-            $("#select-serviceLevel").prop("disabled", false);
 
-            $("#select-ticketType").each(function(index){
-                if($(this).find(":selected").data("notice") == "NOTICE"){
-                    $("#select-serviceLevel").val(null).prop("disabled", true);
-                    $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>"));
-                    //getDeadlineExtended();
-                }else if($(this).find(":selected").data("notice") == "ASSIGNMENT"){
-                    $("#fdt_deadline_extended_datetime").val(null);
-                }else if($(this).find(":selected").data("notice") == "INFO"){
-                    $("#fdt_deadline_extended_datetime").val(null);
+                //alert($("#select-ticketType option:selected").data("fbl"));
+                if($(this).find(":selected").data("fbl") == "0"){
+                    //$("#select-status").val("APPROVED/OPEN");
+                    $("#select-status").html("<option value='APPROVED/OPEN'><?=lang("APPROVED/OPEN")?></option>");
+                    $("#fbl_need_approval").val("0");
+                    $("#select-approvedby").prop("disabled", true);
+                }else if($(this).find(":selected").data("fbl") == "1"){
+                    //$("#select-status").val("NEED_APPROVAL");
+                    $("#select-status").html("<option value='NEED_APPROVAL'><?=lang("NEED APPROVAL")?></option>");
+                    $("#fbl_need_approval").val("1");
+                    $("#select-approvedby").prop("disabled", false);
                 }
             });
-        });
-
-        /* masih error
-        $("#select-ticketType").change(function(event){
-            event.preventDefault();
-
-            //alert($("#select-ticketType option:selected").data("fbl"));
-            if($(this).find(":selected").data("fbl") == "0"){
-                //$("#select-status").val("APPROVED/OPEN");
-                $("#select-status").html("<option value='APPROVED/OPEN'><?=lang("APPROVED/OPEN")?></option>");
-                $("#select-approvedby").prop("disabled", true);
-            }else if($(this).find(":selected").data("fbl") == "1"){
-                //$("#select-status").val("NEED_APPROVAL");
-                $("#select-status").html("<option value='NEED_APPROVAL'><?=lang("NEED APPROVAL")?></option>");
-                $("#select-approvedby").prop("disabled", false);
-            }
-        });*/
+        }
 
         $("#select-toUser").change(function(){
 			$("#select-department").val(null).prop("disabled", true);
@@ -671,9 +671,14 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             $("#select-toUser").val(null).prop("disabled", true);
         });
 
+        $("#tblList").on("click",".btn-view",function(e){    
+            showTransaction($(this),true);
+        });
+
     })
 
     function init_form(fin_ticket_id){
+
         //alert("Init Form);
         var url = "<?=site_url()?>tr/ticket/fetch_data/" + fin_ticket_id;
         $.ajax({
@@ -698,10 +703,12 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     }
                 });
 
-                $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
-                //$("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
-                //$("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
-                $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
+                if (resp.ms_ticket.fdt_deadline_extended_datetime != null){
+                    $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
+                    $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
+                    $("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
+                    $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
+                }
 
                 var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, true);
                 $('#select-ticketType').append(newOption).trigger('change');
