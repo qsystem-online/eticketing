@@ -97,16 +97,5 @@ class Ticket_model extends MY_MODEL {
         
         return $max_tr_no;
     }
-
-    /*function getDbConfig($key){
-        $CI = & get_instance();
-        $ssql ="select fst_value from config where fst_key = ? and fbl_active = true";
-        $qr = $CI->db->query($ssql,[$key]);
-        $rw = $qr->row();
-        if ($rw){
-            return $rw->fst_value;
-        }
-        return null;
-    }*/
     
 }

@@ -223,7 +223,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-department" class="form-control select2" name="fin_to_department_id">
-                                            <option value="All">-- <?=lang("All")?> --</option>
+                                            <option value="ALL"><?=lang("ALL")?></option>
                                             <?php
                                                 $deptidList = $this->msdepartments_model->getAllList();
                                                 foreach ($deptidList as $deptId) {
@@ -423,7 +423,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                 <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
                                                 <div class="col-xs-6 col-md-4">
                                                     <select id="select-department" class="form-control select2" name="fin_to_department_id" disabled>
-                                                        <option value="">-- <?=lang("select")?> --</option>
+                                                        <option value="ALL"><?=lang("ALL")?></option>
                                                         <?php
                                                             $deptidList = $this->msdepartments_model->getAllList();
                                                             foreach ($deptidList as $deptId) {

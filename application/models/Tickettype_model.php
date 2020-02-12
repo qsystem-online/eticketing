@@ -56,11 +56,4 @@ class Tickettype_model extends MY_MODEL {
         $rs = $qr->result();
         return $rs;
     }
-
-    /*public function getNotify($notifyDays,$finTicTypeId){
-        $ssql = "select * from mstickettype where fin_ticket_type_id like ? and fst_ticket_type_name like ? 
-            and fst_assignment_or_notice = 'NOTICE' and fst_active = 'A'";
-        $qr = $this->db->query($ssql,[$notifyDays,$finTicTypeId]);
-        return $qr->result();
-    }*/
 }
