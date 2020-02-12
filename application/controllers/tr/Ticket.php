@@ -150,12 +150,11 @@ class ticket extends MY_Controller
         $fdt_ticket_datetime = date("Y-m-d H:i:s");
         $fst_ticket_no = $this->ticket_model->GenerateTicketNo();
 
-       /* $notifyDeadline = getDbConfig("notify_deadline");
-        
+        $notifyDeadline = getDbConfig("notify_deadline");
         $now = date("Y-m-d H:i:s");
         $now = date_create($now);
         date_add($now,date_interval_create_from_date_string("$notifyDeadline days"));
-        $deadlineDatetime = date_format($now,"Y-m-d H:i:s");*/
+        $deadlineDatetime = date_format($now,"Y-m-d H:i:s");
 
         $this->load->model('ticket_model');
         $this->form_validation->set_rules($this->ticket_model->getRules("ADD", 0));
@@ -176,8 +175,8 @@ class ticket extends MY_Controller
             "fdt_acceptance_expiry_datetime" => dBDateTimeFormat($this->input->post("fdt_acceptance_expiry_datetime")),
             "fin_ticket_type_id" => $this->input->post("fin_ticket_type_id"),
             "fin_service_level_id" => $this->input->post("fin_service_level_id"),
-            "fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_datetime")),
-            "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
+            //"fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_datetime")),
+            //"fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
             "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
             "fin_approved_by_user_id" => $this->input->post("fin_approved_by_user_id"),
@@ -194,6 +193,15 @@ class ticket extends MY_Controller
             $data["fst_status"] = "APPROVED/OPEN";
         }else{
             $data["fst_status"] = "NEED_APPROVAL";
+        }
+
+        $fst_assignment_or_notice = $this->input->post("fst_assignment_or_notice");
+        if ($fst_assignment_or_notice == "NOTICE"){
+            $data["fdt_deadline_datetime"]= $deadlineDatetime;
+            $data["fdt_deadline_extended_datetime"] = $deadlineDatetime;
+        }else{
+            $data["fdt_deadline_datetime"]= dBDateTimeFormat($this->input->post("fdt_deadline_datetime"));
+            $data["fdt_deadline_extended_datetime"] = dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime"));
         }
 
         //save data

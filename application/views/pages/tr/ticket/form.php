@@ -110,6 +110,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <input type="hidden" id="frm-mode" value="<?=$mode?>">
                                 <input type="hidden" class="form-control" id="fin_ticket_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_id" value="<?=$fin_ticket_id?>" readonly>
                                 <input type="hidden" class="form-control" id="fbl_need_approval" name="fbl_need_approval" readonly>
+                                <input type="hidden" class="form-control" id="fst_assignment_or_notice" name="fst_assignment_or_notice" readonly>
                                 
                                 <div class="form-group">
                                     <label for="fst_ticket_no" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket No.")?> #</label>
@@ -633,11 +634,16 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 $("#select-ticketType").each(function(index){
                     if($(this).find(":selected").data("notice") == "NOTICE"){
                         $("#select-serviceLevel").val(null).prop("disabled", true);
-                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>"));
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
+                        $("#fst_assignment_or_notice").val("NOTICE");
                     }else if($(this).find(":selected").data("notice") == "ASSIGNMENT"){
                         $("#fdt_deadline_extended_datetime").val(null);
+                        $("#fst_assignment_or_notice").val("ASSIGNMENT");
+                        $("#fdt_deadline_extended_datetime").prop("disabled", true);
                     }else if($(this).find(":selected").data("notice") == "INFO"){
                         $("#fdt_deadline_extended_datetime").val(null);
+                        $("#fdt_deadline_extended_datetime").prop("disabled", false);
+                        $("#fst_assignment_or_notice").val("INFO");
                     }
                 });
             });
@@ -705,7 +711,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 if (resp.ms_ticket.fdt_deadline_extended_datetime != null){
                     $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
-                    $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
+                    //$("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
                     $("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
                     $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
                 }
