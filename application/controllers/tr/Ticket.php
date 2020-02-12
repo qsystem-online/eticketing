@@ -12,6 +12,8 @@ class ticket extends MY_Controller
         $this->load->model('servicelevel_model');
         $this->load->model('tickettype_model');
         $this->load->model('users_model');
+        $this->load->model('msdepartments_model');
+        $this->load->model('usersgroup_model');
     }
 
     public function index()
@@ -41,9 +43,36 @@ class ticket extends MY_Controller
         ];
         $this->list['columns'] = [
             ['title' => 'Ticket ID.', 'width' => '10%', 'data' => 'fin_ticket_id'],
-            ['title' => 'Ticket No.', 'width' => '20%', 'data' => 'fst_ticket_no'],
-            ['title' => 'Ticket Datetime', 'width' => '20%', 'data' => 'fdt_ticket_datetime'],
-            ['title' => 'Memo', 'width' => '40%', 'data' => 'fst_memo'],
+            ['title' => 'Ticket No.', 'width' => '15%', 'data' => 'fst_ticket_no'],
+            ['title' => 'Ticket Datetime', 'width' => '15%', 'data' => 'fdt_ticket_datetime'],
+            ['title' => 'Memo', 'width' => '30%', 'data' => 'fst_memo'],
+            ['title' => 'Status', 'width' => '20%', 'data' => 'fst_status',
+                'render' =>"function(data,type,row){
+                    if(data == 'NEED_APPROVAL'){
+                        return 'NEED APPROVAL';
+                    }else if(data == 'APPROVED/OPEN'){
+                        return 'APPROVED/OPEN';
+                    }else if(data == 'ACCEPTED'){
+                        return 'ACCEPTED';
+                    }else if(data == 'NEED_REVISION'){
+                        return 'NEED_REVISION';
+                    }else if(data == 'COMPLETED'){
+                        return 'COMPLETED';
+                    }else if(data == 'COMPLETION_REVISED'){
+                        return 'COMPLETION REVISED';
+                    }else if(data == 'CLOSED'){
+                        return 'CLOSED';
+                    }else if(data == 'ACCEPTANCE_EXPIRED'){
+                        return 'ACCEPTANCE EXPIRED';
+                    }else if(data == 'TICKET_EXPIRED'){
+                        return 'TICKET EXPIRED';
+                    }else if(data == 'REJECTED'){
+                        return 'REJECTED';
+                    }else if(data == 'VOID'){
+                        return 'VOID';
+                    }
+                }"
+            ],
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center',
                 'render'=>"function(data,type,row){
                     action = \"<div style='font-size:16px'>\";
@@ -120,6 +149,13 @@ class ticket extends MY_Controller
     {
         $fdt_ticket_datetime = date("Y-m-d H:i:s");
         $fst_ticket_no = $this->ticket_model->GenerateTicketNo();
+        /*$deadlineDatetime = $this->ticket_model->getNotifyDeadline();
+        $notifyDeadline = getDbConfig("notify_deadline");
+        
+        $now = date("Y-m-d H:i:s");
+        $now = date_create($now);
+        date_add($now,date_interval_create_from_date_string("$notifyDeadline days"));
+        $deadlineDatetime = date_format($now,"Y-m-d H:i:s");*/
 
         $this->load->model('ticket_model');
         $this->form_validation->set_rules($this->ticket_model->getRules("ADD", 0));
@@ -144,6 +180,8 @@ class ticket extends MY_Controller
             "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
             "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
+            "fin_approved_by_user_id" => $this->input->post("fin_approved_by_user_id"),
+            "fin_department_id" => $this->input->post("fin_department_id"),
             "fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
             //"fbl_rejected_view" => ($this->input->post("fbl_rejected_view") == null) ? 0 : 1,
@@ -181,9 +219,7 @@ class ticket extends MY_Controller
         $this->json_output();
     }
 
-    public function ajx_view_save()
-    {
-        $fdt_ticket_datetime = dBDateTimeFormat($this->input->post("fdt_ticket_datetime"));
+    public function ajx_view_save(){
 
         $this->load->model('ticket_model');
         $fin_ticket_id = $this->input->post("fin_ticket_id");
@@ -219,6 +255,8 @@ class ticket extends MY_Controller
             "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
             "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
+            "fin_approved_by_user_id" => $this->input->post("fin_approved_by_user_id"),
+            "fin_department_id" => $this->input->post("fin_department_id"),
             "fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
             //"fbl_rejected_view" => ($this->input->post("fbl_rejected_view") == null) ? 0 : 1,
@@ -261,7 +299,7 @@ class ticket extends MY_Controller
         $this->load->library("datatables");
         $this->datatables->setTableName("trticket");
 
-        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fst_memo,'action' as action";
+        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fst_memo,fst_status,'action' as action";
         $this->datatables->setSelectFields($selectFields);
 
         $Fields = $this->input->get('optionSearch');
@@ -286,7 +324,6 @@ class ticket extends MY_Controller
     }
 
     public function fetch_data($fin_ticket_id){
-        $this->load->model("ticketstatus_model");
         $this->load->model("ticket_model");
         $data = $this->ticket_model->getDataById($fin_ticket_id);
 		
@@ -339,4 +376,8 @@ class ticket extends MY_Controller
         $this->Cell(30, 10, 'Percobaan Header Dan Footer With Page Number', 0, 0, 'C');
         $this->Cell(0, 10, 'Halaman ' . $this->PageNo() . ' dari {nb}', 0, 0, 'R');
     }
+    
+    /*public function getNotifyDeadline(){
+        $notifyDeadline = getDbConfig("notify_deadline");
+    }*/
 }

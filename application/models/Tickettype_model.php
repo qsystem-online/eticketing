@@ -49,11 +49,18 @@ class Tickettype_model extends MY_MODEL {
         return $query->result_array();
     }
 
-    public function get_data_ticketType(){
+    public function getTicketType(){
         $term = $this->input->get("term");
         $ssql = "select * from " . $this->tableName . " where fst_active = 'A' order by fst_ticket_type_name";
         $qr = $this->db->query($ssql, []);
         $rs = $qr->result();
         return $rs;
     }
+
+    /*public function getNotify($notifyDays,$finTicTypeId){
+        $ssql = "select * from mstickettype where fin_ticket_type_id like ? and fst_ticket_type_name like ? 
+            and fst_assignment_or_notice = 'NOTICE' and fst_active = 'A'";
+        $qr = $this->db->query($ssql,[$notifyDays,$finTicTypeId]);
+        return $qr->result();
+    }*/
 }

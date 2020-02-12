@@ -224,4 +224,17 @@ class Users_model extends MY_Model
 		$rs = $qr->result();
 		return $rs;
 	}
+
+	public function getApprovedBy(){
+		$user = $this->aauth->user();
+        $deptActive = $user->fin_department_id;
+        $levelActive = intval($user->fin_level);
+        $levelActive = strval($levelActive);
+
+        $ssql = "SELECT a.*,b.fst_group_name,b.fin_level FROM users a LEFT JOIN usersgroup b ON a.fin_group_id = b.fin_group_id 
+		WHERE a.fin_department_id = ".$deptActive." AND b.fin_level < ".$levelActive." AND a.fst_active ='A' ORDER BY a.fst_username";
+        $qr = $this->db->query($ssql,[$levelActive]);
+		$rs = $qr->result();
+		return $rs;
+	}
 }

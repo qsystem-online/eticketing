@@ -50,4 +50,11 @@ class Msdepartments_model extends MY_Model {
         $query = $this->db->get('departments');
 		return $query->result_array();
     }
+	
+	public function getDepartment(){
+		$ssql = "select fin_department_id,fst_department_name from ".$this->tableName." where fst_department_name like ? and fst_active = 'A'";
+		$qr = $this->db->query($ssql,[]);
+		$rs = $qr->result();
+		return $rs;
+	}
 }

@@ -80,8 +80,10 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <label for="fst_assignment_or_notice" class="col-xs-6 col-md-2 control-label"><?=lang("Assignment or Notice")?></label>
                             <div class="col-xs-6 col-md-4">
                                 <select class="form-control" id="fst_assignment_or_notice" name="fst_assignment_or_notice">
+                                    <option value="" disabled selected>-- <?=lang("select")?> --</option>
                                     <option value='ASSIGNMENT'><?=lang("ASSIGNMENT")?></option>
                                     <option value='NOTICE'><?=lang("NOTICE")?></option>
+                                    <option value='INFO'><?=lang("INFO")?></option>
                                 </select>
                             </div>
                         </div>
