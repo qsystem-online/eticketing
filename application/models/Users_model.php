@@ -237,4 +237,11 @@ class Users_model extends MY_Model
 		$rs = $qr->result();
 		return $rs;
 	}
+
+	public function getDepartment(){
+        $ssql = "SELECT a.*,b.fst_department_name from users a left join departments b on a.fin_department_id = b.fin_department_id where a.fst_active = 'A'";
+		$qr = $this->db->query($ssql,[]);
+		$rs = $qr->result();
+		return $rs;
+	}
 }

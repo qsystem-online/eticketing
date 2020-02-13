@@ -223,9 +223,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-department" class="form-control select2" name="fin_to_department_id">
-                                            <option value="ALL"><?=lang("ALL")?></option>
+                                        <option value="">-- <?=lang("select")?> --</option>
                                             <?php
-                                                $deptidList = $this->msdepartments_model->getAllList();
+                                                $deptidList = $this->msdepartments_model->getDepartment();
                                                 foreach ($deptidList as $deptId) {
                                                     echo "<option value='$deptId->fin_department_id'>$deptId->fst_department_name</option>";
                                                 }
@@ -238,7 +238,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div class="form-group">
                                     <label for="fin_approved_by_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Approved By")?></label>
                                     <div class="col-xs-6 col-md-4">
-                                        <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id" disabled>
+                                        <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id">
                                             <option value="" disabled selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $approvedbyList = $this->users_model->getApprovedBy();
@@ -423,9 +423,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                 <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
                                                 <div class="col-xs-6 col-md-4">
                                                     <select id="select-department" class="form-control select2" name="fin_to_department_id" disabled>
-                                                        <option value="ALL"><?=lang("ALL")?></option>
+                                                        <option value="">-- <?=lang("select")?> --</option>
                                                         <?php
-                                                            $deptidList = $this->msdepartments_model->getAllList();
+                                                            $deptidList = $this->msdepartments_model->getDepartment();
                                                             foreach ($deptidList as $deptId) {
                                                                 echo "<option value='$deptId->fin_department_id'>$deptId->fst_department_name</option>";
                                                             }
@@ -499,7 +499,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
 <script type="text/javascript">
     var $userActive ="<?= $this->aauth->get_user_id()?>";
-    var $levelActive ="<?= $this->aauth->user('fin_user_id')->fin_level +1?>";
+    var $levelActive ="<?= $this->aauth->user('fin_user_id')->fin_level?>";
 
     $(function(){
 
@@ -652,14 +652,14 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         mode = $("#frm-mode").val();
         if(mode == "ADD"){
             $("#select-ticketType").change(function(event){
-            event.preventDefault();
+                event.preventDefault();
 
                 //alert($("#select-ticketType option:selected").data("fbl"));
                 if($(this).find(":selected").data("fbl") == "0"){
                     //$("#select-status").val("APPROVED/OPEN");
                     $("#select-status").html("<option value='APPROVED/OPEN'><?=lang("APPROVED/OPEN")?></option>");
                     $("#fbl_need_approval").val("0");
-                    $("#select-approvedby").prop("disabled", true);
+                    $("#select-approvedby").val(null).prop("disabled", true);
                 }else if($(this).find(":selected").data("fbl") == "1"){
                     //$("#select-status").val("NEED_APPROVAL");
                     $("#select-status").html("<option value='NEED_APPROVAL'><?=lang("NEED APPROVAL")?></option>");

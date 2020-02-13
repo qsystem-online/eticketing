@@ -400,7 +400,4 @@ class ticket extends MY_Controller
         $this->Cell(0, 10, 'Halaman ' . $this->PageNo() . ' dari {nb}', 0, 0, 'R');
     }
     
-    /*public function getNotifyDeadline(){
-        $notifyDeadline = getDbConfig("notify_deadline");
-    }*/
 }
