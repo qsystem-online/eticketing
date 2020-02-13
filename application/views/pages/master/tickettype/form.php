@@ -23,7 +23,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         border-bottom-style: fixed;
     }
     .form-group{
-		margin-bottom: 5px;
+		margin-bottom: 10px;
 	}
 	.checkbox label, .radio label {
 		font-weight:700;
