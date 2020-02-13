@@ -408,6 +408,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                 <label for="select-toUser" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
                                                 <div class="col-xs-6 col-md-4">
                                                     <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id" style="width:100%" disabled>
+                                                        <option value="" disabled selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $touserList = $this->users_model->getToUserList();
                                                             foreach ($touserList as $toUser){
@@ -423,7 +424,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                 <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
                                                 <div class="col-xs-6 col-md-4">
                                                     <select id="select-department" class="form-control select2" name="fin_to_department_id" disabled>
-                                                        <option value="">-- <?=lang("select")?> --</option>
+                                                        <option value="" disabled selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $deptidList = $this->msdepartments_model->getDepartment();
                                                             foreach ($deptidList as $deptId) {
@@ -667,15 +668,27 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     $("#select-approvedby").prop("disabled", false);
                 }
             });
+
+            $("#select-toUser").change(function(){
+			$("#select-department").val(null);
+            $("#select-department").prop("disabled", true);
+            });
+
+            $("#select-department").change(function(){
+                $("#select-toUser").val(null);
+                $("#select-toUser").prop("disabled", true);
+            });
         }
 
-        $("#select-toUser").change(function(){
-			$("#select-department").val(null).prop("disabled", true);
+        /*$("#select-toUser").change(function(){
+			$("#select-department").val(null);
+            $("#select-department").prop("disabled", true);
 		});
 
         $("#select-department").change(function(){
-            $("#select-toUser").val(null).prop("disabled", true);
-        });
+            $("#select-toUser").val(null);
+            $("#select-toUser").prop("disabled", true);
+        });*/
 
         $("#tblList").on("click",".btn-view",function(e){    
             showTransaction($(this),true);
@@ -733,7 +746,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 var newOption = new Option(resp.ms_ticket.fst_username, true);
                 $('#select-approvedby').append(newOption).trigger('change');
 
-                var newOption = new Option(resp.ms_ticket.fst_department_name, true);
+                var newOption = new Option(resp.ms_ticket.fin_department_id, true);
                 $('#select-department').append(newOption).trigger('change');
 
                 //populate Ticket Log
