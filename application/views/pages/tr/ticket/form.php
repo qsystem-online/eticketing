@@ -111,6 +111,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <input type="hidden" class="form-control" id="fin_ticket_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_id" value="<?=$fin_ticket_id?>" readonly>
                                 <input type="hidden" class="form-control" id="fbl_need_approval" name="fbl_need_approval" readonly>
                                 <input type="hidden" class="form-control" id="fst_assignment_or_notice" name="fst_assignment_or_notice" readonly>
+                                <input type="hidden" class="form-control" id="fin_service_level_days" name="fin_service_level_days" readonly>
                                 
                                 <div class="form-group">
                                     <label for="fst_ticket_no" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket No.")?> #</label>
@@ -645,6 +646,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         $("#fdt_deadline_extended_datetime").val(null);
                         $("#fdt_deadline_extended_datetime").prop("disabled", false);
                         $("#fst_assignment_or_notice").val("INFO");
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('1 days'))?>"));
+                        $("#select-serviceLevel").prop("disabled", true);
                     }
                 });
             });
@@ -670,8 +673,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             });
 
             $("#select-toUser").change(function(){
-			$("#select-department").val(null);
-            $("#select-department").prop("disabled", true);
+                $("#select-department").val(null);
+                $("#select-department").prop("disabled", true);
             });
 
             $("#select-department").change(function(){
@@ -679,20 +682,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 $("#select-toUser").prop("disabled", true);
             });
         }
-
-        /*$("#select-toUser").change(function(){
-			$("#select-department").val(null);
-            $("#select-department").prop("disabled", true);
-		});
-
-        $("#select-department").change(function(){
-            $("#select-toUser").val(null);
-            $("#select-toUser").prop("disabled", true);
-        });*/
-
-        $("#tblList").on("click",".btn-view",function(e){    
-            showTransaction($(this),true);
-        });
 
     })
 
@@ -724,7 +713,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 if (resp.ms_ticket.fdt_deadline_extended_datetime != null){
                     $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
-                    //$("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
+                    $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
                     $("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
                     $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
                 }
