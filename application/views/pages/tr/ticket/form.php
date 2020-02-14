@@ -761,7 +761,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, true);
                 $('#select-ticketType').append(newOption).trigger('change');
                 
-                var newOption = new Option(resp.ms_ticket.fin_service_level_id, true);
+                var newOption = new Option(resp.ms_ticket.fst_service_level_name, true);
                 $('#select-serviceLevel').append(newOption).trigger('change');
 
                 var newOption = new Option(resp.ms_ticket.userActive, true);
