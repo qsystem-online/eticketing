@@ -13,11 +13,13 @@ class Ticket_model extends MY_MODEL {
     public function getDataById($fin_ticket_id){
         $activeUser = $this->aauth->is_login();
         $ssql = "select a.*,b.fst_ticket_type_name,b.fst_assignment_or_notice,c.fst_service_level_name,c.fin_service_level_days,
-        d.fst_username as useractive,e.fst_username from ". $this->tableName ." a
+        d.fst_username as userActive,e.fst_username,f.fst_department_name,g.fst_username from ". $this->tableName ." a
         left join mstickettype b on a.fin_ticket_type_id = b.fin_ticket_type_id
         left join msservicelevel c on a.fin_service_level_id = c.fin_service_level_id
         left join users d on a.fin_issued_by_user_id = d.fin_user_id
         left join users e on a.fin_issued_to_user_id = e.fin_user_id
+        left join departments f on a.fin_to_department_id = f.fin_department_id
+        left join users g on a.fin_approved_by_user_id = g.fin_user_id
         where a.fin_ticket_id = ?";
         $qr = $this->db->query($ssql,[$fin_ticket_id]);
         $rwTicket = $qr->row();
@@ -36,30 +38,18 @@ class Ticket_model extends MY_MODEL {
         return $data;
     }
 
+    public function getDataHeaderById($finTicketId){
+        $ssql = "select * from trticket where fin_ticket_id = ? and fst_active != 'D'";
+        $qr = $this->db->query($ssql,[$finTicketId]);
+        return $qr->row();
+    }
+
     public function getRules($mode = "ADD", $id = 0){
         $rules = [];
 
         $rules[] = [
             'field' => 'fst_ticket_no',
             'label' => 'Ticket No.',
-            'rules' => 'required',
-            'errors' => array(
-                'required' => '%s tidak boleh kosong'
-            )
-        ];
-        
-        $rules[] = [
-            'field' => 'fst_status',
-            'label' => 'Status',
-            'rules' => 'required',
-            'errors' => array(
-                'required' => '%s tidak boleh kosong'
-            )
-        ];
-
-        $rules[] = [
-            'field' => 'fdt_acceptance_expiry_datetime',
-            'label' => 'Acceptance Expiry Datetime',
             'rules' => 'required',
             'errors' => array(
                 'required' => '%s tidak boleh kosong'
@@ -80,6 +70,10 @@ class Ticket_model extends MY_MODEL {
         $query = $this->db->get('trticket');
         return $query->result_array();
     }
+
+    /*public function show_transaction($finTicketId){
+        redirect(site_url()."tr/ticket/view/$finTicketId", 'refresh');
+    }*/
 
     public function GenerateTicketNo($trDate = null) {
         $trDate = ($trDate == null) ? date ("Y-m-d"): $trDate;
@@ -103,23 +97,5 @@ class Ticket_model extends MY_MODEL {
         
         return $max_tr_no;
     }
-
-    /*public function getTicket(){
-        $notify = getDbConfig("notify_deadline");
-        $ssql = "select * from trticket where fst_ticket_no = ? and fdt_deadline_extended_datetime + $notify order by fst_ticket_no";
-        $qr = $this->db->query($ssql,[$notify]);
-        $rs = $qr->result();
-        return $rs;
-    }
-
-    /*function getDbConfig($key){
-        $CI = & get_instance();
-        $ssql ="select fst_value from config where fst_key = ? and fbl_active = true";
-        $qr = $CI->db->query($ssql,[$key]);
-        $rw = $qr->row();
-        if ($rw){
-            return $rw->fst_value;
-        }
-        return null;
-    }*/
+    
 }

@@ -45,6 +45,8 @@ class Tickettype extends MY_Controller
                         return 'ASSIGNMENT';
                     }else if(data == 'NOTICE'){
                         return 'NOTICE';
+                    }else if(data == 'INFO'){
+                        return 'INFO';
                     }
                 }"
             ],
