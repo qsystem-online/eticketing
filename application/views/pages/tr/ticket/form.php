@@ -143,7 +143,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <?php
                                                 $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
                                                 foreach ($servicelevelList as $serviceLevel) {
-                                                    echo "<option value='$serviceLevel->fin_service_level_id'>$serviceLevel->fst_service_level_name - $serviceLevel->fin_service_level_days HARI </option>";
+                                                    echo "<option value='$serviceLevel->fin_service_level_id' data-days='$serviceLevel->fin_service_level_days'>$serviceLevel->fst_service_level_name - $serviceLevel->fin_service_level_days HARI </option>";
                                                 }
                                             ?>
                                         </select>
@@ -637,17 +637,42 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     if($(this).find(":selected").data("notice") == "NOTICE"){
                         $("#select-serviceLevel").val(null).prop("disabled", true);
                         $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("NOTICE");
                     }else if($(this).find(":selected").data("notice") == "ASSIGNMENT"){
-                        $("#fdt_deadline_extended_datetime").val(null);
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("ASSIGNMENT");
-                        $("#fdt_deadline_extended_datetime").prop("disabled", true);
                     }else if($(this).find(":selected").data("notice") == "INFO"){
-                        $("#fdt_deadline_extended_datetime").val(null);
-                        $("#fdt_deadline_extended_datetime").prop("disabled", false);
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("INFO");
-                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('1 days'))?>"));
                         $("#select-serviceLevel").prop("disabled", true);
+                    }
+                });
+            });
+
+            $("#select-serviceLevel").change(function(event){
+                event.preventDefault();
+                alert($("#select-serviceLevel option:selected").data("days"));
+                $("#select-serviceLevel").each(function(index){
+                    if ($(this).find(":selected").data("days") == "1"){
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('1 days'))?>")).prop("disabled", true);
+                        $("#fin_service_level_days").val("1");
+                    }else if ($(this).find(":selected").data("days") == "2"){
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('2 days'))?>")).prop("disabled", true);
+                        $("#fin_service_level_days").val("2");
+                    }else if ($(this).find(":selected").data("days") == "3"){
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
+                        $("#fin_service_level_days").val("3");
+                    }else if ($(this).find(":selected").data("days") == "4"){
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('4 days'))?>")).prop("disabled", true);
+                        $("#fin_service_level_days").val("4");
+                    }else if ($(this).find(":selected").data("days") == "5"){
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('5 days'))?>")).prop("disabled", true);
+                        $("#fin_service_level_days").val("5");
+                    }else if ($(this).find(":selected").data("days") == "6"){
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('6 days'))?>")).prop("disabled", true);
+                        $("#fin_service_level_days").val("6");
                     }
                 });
             });
@@ -714,7 +739,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 if (resp.ms_ticket.fdt_deadline_extended_datetime != null){
                     $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
                     $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
-                    $("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
                     $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
                 }
 

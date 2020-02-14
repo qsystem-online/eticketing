@@ -145,8 +145,10 @@ class ticket extends MY_Controller
         $this->openForm("VIEW", $finTicketId);
     }
 
-    public function ajx_add_save()
-    {
+    public function ajx_add_save(){
+        $this->load->model('ticket_model');
+        $this->load->model('servicelevel_model');
+
         $fdt_ticket_datetime = date("Y-m-d H:i:s");
         $fst_ticket_no = $this->ticket_model->GenerateTicketNo();
 
@@ -156,13 +158,18 @@ class ticket extends MY_Controller
         date_add($noW,date_interval_create_from_date_string("$notifyDeadline days"));
         $deadlineDatetime = date_format($noW,"Y-m-d H:i:s");
 
-        $days = 1;
-        $now = date("Y-m-d H:i:s");
-        $now = date_create($now);
-        date_add($now,date_interval_create_from_date_string("$days days"));
-        $acceptDate = date_format($now,"Y-m-d H:i:s");
+        $acceptDate = getDbConfig("acceptance_expiry");
+        $dateNow = date("Y-m-d H:i:s");
+        $dateNow = date_create($dateNow);
+        date_add($dateNow,date_interval_create_from_date_string("$acceptDate days"));
+        $acceptDatetime = date_format($dateNow,"Y-m-d H:i:s");
 
-        $this->load->model('ticket_model');
+        $serviceLevelDays = $this->input->post("fin_service_level_days");
+        $dateLevel = date("Y-m-d H:i:s");
+        $dateLevel = date_create($dateLevel);
+        date_add($dateLevel,date_interval_create_from_date_string("$serviceLevelDays days"));
+        $serviceLevel =  date_format($dateLevel,"Y-m-d H:i:s");
+
         $this->form_validation->set_rules($this->ticket_model->getRules("ADD", 0));
         $this->form_validation->set_error_delimiters('<div class="text-danger">* ', '</div>');
         if ($this->form_validation->run() == FALSE) {
@@ -204,16 +211,15 @@ class ticket extends MY_Controller
         if ($fst_assignment_or_notice == "NOTICE"){
             $data["fdt_deadline_datetime"] = $deadlineDatetime;
             $data["fdt_deadline_extended_datetime"] = $deadlineDatetime;
-        }else{
-            $data["fdt_deadline_datetime"]= dBDateTimeFormat($this->input->post("fdt_deadline_datetime"));
-            $data["fdt_deadline_extended_datetime"] = dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime"));
-        }
-
-        $fst_assignment_or_notice = $this->input->post("fst_assignment_or_notice");
-        if ($fst_assignment_or_notice == "INFO"){
-            $data["fdt_acceptance_expiry_datetime"] = $acceptDate;
-        }else{
-            $data["fdt_acceptance_expiry_datetime"] = dBDateTimeFormat($this->input->post("fdt_acceptance_expiry_datetime"));
+            $data["fdt_acceptance_expiry_datetime"] = $acceptDatetime;
+        }else if ($fst_assignment_or_notice == "ASSIGNMENT"){
+            $data["fdt_acceptance_expiry_datetime"] = $acceptDatetime;
+            $data["fdt_deadline_datetime"]= $serviceLevel;
+            $data["fdt_deadline_extended_datetime"] = $serviceLevel;
+        }else if ($fst_assignment_or_notice == "INFO"){
+            $data["fdt_acceptance_expiry_datetime"] = $acceptDatetime;
+            $data["fdt_deadline_datetime"] = $acceptDatetime;
+            $data["fdt_deadline_extended_datetime"] = $acceptDatetime;
         }
 
         //save data
@@ -254,8 +260,6 @@ class ticket extends MY_Controller
 
     public function ajx_view_save(){
 
-        $fdt_ticket_datetime = dBDateTimeFormat($this->input->post("fdt_ticket_datetime"));
-
         $this->load->model('ticket_model');
         $fin_ticket_id = $this->input->post("fin_ticket_id");
         $data = $this->ticket_model->getDataById($fin_ticket_id);
@@ -282,7 +286,7 @@ class ticket extends MY_Controller
         $data = [
             "fin_ticket_id" => $fin_ticket_id,
             "fst_ticket_no" => $this->input->post("fst_ticket_no"),
-            "fdt_ticket_datetime" => $fdt_ticket_datetime,
+            "fdt_ticket_datetime" => dBDateTimeFormat($this->input->post("fdt_ticket_datetime")),
             "fdt_acceptance_expiry_datetime" => dBDateTimeFormat($this->input->post("fdt_acceptance_expiry_datetime")),
             "fin_ticket_type_id" => $this->input->post("fin_ticket_type_id"),
             "fin_service_level_id" => $this->input->post("fin_service_level_id"),
