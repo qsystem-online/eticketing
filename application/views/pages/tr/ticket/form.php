@@ -93,9 +93,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 <div class="box-header with-border">
                     <h3 class="box-title title"><?= $title ?></h3>
                     <div class="btn-group btn-group-sm pull-right">
-                        <a id="btnDelete" class="btn btn-primary" href="#" title="<?=lang("Void")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
                         <a id="btnNew" class="btn btn-primary" href="#" title="<?=lang("Tambah Baru")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-plus" aria-hidden="true"></i></a>
                         <a id="btnSubmitAjax" class="btn btn-primary" href="#" title="<?=lang("Simpan")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
+                        <a id="btnDelete" class="btn btn-primary" href="#" title="<?=lang("Void")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
                         <a id="btnList" class="btn btn-primary" href="#" title="<?=lang("Daftar Transaksi")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-list" aria-hidden="true"></i></a>
                     </div>
                 </div>
@@ -109,6 +109,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
                                 <input type="hidden" id="frm-mode" value="<?=$mode?>">
                                 <input type="hidden" class="form-control" id="fin_ticket_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_id" value="<?=$fin_ticket_id?>" readonly>
+                                <input type="hidden" class="form-control" id="fbl_need_approval" name="fbl_need_approval" readonly>
+                                <input type="hidden" class="form-control" id="fst_assignment_or_notice" name="fst_assignment_or_notice" readonly>
+                                <input type="hidden" class="form-control" id="fin_service_level_days" name="fin_service_level_days" readonly>
                                 
                                 <div class="form-group">
                                     <label for="fst_ticket_no" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket No.")?> #</label>
@@ -124,9 +127,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                         <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id">
                                             <option value="" disabled selected>-- <?=lang("select")?> --</option>
                                             <?php
-                                                $tickettypeList = $this->tickettype_model->get_data_ticketType();
+                                                $tickettypeList = $this->tickettype_model->getTicketType();
                                                 foreach ($tickettypeList as $ticketType) {
-                                                    echo "<option value='$ticketType->fin_ticket_type_id' data-notice='$ticketType->fst_assignment_or_notice'>$ticketType->fst_ticket_type_name</option>";
+                                                    echo "<option value='$ticketType->fin_ticket_type_id' data-notice='$ticketType->fst_assignment_or_notice' data-fbl='$ticketType->fbl_need_approval'>$ticketType->fst_ticket_type_name</option>";
                                                 }
                                             ?>
                                         </select>
@@ -140,7 +143,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <?php
                                                 $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
                                                 foreach ($servicelevelList as $serviceLevel) {
-                                                    echo "<option value='$serviceLevel->fin_service_level_id'>$serviceLevel->fst_service_level_name - $serviceLevel->fin_service_level_days HARI </option>";
+                                                    echo "<option value='$serviceLevel->fin_service_level_id' data-days='$serviceLevel->fin_service_level_days'>$serviceLevel->fst_service_level_name - $serviceLevel->fin_service_level_days HARI </option>";
                                                 }
                                             ?>
                                         </select>
@@ -167,7 +170,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
-                                            <input type="text" class="form-control text-right datetimepicker" id="fdt_acceptance_expiry_datetime" name="fdt_acceptance_expiry_datetime"/>
+                                            <input type="text" class="form-control text-right datetimepicker" id="fdt_acceptance_expiry_datetime" name="fdt_acceptance_expiry_datetime" disabled/>
                                         </div>
                                         <div id="fdt_acceptance_expiry_datetime_err" class="text-danger"></div>
                                     </div>
@@ -180,21 +183,10 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
-                                            <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime"/>
+                                            <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime" disabled/>
                                         </div>
                                         <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
                                     </div>
-
-                                    <!--<label for="fdt_deadline_extended_datetime" class="col-xs-6 col-md-4 control-label"><?=lang("Deadline Datetime")?></label>
-                                    <div class="col-xs-6 col-md-3">
-                                        <div class="input-group date">
-                                            <div class="input-group-addon">
-                                                <i class="fa fa-calendar"></i>
-                                            </div>
-                                            <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime"/>
-                                        </div>
-                                        <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
-                                    </div>-->
                                 </div>
 
                                 <div class="form-group">
@@ -216,6 +208,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="select-toUser" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
+                                            <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $touserList = $this->users_model->getToUserList();
                                                 foreach ($touserList as $toUser){
@@ -228,10 +221,41 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
+                                    <div class="col-xs-6 col-md-4">
+                                        <select id="select-department" class="form-control select2" name="fin_to_department_id">
+                                        <option value="">-- <?=lang("select")?> --</option>
+                                            <?php
+                                                $deptidList = $this->msdepartments_model->getDepartment();
+                                                foreach ($deptidList as $deptId) {
+                                                    echo "<option value='$deptId->fin_department_id'>$deptId->fst_department_name</option>";
+                                                }
+                                            ?>
+                                        </select>
+                                        <div id="fin_to_department_id" class="text-danger"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="fin_approved_by_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Approved By")?></label>
+                                    <div class="col-xs-6 col-md-4">
+                                        <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id">
+                                            <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                            <?php
+                                                $approvedbyList = $this->users_model->getApprovedBy();
+                                                foreach ($approvedbyList as $approvedBy){
+                                                    echo "<option value='$approvedBy->fin_user_id'>$approvedBy->fst_username</option>";
+                                                }
+                                            ?>
+                                        </select>
+                                        <div id="fin_approved_by_user_id_err" class="text-danger"></div>
+                                    </div>
+
                                     <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Status")?></label>
                                     <div class="col-xs-6 col-md-4">
-                                        <select id="select-status" class="form-control select2" name="fst_status" disabled="true">
-                                            <option value="NEED_APPROVAL" selected><?=lang("NEED APPROVAL")?></option>
+                                        <select id="select-status" class="form-control select2" name="fst_status" disabled>
+                                            <option value="">-- <?=lang("select")?> --</option>
+                                            <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
                                             <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
                                             <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
                                             <option value="NEED_REVISION"><?=lang("NEED REVISION")?></option>
@@ -243,7 +267,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <option value="REJECTED"><?=lang("REJECTED")?></option>
                                             <option value="VOID"><?=lang("VOID")?></option>
                                         </select>
-                                        <input type="hidden" name="fst_status" value="NEED_APPROVAL"/>
                                     </div>
                                 </div>
 
@@ -302,12 +325,12 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <div class="form-group">
                                                 <label for="select-ticketType" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
                                                 <div class="col-xs-6 col-md-4">
-                                                    <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id">
+                                                    <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id" style="width:100%" disabled>
                                                         <option value="" disabled selected>-- <?=lang("select")?> --</option>
                                                         <?php
-                                                            $tickettypeList = $this->tickettype_model->get_data_ticketType();
+                                                            $tickettypeList = $this->tickettype_model->getTicketType();
                                                             foreach ($tickettypeList as $ticketType) {
-                                                                echo "<option value='$ticketType->fin_ticket_type_id' data-notice='$ticketType->fst_assignment_or_notice'>$ticketType->fst_ticket_type_name</option>";
+                                                                echo "<option value='$ticketType->fin_ticket_type_id' data-notice='$ticketType->fst_assignment_or_notice' data-fbl='$ticketType->fbl_need_approval'>$ticketType->fst_ticket_type_name</option>";
                                                             }
                                                         ?>
                                                     </select>
@@ -316,7 +339,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             
                                                 <label for="select-serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
                                                 <div class="col-xs-6 col-md-4">
-                                                    <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id">
+                                                    <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id" style="width:100%" disabled>
                                                         <option value="" disabled selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
@@ -348,7 +371,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                         <div class="input-group-addon">
                                                             <i class="fa fa-calendar"></i>
                                                         </div>
-                                                        <input type="text" class="form-control text-right datetimepicker" id="fdt_acceptance_expiry_datetime" name="fdt_acceptance_expiry_datetime"/>
+                                                        <input type="text" class="form-control text-right datetimepicker" id="fdt_acceptance_expiry_datetime" name="fdt_acceptance_expiry_datetime" disabled/>
                                                     </div>
                                                     <div id="fdt_acceptance_expiry_datetime_err" class="text-danger"></div>
                                                 </div>
@@ -361,27 +384,16 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                         <div class="input-group-addon">
                                                             <i class="fa fa-calendar"></i>
                                                         </div>
-                                                        <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime"/>
+                                                        <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime" disabled/>
                                                     </div>
                                                     <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
                                                 </div>
-
-                                                <!--<label for="fdt_deadline_extended_datetime" class="col-xs-6 col-md-4 control-label"><?=lang("Deadline Datetime")?></label>
-                                                <div class="col-xs-6 col-md-3">
-                                                    <div class="input-group date">
-                                                        <div class="input-group-addon">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </div>
-                                                        <input type="text" class="form-control text-right datetimepicker" id="fdt_deadline_extended_datetime" name="fdt_deadline_extended_datetime"/>
-                                                    </div>
-                                                    <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
-                                                </div>-->
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="select-users" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
                                                 <div class="col-xs-6 col-md-4">
-                                                    <select id="select-users" class="form-control select2" name="fin_issued_by_user_id">
+                                                    <select id="select-users" class="form-control select2" name="fin_issued_by_user_id" style="width:100%" disabled>
                                                         <?php
                                                             $active_user = $this->aauth->get_user_id();
                                                             $usersList = $this->users_model->getAllList();
@@ -396,7 +408,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                                                 <label for="select-toUser" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
                                                 <div class="col-xs-6 col-md-4">
-                                                    <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
+                                                    <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id" style="width:100%" disabled>
+                                                        <option value=""  selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $touserList = $this->users_model->getToUserList();
                                                             foreach ($touserList as $toUser){
@@ -407,12 +420,40 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                     <div id="fin_issued_to_user_id_err" class="text-danger"></div>
                                                 </div>
                                             </div>
-
+                                            
                                             <div class="form-group">
+                                                <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
+                                                <div class="col-xs-6 col-md-4">
+                                                    <select id="select-department" class="form-control select2" name="fin_to_department_id" disabled>
+                                                        <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                                        <?php
+                                                            $deptidList = $this->msdepartments_model->getDepartment();
+                                                            foreach ($deptidList as $deptId) {
+                                                                echo "<option value='$deptId->fin_department_id'>$deptId->fst_department_name</option>";
+                                                            }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label for="fin_approved_by_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Approved By")?></label>
+                                                <div class="col-xs-6 col-md-4">
+                                                    <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id" disabled>
+                                                        <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                                        <?php
+                                                            $approvedbyList = $this->users_model->getToUserList();
+                                                            foreach ($approvedbyList as $approvedBy) {
+                                                                echo "<option value='$approvedBy->fin_user_id'>$approvedBy->fst_username</option>";
+                                                            }
+                                                        ?>
+                                                    </select>
+                                                </div>
+
                                                 <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Status")?></label>
                                                 <div class="col-xs-6 col-md-4">
-                                                    <select id="select-status" class="form-control select2" name="fst_status" disabled="true">
-                                                        <option value="NEED_APPROVAL" selected><?=lang("NEED APPROVAL")?></option>
+                                                    <select id="select-status" class="form-control select2" name="fst_status" disabled>
+                                                        <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
                                                         <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
                                                         <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
                                                         <option value="NEED_REVISION"><?=lang("NEED REVISION")?></option>
@@ -424,14 +465,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                         <option value="REJECTED"><?=lang("REJECTED")?></option>
                                                         <option value="VOID"><?=lang("VOID")?></option>
                                                     </select>
-                                                    <input type="hidden" name="fst_status" value="NEED_APPROVAL"/>
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="fst_memo" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
                                                 <div class="col-xs-6 col-md-10">
-                                                    <textarea rows="4" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo"></textarea>
+                                                    <textarea rows="4" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo" readonly></textarea>
                                                 </div>
                                             </div>
 
@@ -461,7 +501,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
 <script type="text/javascript">
     var $userActive ="<?= $this->aauth->get_user_id()?>";
-    var $levelActive ="<?= $this->aauth->user('fin_user_id')->fin_level +1?>";
+    var $levelActive ="<?= $this->aauth->user('fin_user_id')->fin_level?>";
 
     $(function(){
 
@@ -587,29 +627,109 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
         $("#fdt_ticket_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s")?>")).datetimepicker("update");
 
-        $("#select-ticketType").change(function(event){
-            event.preventDefault();
-            $("#select-serviceLevel").prop("disabled", false);
+        mode = $("#frm-mode").val();
+        if(mode == "ADD"){
+            $("#select-ticketType").change(function(event){
+                event.preventDefault();
+                var ticketType = $("#select-ticketType option:selected").data("notice");
+                if (ticketType == "NOTICE" || ticketType == "INFO" ){
 
-            $("#select-ticketType").each(function(index){
-                if($(this).find(':selected').data('notice') == "NOTICE"){
-                    $("#select-serviceLevel").val(null);
+                    $("#select-serviceLevel").val(null).trigger("change.select2");
                     $("#select-serviceLevel").prop("disabled", true);
-                    //$("#fdt_deadline_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>"));
-                    $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>"));
+                    
+
                 }else{
-                    //$("#fdt_deadline_datetime").val(null);
-                    $("#fdt_deadline_extended_datetime").val(null);
+                    
+                    $("#select-serviceLevel").prop("disabled", false);
+                }
+
+                if (ticketType == "INFO" ){
+                    $("#select-department").prop("disabled",false);
+                }else{
+                    $("#select-department").val(null).trigger("change.select2");
+                    $("#select-department").prop("disabled",true);
+                }
+                
+
+                $("#select-ticketType").each(function(index){
+                    if($(this).find(":selected").data("notice") == "NOTICE"){
+                        $("#select-serviceLevel").val(null).prop("disabled", true);
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
+                        $("#fst_assignment_or_notice").val("NOTICE");
+                    }else if($(this).find(":selected").data("notice") == "ASSIGNMENT"){
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
+                        $("#fst_assignment_or_notice").val("ASSIGNMENT");
+                    }else if($(this).find(":selected").data("notice") == "INFO"){
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
+                        $("#fst_assignment_or_notice").val("INFO");
+                        $("#select-serviceLevel").prop("disabled", true);
+                    }
+                });
+            });
+
+            $("#select-serviceLevel").change(function(event){
+                event.preventDefault();
+                alert($("#select-serviceLevel option:selected").data("days"));
+                $("#select-serviceLevel").each(function(index){
+                    if ($(this).find(":selected").data("days") == "1"){
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('1 days'))?>")).prop("disabled", true);
+                        $("#fin_service_level_days").val("1");
+                    }else if ($(this).find(":selected").data("days") == "2"){
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('2 days'))?>")).prop("disabled", true);
+                        $("#fin_service_level_days").val("2");
+                    }else if ($(this).find(":selected").data("days") == "3"){
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
+                        $("#fin_service_level_days").val("3");
+                    }else if ($(this).find(":selected").data("days") == "4"){
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('4 days'))?>")).prop("disabled", true);
+                        $("#fin_service_level_days").val("4");
+                    }else if ($(this).find(":selected").data("days") == "5"){
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('5 days'))?>")).prop("disabled", true);
+                        $("#fin_service_level_days").val("5");
+                    }else if ($(this).find(":selected").data("days") == "6"){
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('6 days'))?>")).prop("disabled", true);
+                        $("#fin_service_level_days").val("6");
+                    }
+                });
+            });
+        }
+
+        mode = $("#frm-mode").val();
+        if(mode == "ADD"){
+            $("#select-ticketType").change(function(event){
+                event.preventDefault();
+
+                //alert($("#select-ticketType option:selected").data("fbl"));
+                if($(this).find(":selected").data("fbl") == "0"){
+                    //$("#select-status").val("APPROVED/OPEN");
+                    $("#select-status").html("<option value='APPROVED/OPEN'><?=lang("APPROVED/OPEN")?></option>");
+                    $("#fbl_need_approval").val("0");
+                    $("#select-approvedby").val(null).prop("disabled", true);
+                }else if($(this).find(":selected").data("fbl") == "1"){
+                    //$("#select-status").val("NEED_APPROVAL");
+                    $("#select-status").html("<option value='NEED_APPROVAL'><?=lang("NEED APPROVAL")?></option>");
+                    $("#fbl_need_approval").val("1");
+                    $("#select-approvedby").prop("disabled", false);
                 }
             });
-        });
+
+            $("#select-toUser").change(function(){
+                $("#select-department").val(null).trigger("change.select2");                
+            });
+
+            $("#select-department").change(function(){
+                $("#select-toUser").val(null).trigger("change.select2");
+            });
+        }
 
     })
 
     function init_form(fin_ticket_id){
+
         //alert("Init Form);
         var url = "<?=site_url()?>tr/ticket/fetch_data/" + fin_ticket_id;
-
         $.ajax({
             type: "GET",
             url: url,
@@ -632,22 +752,11 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     }
                 });
 
-                $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
-                $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
-                $("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_datetime));
-                $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
-
-                $("#select-ticketType").each(function(index){				
-					if($(this).find(':selected').data('notice') == "ASSIGNMENT"){
-                        $("#select-serviceLevel").val();
-                        $("#select-serviceLevel").prop("disabled", false);
-                        $("#fdt_deadline_datetime").val(null);
-                        $("#fdt_deadline_extended_datetime").val(null);
-                    }else{
-                        $("#fdt_deadline_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>"));
-                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>"));
-                    } 
-				});
+                if (resp.ms_ticket.fdt_deadline_extended_datetime != null){
+                    $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
+                    $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
+                    $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
+                }
 
                 var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, true);
                 $('#select-ticketType').append(newOption).trigger('change');
@@ -655,13 +764,19 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 var newOption = new Option(resp.ms_ticket.fst_service_level_name, true);
                 $('#select-serviceLevel').append(newOption).trigger('change');
 
-                var newOption = new Option(resp.ms_ticket.useractive, true);
+                var newOption = new Option(resp.ms_ticket.userActive, true);
                 $('#select-users').append(newOption).trigger('change');
                 var newOption = new Option(resp.ms_ticket.fst_username, true);
                 $('#select-toUser').append(newOption).trigger('change');
 
                 var newOption = new Option(resp.ms_ticket.fst_status, true);
                 $('#select-status').append(newOption).trigger('change');
+
+                var newOption = new Option(resp.ms_ticket.fst_username, true);
+                $('#select-approvedby').append(newOption).trigger('change');
+
+                var newOption = new Option(resp.ms_ticket.fin_department_id, true);
+                $('#select-department').append(newOption).trigger('change');
 
                 //populate Ticket Log
                 var issuedBy = resp.ms_ticket.fin_issued_by_user_id;

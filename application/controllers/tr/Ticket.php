@@ -12,6 +12,8 @@ class ticket extends MY_Controller
         $this->load->model('servicelevel_model');
         $this->load->model('tickettype_model');
         $this->load->model('users_model');
+        $this->load->model('msdepartments_model');
+        $this->load->model('usersgroup_model');
     }
 
     public function index()
@@ -41,9 +43,36 @@ class ticket extends MY_Controller
         ];
         $this->list['columns'] = [
             ['title' => 'Ticket ID.', 'width' => '10%', 'data' => 'fin_ticket_id'],
-            ['title' => 'Ticket No.', 'width' => '20%', 'data' => 'fst_ticket_no'],
-            ['title' => 'Ticket Datetime', 'width' => '20%', 'data' => 'fdt_ticket_datetime'],
-            ['title' => 'Memo', 'width' => '40%', 'data' => 'fst_memo'],
+            ['title' => 'Ticket No.', 'width' => '15%', 'data' => 'fst_ticket_no'],
+            ['title' => 'Ticket Datetime', 'width' => '15%', 'data' => 'fdt_ticket_datetime'],
+            ['title' => 'Memo', 'width' => '30%', 'data' => 'fst_memo'],
+            ['title' => 'Status', 'width' => '20%', 'data' => 'fst_status',
+                'render' =>"function(data,type,row){
+                    if(data == 'NEED_APPROVAL'){
+                        return 'NEED APPROVAL';
+                    }else if(data == 'APPROVED/OPEN'){
+                        return 'APPROVED/OPEN';
+                    }else if(data == 'ACCEPTED'){
+                        return 'ACCEPTED';
+                    }else if(data == 'NEED_REVISION'){
+                        return 'NEED_REVISION';
+                    }else if(data == 'COMPLETED'){
+                        return 'COMPLETED';
+                    }else if(data == 'COMPLETION_REVISED'){
+                        return 'COMPLETION REVISED';
+                    }else if(data == 'CLOSED'){
+                        return 'CLOSED';
+                    }else if(data == 'ACCEPTANCE_EXPIRED'){
+                        return 'ACCEPTANCE EXPIRED';
+                    }else if(data == 'TICKET_EXPIRED'){
+                        return 'TICKET EXPIRED';
+                    }else if(data == 'REJECTED'){
+                        return 'REJECTED';
+                    }else if(data == 'VOID'){
+                        return 'VOID';
+                    }
+                }"
+            ],
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center',
                 'render'=>"function(data,type,row){
                     action = \"<div style='font-size:16px'>\";
@@ -116,12 +145,31 @@ class ticket extends MY_Controller
         $this->openForm("VIEW", $finTicketId);
     }
 
-    public function ajx_add_save()
-    {
+    public function ajx_add_save(){
+        $this->load->model('ticket_model');
+        $this->load->model('servicelevel_model');
+
         $fdt_ticket_datetime = date("Y-m-d H:i:s");
         $fst_ticket_no = $this->ticket_model->GenerateTicketNo();
 
-        $this->load->model('ticket_model');
+        $notifyDeadline = getDbConfig("notify_deadline");
+        $noW = date("Y-m-d H:i:s");
+        $noW = date_create($noW);
+        date_add($noW,date_interval_create_from_date_string("$notifyDeadline days"));
+        $deadlineDatetime = date_format($noW,"Y-m-d H:i:s");
+
+        $acceptDate = getDbConfig("acceptance_expiry");
+        $dateNow = date("Y-m-d H:i:s");
+        $dateNow = date_create($dateNow);
+        date_add($dateNow,date_interval_create_from_date_string("$acceptDate days"));
+        $acceptDatetime = date_format($dateNow,"Y-m-d H:i:s");
+
+        $serviceLevelDays = $this->input->post("fin_service_level_days");
+        $dateLevel = date("Y-m-d H:i:s");
+        $dateLevel = date_create($dateLevel);
+        date_add($dateLevel,date_interval_create_from_date_string("$serviceLevelDays days"));
+        $serviceLevel =  date_format($dateLevel,"Y-m-d H:i:s");
+
         $this->form_validation->set_rules($this->ticket_model->getRules("ADD", 0));
         $this->form_validation->set_error_delimiters('<div class="text-danger">* ', '</div>');
         if ($this->form_validation->run() == FALSE) {
@@ -137,18 +185,42 @@ class ticket extends MY_Controller
         $data = [
             "fst_ticket_no" => $fst_ticket_no,
             "fdt_ticket_datetime" => $fdt_ticket_datetime,
-            "fdt_acceptance_expiry_datetime" => dBDateTimeFormat($this->input->post("fdt_acceptance_expiry_datetime")),
+            //"fdt_acceptance_expiry_datetime" => dBDateTimeFormat($this->input->post("fdt_acceptance_expiry_datetime")),
             "fin_ticket_type_id" => $this->input->post("fin_ticket_type_id"),
             "fin_service_level_id" => $this->input->post("fin_service_level_id"),
-            "fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_datetime")),
-            "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
+            //"fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_datetime")),
+            //"fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
             "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
-            "fst_status" => $this->input->post("fst_status"),
+            "fin_approved_by_user_id" => $this->input->post("fin_approved_by_user_id"),
+            "fin_to_department_id" => $this->input->post("fin_to_department_id"),
+            //"fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
             //"fbl_rejected_view" => ($this->input->post("fbl_rejected_view") == null) ? 0 : 1,
             "fst_active" => 'A'
         ];
+
+        $fbl_need_approval = $this->input->post("fbl_need_approval");
+        if ($fbl_need_approval == "0" ){
+            $data["fst_status"] = "APPROVED/OPEN";
+        }else{
+            $data["fst_status"] = "NEED_APPROVAL";
+        }
+
+        $fst_assignment_or_notice = $this->input->post("fst_assignment_or_notice");
+        if ($fst_assignment_or_notice == "NOTICE"){
+            $data["fdt_deadline_datetime"] = $deadlineDatetime;
+            $data["fdt_deadline_extended_datetime"] = $deadlineDatetime;
+            $data["fdt_acceptance_expiry_datetime"] = $acceptDatetime;
+        }else if ($fst_assignment_or_notice == "ASSIGNMENT"){
+            $data["fdt_acceptance_expiry_datetime"] = $acceptDatetime;
+            $data["fdt_deadline_datetime"]= $serviceLevel;
+            $data["fdt_deadline_extended_datetime"] = $serviceLevel;
+        }else if ($fst_assignment_or_notice == "INFO"){
+            $data["fdt_acceptance_expiry_datetime"] = $acceptDatetime;
+            $data["fdt_deadline_datetime"] = $acceptDatetime;
+            $data["fdt_deadline_extended_datetime"] = $acceptDatetime;
+        }
 
         //save data
         $this->db->trans_start();
@@ -172,6 +244,11 @@ class ticket extends MY_Controller
             "fst_status_memo" => $this->input->post("fst_memo"),
             "fin_status_by_user_id" => $this->input->post("fin_issued_by_user_id")
         ];
+        if($fbl_need_approval == "0"){
+            $data["fst_status"]= "APPROVED/OPEN";
+        }else{
+            $data["fst_status"] = "NEED_APPROVAL";
+        }
         $insertId = $this->ticketlog_model->insert($data);
 
         $this->db->trans_complete();
@@ -181,9 +258,7 @@ class ticket extends MY_Controller
         $this->json_output();
     }
 
-    public function ajx_view_save()
-    {
-        $fdt_ticket_datetime = dBDateTimeFormat($this->input->post("fdt_ticket_datetime"));
+    public function ajx_view_save(){
 
         $this->load->model('ticket_model');
         $fin_ticket_id = $this->input->post("fin_ticket_id");
@@ -197,7 +272,7 @@ class ticket extends MY_Controller
             return;
         }
 
-        $this->form_validation->set_rules($this->ticket_model->getRules("EDIT", $fin_ticket_id));
+        $this->form_validation->set_rules($this->ticket_model->getRules("VIEW", $fin_ticket_id));
         $this->form_validation->set_error_delimiters('<div class="text-danger">* ', '</div>');
         if ($this->form_validation->run() == FALSE) {
             //print_r($this->form_validation->error_array());
@@ -219,6 +294,8 @@ class ticket extends MY_Controller
             "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
             "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
+            "fin_approved_by_user_id" => $this->input->post("fin_approved_by_user_id"),
+            "fin_to_department_id" => $this->input->post("fin_to_department_id"),
             "fst_status" => $this->input->post("fst_status"),
             "fst_memo" => $this->input->post("fst_memo"),
             //"fbl_rejected_view" => ($this->input->post("fbl_rejected_view") == null) ? 0 : 1,
@@ -261,7 +338,7 @@ class ticket extends MY_Controller
         $this->load->library("datatables");
         $this->datatables->setTableName("trticket");
 
-        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fst_memo,'action' as action";
+        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fst_memo,fst_status,'action' as action";
         $this->datatables->setSelectFields($selectFields);
 
         $Fields = $this->input->get('optionSearch');
@@ -286,7 +363,6 @@ class ticket extends MY_Controller
     }
 
     public function fetch_data($fin_ticket_id){
-        $this->load->model("ticketstatus_model");
         $this->load->model("ticket_model");
         $data = $this->ticket_model->getDataById($fin_ticket_id);
 		
@@ -339,4 +415,5 @@ class ticket extends MY_Controller
         $this->Cell(30, 10, 'Percobaan Header Dan Footer With Page Number', 0, 0, 'C');
         $this->Cell(0, 10, 'Halaman ' . $this->PageNo() . ' dari {nb}', 0, 0, 'R');
     }
+    
 }
