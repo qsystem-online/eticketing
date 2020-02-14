@@ -208,7 +208,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="select-toUser" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
-                                            <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                            <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $touserList = $this->users_model->getToUserList();
                                                 foreach ($touserList as $toUser){
@@ -409,7 +409,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                 <label for="select-toUser" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
                                                 <div class="col-xs-6 col-md-4">
                                                     <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id" style="width:100%" disabled>
-                                                        <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                                        <option value=""  selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $touserList = $this->users_model->getToUserList();
                                                             foreach ($touserList as $toUser){
@@ -631,7 +631,25 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         if(mode == "ADD"){
             $("#select-ticketType").change(function(event){
                 event.preventDefault();
-                $("#select-serviceLevel").prop("disabled", false);
+                var ticketType = $("#select-ticketType option:selected").data("notice");
+                if (ticketType == "NOTICE" || ticketType == "INFO" ){
+
+                    $("#select-serviceLevel").val(null).trigger("change.select2");
+                    $("#select-serviceLevel").prop("disabled", true);
+                    
+
+                }else{
+                    
+                    $("#select-serviceLevel").prop("disabled", false);
+                }
+
+                if (ticketType == "INFO" ){
+                    $("#select-department").prop("disabled",false);
+                }else{
+                    $("#select-department").val(null).trigger("change.select2");
+                    $("#select-department").prop("disabled",true);
+                }
+                
 
                 $("#select-ticketType").each(function(index){
                     if($(this).find(":selected").data("notice") == "NOTICE"){
@@ -698,13 +716,11 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             });
 
             $("#select-toUser").change(function(){
-                $("#select-department").val(null);
-                $("#select-department").prop("disabled", true);
+                $("#select-department").val(null).trigger("change.select2");                
             });
 
             $("#select-department").change(function(){
-                $("#select-toUser").val(null);
-                $("#select-toUser").prop("disabled", true);
+                $("#select-toUser").val(null).trigger("change.select2");
             });
         }
 
