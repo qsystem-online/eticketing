@@ -671,7 +671,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
             $("#select-serviceLevel").change(function(event){
                 event.preventDefault();
-                alert($("#select-serviceLevel option:selected").data("days"));
+                //alert($("#select-serviceLevel option:selected").data("days"));
                 $("#select-serviceLevel").each(function(index){
                     if ($(this).find(":selected").data("days") == "1"){
                         $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('1 days'))?>")).prop("disabled", true);
