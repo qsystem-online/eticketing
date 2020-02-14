@@ -53,7 +53,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<div class="form-group">
 						<label for="fin_level" class="col-xs-6 col-md-3 control-label"><?=lang("Level")?></label>
 							<div class="col-xs-6 col-md-3">
-								<select id="fin_level" class="form-control select2" name="fin_level">
+								<select id="fin_level" class="form-control" name="fin_level">
 								<option value="" disabled selected>-- <?=lang("select")?> --</option>
 									<option value='0'><?= lang("Top Management")?></option>
 									<option value='1'><?= lang("Upper Management")?></option>

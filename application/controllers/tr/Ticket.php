@@ -203,7 +203,7 @@ class ticket extends MY_Controller
         $fbl_need_approval = $this->input->post("fbl_need_approval");
         if ($fbl_need_approval == "0" ){
             $data["fst_status"] = "APPROVED/OPEN";
-        }else{
+        }else if ($fbl_need_approval == "1"){
             $data["fst_status"] = "NEED_APPROVAL";
         }
 
