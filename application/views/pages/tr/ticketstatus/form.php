@@ -196,7 +196,7 @@ body {
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id" style="width: 100%" disabled>
                                             <?php
-                                                $tickettypeList = $this->tickettype_model->get_data_ticketType();
+                                                $tickettypeList = $this->tickettype_model->getAllList();
                                                 foreach ($tickettypeList as $ticketType) {
                                                     echo "<option value='$ticketType->fin_ticket_type_id'>$ticketType->fst_ticket_type_name</option>";
                                                 }
