@@ -21,6 +21,16 @@ class Ticketstatus_model extends MY_MODEL {
         $qr = $this->db->query($ssql,[$fin_ticket_id]);
         $rwTicketstatus = $qr->row();
 
+		if ($rwTicketstatus) {
+			if (file_exists(FCPATH . 'assets/app/tickets/image/' . $rwTicketstatus->fin_ticket_id . '.jpg')) {
+				$lampiranURL = site_url() . 'assets/app/tickets/image/' . $rwTicketstatus->fin_ticket_id . '.jpg';
+			} else {
+
+				$lampiranURL = site_url() . 'assets/app/tickets/image/default.jpg';
+			}
+			$rwTicketstatus->lampiranURL = $lampiranURL;
+		}
+
         $ssql = "select a.*,b.fst_username,c.fin_level from trticket_log a
         left join users b on a.fin_status_by_user_id = b.fin_user_id
         INNER JOIN usersgroup c ON b.fin_group_id = c.fin_group_id
@@ -76,7 +86,7 @@ class Ticketstatus_model extends MY_MODEL {
         $levelActive = intval($user->fin_level) +1;
         $levelActive = strval($levelActive);
 
-        $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id,c.fin_level FROM trticket a 
+        $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id as DeptBy,c.fin_level FROM trticket a 
             INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id
             INNER JOIN usersgroup c ON b.fin_group_id = c.fin_group_id
             WHERE a.fst_status = 'NEED_APPROVAL'AND b.fin_department_id =".$deptActive." AND c.fin_level =?";

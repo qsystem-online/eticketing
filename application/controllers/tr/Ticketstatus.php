@@ -12,6 +12,7 @@ class Ticketstatus extends MY_Controller
         $this->load->model('servicelevel_model');
         $this->load->model('tickettype_model');
         $this->load->model('users_model');
+        $this->load->model('msdepartments_model');
     }
 
     public function index()
@@ -406,7 +407,8 @@ class Ticketstatus extends MY_Controller
 
     public function ticket_report()
     {
-		$this->load->library("menus");
+        $this->load->library("menus");
+        $this->list["depList"] = $this->ticketstatus_model->getAllList();
 
 		$main_header = $this->parser->parse('inc/main_header', [], true);
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
@@ -575,6 +577,30 @@ class Ticketstatus extends MY_Controller
             return;
         }
 
+        //Save Image
+		if (!empty($_FILES['fst_lampiran']['tmp_name'])) {
+			$config['upload_path']          = './assets/app/tickets/image/';
+			$config['file_name']			= $data["fin_ticket_id"]. '.jpg';
+			$config['overwrite']			= TRUE;
+			$config['file_ext_tolower']		= TRUE;
+			$config['allowed_types']        = 'gif|jpg|png';
+			$config['max_size']             = 0; //kilobyte
+			$config['max_width']            = 0; //1024; //pixel
+			$config['max_height']           = 0; //768; //pixel
+			$this->load->library('upload', $config);
+			if (!$this->upload->do_upload('fst_lampiran')) {
+				$this->ajxResp["status"] = "IMAGES_FAILED";
+				$this->ajxResp["message"] = "Failed to upload images, " . $this->upload->display_errors();
+				$this->ajxResp["data"] = $this->upload->display_errors();
+				$this->json_output();
+				$this->db->trans_rollback();
+				return;
+			} else {
+				//$data = array('upload_data' => $this->upload->data());			
+			}
+			$this->ajxResp["data"]["data_lampiran"] = $this->upload->data();
+		}
+
         // Ticket Log
         $this->load->model("ticketlog_model");
         $user_status = $this->aauth->get_user_id();
@@ -603,9 +629,19 @@ class Ticketstatus extends MY_Controller
     public function fetch_list_data()
     {
         $this->load->library("datatables");
-        $this->datatables->setTableName("mstickettype");
+        $user = $this->aauth->user();
+        $deptActive = $user->fin_department_id;
+		$this->datatables->setTableName("
+			(
+                SELECT a.*,b.fin_user_id,b.fst_username AS issuedBy,b.fin_department_id,c.fst_username AS issuedTo FROM trticket a 
+                INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id
+                INNER JOIN users c ON a.fin_issued_to_user_id = c.fin_user_id
+                INNER JOIN users d ON a.fin_approved_by_user_id = d.fin_user_id
+                WHERE b.fin_department_id = $deptActive OR c.fin_department_id = $deptActive
+			) as a 
+        ");
 
-        $selectFields = "fin_ticket_id,fst_ticket_type_name,fst_assignment_or_notice,'action' as action";
+        $selectFields = "a.fin_ticket_id,a.fst_memo,a.fin_issued_by_user_id,a.fin_issued_to_user_id,a.fin_approved_by_user_id,a.fdt_ticket_datetime,a.fst_status";
         $this->datatables->setSelectFields($selectFields);
 
         $Fields = $this->input->get('optionSearch');
@@ -810,7 +846,50 @@ class Ticketstatus extends MY_Controller
         //FILE NAME WITH DATE
         $this->phpspreadsheet->save("ticket_report_" . date("Ymd") . ".xls" ,$spreadsheet);
     }
+    public function monitoring(){
+        
+        $user = $this->aauth->user();
+        $arrDepartment[]= $user->fin_department_id;
+        //var_dump($arrDepartment);
+        //die();
+		$this->load->model("monitoringticket_model");
+		$tickets = $this->monitoringticket_model->get_monitoringticket($arrDepartment);
+        $data = [
+			"tickets" => $tickets['tickets']
+        ];
+        
+        //var_dump($data);
+        //die();
+        $this->load->model("msdepartments_model");
+        $data["arrDeptList"] =$this->msdepartments_model->getAllList();
+        $this->parser->parse('pages/tr/ticketstatus/monitoring.php',$tickets);
+    }
+    
 
+    public function monitoring1(){
+
+        $this->load->model("monitoringticket_model");
+        $tickets = $this->monitoringticket_model->get_monitoringticket();
+        $data = [
+			"datas" => $tickets['tickets']
+        ];
+        $this->load->view('pages/tr/ticketstatus/monitoring.php',$tickets);
+        //$url = 'https://gocleanlaundry.herokuapp.com/api/users/';
+        //$result = $this->scripts->get_data_api($url);
+        //$data_row = $result;
+    
+    }
+
+    public function monitoringticket(){
+
+        $arrDepartment = $this->input->get('fin_dept_id');
+        //var_dump($arrDepartment);
+        //die();
+        //$arrDepartment = ['2'];
+        $this->load->model("monitoringticket_model");
+        $tickets = $this->monitoringticket_model->get_monitoringticket($arrDepartment);
+        $this->json_output($tickets);
+    }
 
 
 

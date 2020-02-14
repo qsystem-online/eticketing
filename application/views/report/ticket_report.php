@@ -28,10 +28,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </style>
 
 <section class="content-header">
-    <h1><?= lang("Ticket Report") ?><small><?= lang("form") ?></small></h1>
+    <h1><?= lang("Ticket Monitoring And Report") ?><small><?= lang("") ?></small></h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> <?= lang("Home") ?></a></li>
-        <li><a href="#"><?= lang("ticketreport") ?></a></li>
+        <li><a href="#"><?= lang("ticketmonitoring and report") ?></a></li>
         <li class="active title"><?= $title ?></li>
     </ol>
 </section>
@@ -46,21 +46,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
 						<a id="btnPrinted" class="btn btn-primary" href="#" title="<?=lang("Cetak")?>"><i class="fa fa-print" aria-hidden="true"></i></a>											
 					</div>
                 </div>
+                <div class="box-header with-border">
+                    <h3 class="box-title title"><?= lang("Ticket Monitoring") ?></h3>
+                    <div class="btn-group btn-group-sm pull-right">
+                        <a id="btnMonitoring" class="btn btn-primary" href="#" title="<?=lang("Monitoring")?>"><i class="fa fa-list" aria-hidden="true"></i></a>											
+					</div>
+                </div>
                 <!-- end box header -->
-
-                <!-- form start -->
-                <form id="frm_changepassword" class="form-horizontal" action="<?= site_url() ?>user/change_password" method="POST" enctype="multipart/form-data">
-                    <div class="box-body">
-                        <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
-                    </div>
-                    <!-- end box body -->
-
-                    <div class="box-footer">
-                    </div>
-                    <!-- end box-footer -->
-                </form>
             </div>
         </div>
+        <div class="col-md-12">
+        <?php		
+			$deptList = $this->msdepartments_model->getAllList();
+			?>
+            <select class="form-control select2" id="fin_dept_id" name="fin_dept_id[]" style="width: 100%" multiple="multiple">
+                <?php
+                $activeBranchId = "4";
+                foreach ($deptList as $dept) {
+                    $isActive = ($dept->fin_department_id == $activeBranchId) ? "selected" : "";
+                    ?>
+                        <option value='<?= $dept->fin_department_id ?>'$isActive><?= $dept->fst_department_name ?> </option>
+                    <?php
+                } ?>
+            </select>
+        </div>
+    </div>
 </section>
 
 <div id="modal_Printed" class="modal fade in" role="dialog" style="display: none">
@@ -180,6 +190,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
         $("#btnPrinted").click(function(e){
 			$("#modal_Printed").modal("toggle");
+		});
+        $("#btnMonitoring").click(function(e){
+            e.preventDefault();
+			window.open("<?= site_url() ?>tr/ticketstatus/monitoring")
 		});
 
 		$("#btnPrint").click(function(e){

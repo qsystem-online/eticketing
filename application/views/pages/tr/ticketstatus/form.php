@@ -117,7 +117,7 @@ body {
                 <!-- end box header -->
                 <div class="box-body">
                     <!-- form start -->
-                    <form id="frmTicketStatus" class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
+                    <form id="frmTicketStatus" class="form-horizontal" action="<?=site_url()?>tr/ticketstatus/Update" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
                         <input type="hidden" id="frm-mode" value="<?=$mode?>">
                         <input type="hidden" class="form-control" id="fin_ticket_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_id" value="<?=$fin_ticket_id?>" readonly>
@@ -155,6 +155,12 @@ body {
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"><?=lang("Lampiran Gambar")?></label>
+                            <div class="col-xs-6 col-md-4">
+                                <input type="file" class="form-control" id="fst_lampiran"  name="fst_lampiran">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="fst_memo_update" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
                             <div class="col-xs-6 col-md-10">
                                 <textarea rows="4" style="width:100%" class="form-control" id="fst_memo_update" placeholder="<?= lang("Memo new status") ?>" name="fst_memo_update"></textarea>
@@ -168,6 +174,7 @@ body {
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#ticket_log" data-toggle="tab" aria-expanded="true"><?= lang("Ticket Log")?></a></li>
                             <li class=""><a href="#ticket_info" data-toggle="tab" aria-expanded="true"><?= lang("Ticket Info")?></a></li>
+                            <li class=""><a href="#ticket_lampiran" data-toggle="tab" aria-expanded="true"><?= lang("Lampiran")?></a></li>
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="ticket_log">
@@ -303,7 +310,18 @@ body {
                                     </div>
                                 </div>			
                             </div>
-                            </form>	
+                            </form>
+
+                            <div class="tab-pane" id="ticket_lampiran">	
+                            <form id="frmTicketlampiran" class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"></label>
+                                    <div class="col-xs-6 col-md-10">
+                                        <img id="imgLampiran" style="border:0px solid #999;width:70%;" src="<?=site_url()?>assets/app/tickets/image/default.jpg"/>
+                                    </div>
+                                </div>									
+                            </form>
+                            </div>
                             <!-- /.tab-pane -->
                         </div>				
                         <!-- /.tab-pane -->
@@ -330,11 +348,13 @@ body {
         $("#btnSubmitAjax").click(function(event){
             event.preventDefault();
             //$("#fdt_update_deadline_extended_datetime").prop("disabled",false);
-            data = $("#frmTicketStatus").serializeArray();
+            //data = $("#frmTicketStatus").serializeArray();
+            data = new FormData($("#frmTicketStatus")[0]);
 
             mode = $("#frm-mode").val();
-
-            url = "<?= site_url() ?>tr/ticketstatus/ajx_update_status";
+            if (mode == "EDIT"){
+                url = "<?= site_url() ?>tr/ticketstatus/ajx_update_status";
+            }
 
             App.blockUIOnAjaxRequest("Please wait while update ticket status.....");
             $.ajax({
@@ -342,9 +362,9 @@ body {
                 //enctype: 'multipart/form-data',
                 url: url,
                 data: data,
-                //processData: false,
-                //contentType: false,
-                //cache: false,
+                processData: false,
+                contentType: false,
+                cache: false,
                 timeout: 600000,
                 success: function (resp) {
                     if (resp.message != "") {
@@ -388,6 +408,15 @@ body {
             });
         });
 
+        $("#fst_lampiran").change(function(event){
+			event.preventDefault();
+			var reader = new FileReader();
+			reader.onload = function (e) {
+               $("#imgLampiran").attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
+		});
+
         $("#fdt_ticket_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s")?>")).datetimepicker("update");
 
         $("#fst_update_status").change(function(event){
@@ -405,6 +434,7 @@ body {
             });
             
         });
+
     })
 
     function init_form(fin_ticket_id){
@@ -521,8 +551,8 @@ body {
                     if(resp.ms_ticketstatus.fin_issued_to_user_id != $userActive){
                         $("#frmTicketStatus").hide();
                     }else{
-                        $("#select_update_serviceLevel").prop("disabled",false);
-                        $("#fdt_update_deadline_extended_datetime").prop("disabled",false);
+                        $("#select_update_serviceLevel").prop("disabled",true);
+                        $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
                     }
                 }
 
@@ -631,6 +661,9 @@ body {
                     $("#ticketlog_card").append(cardlog);
                     }
                 })
+
+                //Image Load 
+				$('#imgLampiran').attr("src",resp.ms_ticketstatus.lampiranURL);
 
             },
 
