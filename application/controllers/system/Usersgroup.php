@@ -196,22 +196,22 @@ class Usersgroup extends MY_Controller {
 		foreach ($arrData as $data) {
 			switch($data["fin_level"]){
 				case 1:
-					$level_name = "Top Management";
+					$level_name = "TOP MANAGEMENT";
 					break;
 				case 2:
-					$level_name = "Upper Management";
+					$level_name = "UPPER MANAGEMENT";
 					break;
 				case 3:
-					$level_name = "Middle Management";
+					$level_name = "MIDDLE MANAGEMENT";
 					break;
 				case 4:
-					$level_name = "Supervisors";
+					$level_name = "SUPERVISORS";
 					break;
 				case 5:
-					$level_name = "Line Workers";
+					$level_name = "LINE WORKERS";
 					break;
 				case 6:
-					$level_name = "Public";
+					$level_name = "PUBLIC";
 					break;
 			}
 			$data["fst_level_name"] = $level_name;

@@ -55,12 +55,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<div class="col-xs-6 col-md-3">
 								<select id="fin_level" class="form-control select2" name="fin_level">
 								<option value="" disabled selected>-- <?=lang("select")?> --</option>
-									<option value='1'><?= lang("Top Management")?></option>
-									<option value='2'><?= lang("Upper Management")?></option>
-									<option value='3'><?= lang("Middle Management")?></option>
-									<option value='4'><?= lang("Supervisors")?></option>
-									<option value='5'><?= lang("Line Workers")?></option>
-									<option value='6'><?= lang("Public")?></option>
+									<option value='1'><?= lang("TOP MANAGEMENT")?></option>
+									<option value='2'><?= lang("UPPER MANAGEMENT")?></option>
+									<option value='3'><?= lang("MIDDLE MANAGEMENT")?></option>
+									<option value='4'><?= lang("SUPERVISORS")?></option>
+									<option value='5'><?= lang("LINE WORKERS")?></option>
+									<option value='6'><?= lang("PUBLIC")?></option>
 								</select>
 							</div>
 						</div>
