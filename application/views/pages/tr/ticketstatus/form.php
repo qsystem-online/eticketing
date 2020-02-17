@@ -292,14 +292,14 @@ body {
                                             <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
                                             <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
                                             <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
-                                            <option valeu="NEED_REVISION"><?=lang("NEED_REVISION")?></option>
-                                            <option valeu="COMPLETED"><?=lang("COMPLETED")?></option>
-                                            <option valeu="COMPLETION_REVISED"><?=lang("COMPLETION_REVISED")?></option>
-                                            <option valeu="CLOSED"><?=lang("CLOSED")?></option>
-                                            <option valeu="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
-                                            <option valeu="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
-                                            <option valeu="VOID"><?=lang("VOID")?></option>
-                                            <option valeu="REJECTED"><?=lang("REJECTED")?></option>
+                                            <option value="NEED_REVISION"><?=lang("NEED_REVISION")?></option>
+                                            <option value="COMPLETED"><?=lang("COMPLETED")?></option>
+                                            <option value="COMPLETION_REVISED"><?=lang("COMPLETION_REVISED")?></option>
+                                            <option value="CLOSED"><?=lang("CLOSED")?></option>
+                                            <option value="ACCEPTANCE_EXP"><?=lang("ACCEPTANCE EXPIRED")?></option>
+                                            <option value="TICKET_EXP"><?=lang("TICKET EXPIRED")?></option>
+                                            <option value="VOID"><?=lang("VOID")?></option>
+                                            <option value="REJECTED"><?=lang("REJECTED")?></option>
                                         </select>
                                     </div>
                                 </div>

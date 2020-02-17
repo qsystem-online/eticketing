@@ -313,6 +313,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
                                             <input type="hidden" id="frm-mode" value="<?=$mode?>">
                                             <input type="hidden" class="form-control" id="fin_ticket_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_id" value="<?=$fin_ticket_id?>" readonly>
+                                            <input type="hidden" class="form-control" id="fbl_need_approval" name="fbl_need_approval" readonly>
+                                            <input type="hidden" class="form-control" id="fst_assignment_or_notice" name="fst_assignment_or_notice" readonly>
+                                            <input type="hidden" class="form-control" id="fin_service_level_days" name="fin_service_level_days" readonly>
                                             
                                             <div class="form-group">
                                                 <label for="fst_ticket_no" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket No.")?> #</label>
