@@ -53,14 +53,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<div class="form-group">
 						<label for="fin_level" class="col-xs-6 col-md-3 control-label"><?=lang("Level")?></label>
 							<div class="col-xs-6 col-md-3">
-								<select id="fin_level" class="form-control" name="fin_level">
+								<select id="fin_level" class="form-control select2" name="fin_level">
 								<option value="" disabled selected>-- <?=lang("select")?> --</option>
-									<option value='0'><?= lang("Top Management")?></option>
-									<option value='1'><?= lang("Upper Management")?></option>
-									<option value='2'><?= lang("Middle Management")?></option>
-									<option value='3'><?= lang("Supervisors")?></option>
-									<option value='4'><?= lang("Line Workers")?></option>
-									<option value='5'><?= lang("Public")?></option>
+									<option value='1'><?= lang("Top Management")?></option>
+									<option value='2'><?= lang("Upper Management")?></option>
+									<option value='3'><?= lang("Middle Management")?></option>
+									<option value='4'><?= lang("Supervisors")?></option>
+									<option value='5'><?= lang("Line Workers")?></option>
+									<option value='6'><?= lang("Public")?></option>
 								</select>
 							</div>
 						</div>
@@ -227,6 +227,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             console.log(val);
 					}
 				});
+
+				var newOption = new Option(resp.usersgroup.fst_level_name, true);
+                $('#fin_level').append(newOption).trigger('change');
 			},
 
 			error: function (e) {

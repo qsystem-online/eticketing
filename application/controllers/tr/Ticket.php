@@ -169,7 +169,7 @@ class ticket extends MY_Controller
         $serVlevelDays = "{$finServiceLevelDays} days";
         $dateLevel = date("Y-m-d H:i:s");
         $dateLevel = date_create($dateLevel);
-        date_add($dateLevel,date_interval_create_from_date_string("$serVlevelDays"));
+        date_add($dateLevel,date_interval_create_from_date_string($serVlevelDays));
         $serviceLevel =  date_format($dateLevel,"Y-m-d H:i:s");
 
         $this->form_validation->set_rules($this->ticket_model->getRules("ADD", 0));

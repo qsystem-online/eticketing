@@ -195,22 +195,22 @@ class Usersgroup extends MY_Controller {
 		$arrDataFormated = [];
 		foreach ($arrData as $data) {
 			switch($data["fin_level"]){
-				case 0:
+				case 1:
 					$level_name = "Top Management";
 					break;
-				case 1:
+				case 2:
 					$level_name = "Upper Management";
 					break;
-				case 2:
+				case 3:
 					$level_name = "Middle Management";
 					break;
-				case 3:
+				case 4:
 					$level_name = "Supervisors";
 					break;
-				case 4:
+				case 5:
 					$level_name = "Line Workers";
 					break;
-				case 5:
+				case 6:
 					$level_name = "Public";
 					break;
 			}
