@@ -125,7 +125,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="select-ticketType" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id">
-                                            <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                            <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $tickettypeList = $this->tickettype_model->getTicketType();
                                                 foreach ($tickettypeList as $ticketType) {
@@ -139,7 +139,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="select-serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id">
-                                            <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                            <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
                                                 foreach ($servicelevelList as $serviceLevel) {
@@ -224,7 +224,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-department" class="form-control select2" name="fin_to_department_id">
-                                        <option value="">-- <?=lang("select")?> --</option>
+                                        <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $deptidList = $this->msdepartments_model->getDepartment();
                                                 foreach ($deptidList as $deptId) {
@@ -240,7 +240,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="fin_approved_by_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Approved By")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id">
-                                            <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                            <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $approvedbyList = $this->users_model->getApprovedBy();
                                                 foreach ($approvedbyList as $approvedBy){
@@ -329,7 +329,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                 <label for="select-ticketType" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
                                                 <div class="col-xs-6 col-md-4">
                                                     <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id" style="width:100%" disabled>
-                                                        <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                                        <option value="" selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $tickettypeList = $this->tickettype_model->getTicketType();
                                                             foreach ($tickettypeList as $ticketType) {
@@ -343,7 +343,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                 <label for="select-serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
                                                 <div class="col-xs-6 col-md-4">
                                                     <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id" style="width:100%" disabled>
-                                                        <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                                        <option value="" selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
                                                             foreach ($servicelevelList as $serviceLevel) {
@@ -428,7 +428,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                 <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
                                                 <div class="col-xs-6 col-md-4">
                                                     <select id="select-department" class="form-control select2" name="fin_to_department_id" disabled>
-                                                        <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                                        <option value="" selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $deptidList = $this->msdepartments_model->getDepartment();
                                                             foreach ($deptidList as $deptId) {
@@ -443,7 +443,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                 <label for="fin_approved_by_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Approved By")?></label>
                                                 <div class="col-xs-6 col-md-4">
                                                     <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id" disabled>
-                                                        <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                                        <option value="" selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $approvedbyList = $this->users_model->getToUserList();
                                                             foreach ($approvedbyList as $approvedBy) {
