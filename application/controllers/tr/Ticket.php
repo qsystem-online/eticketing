@@ -165,7 +165,7 @@ class ticket extends MY_Controller
         $acceptDatetime = date_format($dateNow,"Y-m-d H:i:s");
 
         $finServiceLevelDays = $this->input->post("fin_service_level_days");
-        $finServiceLevelDays = abs(intval("$finServiceLevelDays"));
+        $finServiceLevelDays = abs(intval($finServiceLevelDays));
         $serVlevelDays = "{$finServiceLevelDays} days";
         $dateLevel = date("Y-m-d H:i:s");
         $dateLevel = date_create($dateLevel);

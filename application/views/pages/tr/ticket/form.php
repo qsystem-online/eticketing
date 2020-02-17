@@ -861,7 +861,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         buttons: {
                             OK : function() {
                                 if (resp.status == "SUCCESS") {
-                                    window.location.href = "<?=site_url() ?>tr/ticket/add";
+                                    window.location.href = "<?=site_url() ?>tr/ticket/lizt";
                                     return;
                                 }
                             },
