@@ -636,8 +636,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                     $("#select-serviceLevel").val(null).trigger("change.select2");
                     $("#select-serviceLevel").prop("disabled", true);
-                    
-
                 }else{
                     
                     $("#select-serviceLevel").prop("disabled", false);
@@ -653,7 +651,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 $("#select-ticketType").each(function(index){
                     if($(this).find(":selected").data("notice") == "NOTICE"){
-                        $("#select-serviceLevel").val(null).prop("disabled", true);
+                        $("#select-serviceLevel").val(null).trigger("change.select2");
+                        $("#select-serviceLevel").prop("disabled", true);
                         $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
                         $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("NOTICE");
@@ -664,6 +663,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
                         $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("INFO");
+                        $("#select-serviceLevel").val(null).trigger("change.select2");
                         $("#select-serviceLevel").prop("disabled", true);
                     }
                 });
