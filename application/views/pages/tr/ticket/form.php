@@ -768,18 +768,18 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 $('#select-serviceLevel').append(newOption).trigger("change.select2");
 
                 var newOption = new Option(resp.ms_ticket.userActive, true);
-                $('#select-users').append(newOption).trigger('change');
+                $('#select-users').append(newOption).trigger("change.select2");
                 var newOption = new Option(resp.ms_ticket.fst_username, true);
-                $('#select-toUser').append(newOption).trigger('change');
+                $('#select-toUser').append(newOption).trigger("change.select2");
 
                 var newOption = new Option(resp.ms_ticket.fst_status, true);
-                $('#select-status').append(newOption).trigger('change');
+                $('#select-status').append(newOption).trigger("change.select2");
 
                 var newOption = new Option(resp.ms_ticket.fst_username, true);
-                $('#select-approvedby').append(newOption).trigger('change');
+                $('#select-approvedby').append(newOption).trigger("change.select2");
 
                 var newOption = new Option(resp.ms_ticket.fin_department_id, true);
-                $('#select-department').append(newOption).trigger('change');
+                $('#select-department').append(newOption).trigger("change.select2");
 
                 //populate Ticket Log
                 var issuedBy = resp.ms_ticket.fin_issued_by_user_id;
