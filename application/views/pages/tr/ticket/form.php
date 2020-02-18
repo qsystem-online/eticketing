@@ -503,8 +503,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 </section>
 
 <script type="text/javascript">
-    var $userActive ="<?= $this->aauth->get_user_id()?>";
-    var $levelActive ="<?= $this->aauth->user('fin_user_id')->fin_level?>";
 
     $(function(){
 
