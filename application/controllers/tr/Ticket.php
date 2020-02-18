@@ -164,10 +164,12 @@ class ticket extends MY_Controller
         date_add($dateNow,date_interval_create_from_date_string("$acceptDate days"));
         $acceptDatetime = date_format($dateNow,"Y-m-d H:i:s");
 
-        $serviceLevelDays = $this->input->post("fin_service_level_days");
+        $finServiceLevelDays = $this->input->post("fin_service_level_days");
+        $finServiceLevelDays = abs(intval($finServiceLevelDays));
+        $serVlevelDays = "{$finServiceLevelDays} days";
         $dateLevel = date("Y-m-d H:i:s");
         $dateLevel = date_create($dateLevel);
-        date_add($dateLevel,date_interval_create_from_date_string("$serviceLevelDays days"));
+        date_add($dateLevel,date_interval_create_from_date_string($serVlevelDays));
         $serviceLevel =  date_format($dateLevel,"Y-m-d H:i:s");
 
         $this->form_validation->set_rules($this->ticket_model->getRules("ADD", 0));
