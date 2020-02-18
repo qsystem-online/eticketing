@@ -117,6 +117,38 @@ h2 a {
 </style>
 
 <style type="text/css">
+blink {
+  -webkit-animation: 2s linear infinite condemned_blink_effect; /* for Safari 4.0 - 8.0 */
+  animation: 2s linear infinite condemned_blink_effect;
+}
+
+/* for Safari 4.0 - 8.0 */
+@-webkit-keyframes condemned_blink_effect { 
+  0% {
+    visibility: hidden;
+  }
+  50% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
+}
+
+@keyframes condemned_blink_effect {
+  0% {
+    visibility: hidden;
+  }
+  50% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
+}
+</style>
+
+<style type="text/css">
 .example3 {
  height: 30px;	
  overflow: hidden;
@@ -203,13 +235,13 @@ h2 a {
     <table class="container" id="table-ticket">
       <thead>
         <tr>
-          <th id="init_select2">Penerima</th>
+          <th>Penerima</th>
           <th>Tanggal</th>
           <th>Deadline</th>
           <th>Dari User</th>
           <th>Persetujuan</th>
           <th>Memo Tiket</th>
-          <th id="destroy_select2">Status</th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody id="ticketlist">
@@ -219,7 +251,6 @@ h2 a {
 </body>
 </html>
 <script type="text/javascript">
-var $fin_department_id = $("#fin_dept_id").val();
   $(function(){
       isiTicketlist();
       setInterval(function(){
@@ -244,6 +275,7 @@ var $fin_department_id = $("#fin_dept_id").val();
           width: '100%',
           data: $deptList
       });
+      $('#fin_dept_id').next(".select2-container").hide();
   });
 
   /*$("#destroy_select2").click(function() { 
@@ -285,32 +317,31 @@ var $fin_department_id = $("#fin_dept_id").val();
         }
         var ticketlist = '<tr>';
             if(v.fst_status == 'APPROVED/OPEN' && $issuedTo != ""){
-              ticketlist +='<td><marquee><font color="#00FF00">'+$issuedTo+'</font></marquee></td>';
+              ticketlist +='<td><blink><font color="#00FF00">'+$issuedTo+'</font></blink></td>';
             }else{
               ticketlist +='<td>'+$issuedTo+'</td>';
             }
             ticketlist +='<td>'+v.fdt_ticket_datetime+'</td>';
             ticketlist +='<td>'+v.fdt_deadline_extended_datetime+'</td>';
             if(v.fst_status == 'NEED_REVISION' || v.fst_status == 'COMPLETED'){
-              ticketlist +='<td><marquee><font color="#00FF00">'+v.issuedBy+'</font></marquee></td>';
+              ticketlist +='<td><blink><font color="#00FF00">'+v.issuedBy+'</font></blink></td>';
             }else{
               ticketlist +='<td>'+v.issuedBy+'</td>';
             }
             //ticketlist +='<td>'+v.fdt_ticket_datetime+'</td>';
             if(v.fst_status == 'NEED_APPROVAL' && $Approved !="" ){
-              ticketlist +='<td><marquee><font color="#00FF00">'+$Approved+'</font></marquee></td>';
+              ticketlist +='<td><blink><font color="#00FF00">'+$Approved+'</font></blink></td>';
             }else{
               ticketlist +='<td>'+$Approved+'</td>';
             }
             ticketlist +='<td>'+$memo+'</td>';
-            if(v.fst_status == 'NEED_APPROVAL' | v.fst_status == 'APPROVED/OPEN'){
+            if(v.fst_status == 'NEED_APPROVAL' | v.fst_status == 'APPROVED/OPEN' || v.fst_status == 'NEED_REVISION'){
               ticketlist +='<td><font color="#00FF00">'+v.fst_status+'</font></td>';
             }else{
               ticketlist +='<td>'+v.fst_status+'</td>';             
             }
-            ticketlist += '<tr>';
+            ticketlist += '</tr>';
         $("#ticketlist").append(ticketlist);
-        $('#fin_dept_id').next(".select2-container").hide();
       })
     })
   }
@@ -386,7 +417,7 @@ $(function(){
           if(i == 0){
             varactive = "active";
           }
-        $("#corousel").append("<div class='item " + varactive + "'><label>" + v.fst_memo + "</label></div>");
+        $("#corousel").append("<div class='item " + varactive + "'><label><font color='#00FF00'>" + v.fst_memo + "</font></label></div>");
       })
     })
   }
