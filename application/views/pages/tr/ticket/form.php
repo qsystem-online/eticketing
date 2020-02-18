@@ -286,7 +286,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <!--</div>-->
                             <!-- end box body -->
 
-                            <div class="box-footer text-right"></div>
+                            <!--<div class="box-footer text-right"></div>-->
 
                             <!-- end box-footer -->
                         </form>
