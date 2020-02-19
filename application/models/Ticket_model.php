@@ -97,5 +97,17 @@ class Ticket_model extends MY_MODEL {
         
         return $max_tr_no;
     }
+
+    public function getLastLogStatus($finTicketId){
+        $ssql = "SELECT fst_status from trticket_log where fin_ticket_id = ? order by fin_rec_id desc limit 1";
+        $qr = $this->db->query($ssql,[$finTicketId]);
+        $rw = $qr->row();
+        if ($rw != null){
+            return $rw->fst_status;
+        }else{
+            return null;
+        }
+
+    }
     
 }

@@ -154,12 +154,7 @@ body {
                                 <div id="fin_service_level_id_err" class="text-danger"></div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"><?=lang("Lampiran Gambar")?></label>
-                            <div class="col-xs-6 col-md-4">
-                                <input type="file" class="form-control" id="fst_lampiran"  name="fst_lampiran">
-                            </div>
-                        </div>
+                        
                         <div class="form-group">
                             <label for="fst_memo_update" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
                             <div class="col-xs-6 col-md-10">
@@ -313,14 +308,50 @@ body {
                             </form>
 
                             <div class="tab-pane" id="ticket_lampiran">	
-                            <form id="frmTicketlampiran" class="form-horizontal">
-                                <div class="form-group">
-                                    <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"></label>
-                                    <div class="col-xs-6 col-md-10">
-                                        <img id="imgLampiran" style="border:0px solid #999;width:70%;" src="<?=site_url()?>assets/app/tickets/image/default.jpg"/>
+                                <form id="frmTicketlampiran" class="form-horizontal">
+                                    <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
+                                    <div class="form-group">
+                                        <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"><?=lang("Lampiran Gambar")?></label>
+                                        <div class="col-xs-6 col-md-2">
+                                            <input type="file" class="form-control" id="fst_lampiran"  name="fst_lampiran">
+                                        </div>
+
+                                        <div class="col-xs-12 col-md-8">
+                                            <input type="text" class="form-control" id="fst_doc_title"  name="fst_doc_title">
+                                        </div>
+                                        
+                                        
+
                                     </div>
-                                </div>									
-                            </form>
+                                    <div class="form-group">
+                                        <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"><?=lang("Keterangan")?></label>
+                                        <div class="col-xs-6 col-md-9">
+                                            <textarea class="form-control" id="fst_doc_memo"  name="fst_memo"></textarea>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1">
+                                            <button id="btn-add-doc" class="btn btn-primary">Add</button>
+                                        </div>                                    
+                                    </div>
+
+                                    <!--                                                    
+                                    <div class="form-group">
+                                        <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"></label>
+                                        <div class="col-xs-6 col-md-10">
+                                            <img id="imgLampiran" style="border:0px solid #999;width:70%;" src="<?=site_url()?>assets/app/tickets/image/default.jpg"/>
+                                        </div>
+                                    </div>									
+                                    -->
+                                </form>
+                                <table class="table" style="width:100%">
+                                    <thead>
+                                        <th style="width:30%"><?=lang("Judul")?></th>
+                                        <th><?=lang("Keterangan")?></th>
+                                        <th style="width:50px"><?=lang("Tanggal")?></th>
+                                    </thead>
+                                    <tbody id="tblbodydocs">
+                                    </tbody>
+                                </table>
+
                             </div>
                             <!-- /.tab-pane -->
                         </div>				
@@ -351,6 +382,7 @@ body {
             //data = $("#frmTicketStatus").serializeArray();
             data = new FormData($("#frmTicketStatus")[0]);
 
+            
             mode = $("#frm-mode").val();
             if (mode == "EDIT"){
                 url = "<?= site_url() ?>tr/ticketstatus/ajx_update_status";
@@ -434,6 +466,58 @@ body {
             });
             
         });
+
+        $("#btn-add-doc").click(function(event){
+            event.preventDefault();
+            data = new FormData($("#frmTicketlampiran")[0]);
+
+            data.append("fin_ticket_id", $("#fin_ticket_id").val());
+            
+            url = "<?= site_url() ?>tr/ticketstatus/ajx_add_doc";
+
+            App.blockUIOnAjaxRequest("Please wait while update ticket status.....");
+            $.ajax({
+                type: "POST",
+                //enctype: 'multipart/form-data',
+                url: url,
+                data: data,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 600000,
+                success: function (resp) {
+                    if (resp.message != "") {
+                        $.alert({
+                            title: 'Message',
+                            content: resp.message,
+                            buttons: {
+                                OK : function(){
+                                      return;
+                                    }
+                                },
+                            }
+                        });
+                    }
+
+                    if (resp.status == "VALIDATION_FORM_FAILED"){
+                        //Show Error
+                        errors = resp.data;
+                        for (key in errors) {
+                            $("#" + key + "_err").html(errors[key]);
+                        }
+                    }else if(resp.status == "SUCCESS") {
+                        $("#tblbodydocs").append("<tr id='doc_"+ resp.insertId +"'><td>"+data.get("fst_doc_title")+"</td><td>"+data.get("fst_memo")+"</td><td>"+ App.dateTime(Formatresp.insertDatetime) +"</td></tr>");
+                    }
+                },
+                error: function (e) {
+                    $("#result").text(e.responseText);
+                    console.log("ERROR : ", e);
+                    $("#btnSubmit").prop("disabled", false);
+                }
+            });
+
+
+        })
 
     })
 
