@@ -577,29 +577,7 @@ class Ticketstatus extends MY_Controller
             return;
         }
 
-        //Save Image
-		if (!empty($_FILES['fst_lampiran']['tmp_name'])) {
-			$config['upload_path']          = './assets/app/tickets/image/';
-			$config['file_name']			= $data["fin_ticket_id"]. '.jpg';
-			$config['overwrite']			= TRUE;
-			$config['file_ext_tolower']		= TRUE;
-			$config['allowed_types']        = 'gif|jpg|png';
-			$config['max_size']             = 0; //kilobyte
-			$config['max_width']            = 0; //1024; //pixel
-			$config['max_height']           = 0; //768; //pixel
-			$this->load->library('upload', $config);
-			if (!$this->upload->do_upload('fst_lampiran')) {
-				$this->ajxResp["status"] = "IMAGES_FAILED";
-				$this->ajxResp["message"] = "Failed to upload images, " . $this->upload->display_errors();
-				$this->ajxResp["data"] = $this->upload->display_errors();
-				$this->json_output();
-				$this->db->trans_rollback();
-				return;
-			} else {
-				//$data = array('upload_data' => $this->upload->data());			
-			}
-			$this->ajxResp["data"]["data_lampiran"] = $this->upload->data();
-		}
+        
 
         // Ticket Log
         $this->load->model("ticketlog_model");
@@ -891,6 +869,77 @@ class Ticketstatus extends MY_Controller
         $this->json_output($tickets);
     }
 
+    public function ajx_add_doc(){
+        /*
+        fst_lampiran: (binary)
+        fst_doc_title: asdasdasdasdasdasdasdasdasdasdasd asdasdasd asdasdasd        
+        fst_memo: asdasdasdasd asdmemo
+        */
+        $this->load->model("ticketdocs_model");
+        $this->load->model("ticket_model");
+        $file = $_FILES['fst_lampiran'];
 
+        
+        $data = [
+            "fst_doc_title"=>$this->input->post("fst_doc_title"),
+            "fst_status"=>$this->ticket_model->getLastLogStatus($this->input->post("fin_ticket_id")),
+            "fst_filename"=>$file["name"],
+            "fst_memo"=>$this->input->post("fst_memo"),
+            "fst_active"=>"A",
+        ];
+
+        try{
+
+        
+            $this->db->trans_start();
+            
+            $insertId = $this->ticketdocs_model->insert($data);
+
+            //Save Image
+            if (!empty($_FILES['fst_lampiran']['tmp_name'])) {
+                $config['upload_path']          = './assets/app/tickets/image/';
+                $config['file_name']			= $insertId . '.jpg';
+                $config['overwrite']			= TRUE;
+                $config['file_ext_tolower']		= TRUE;
+                $config['allowed_types']        = 'gif|jpg|png|jpeg';
+                $config['max_size']             = 0; //kilobyte
+                $config['max_width']            = 0; //1024; //pixel
+                $config['max_height']           = 0; //768; //pixel
+                $this->load->library('upload', $config);
+                
+                if (!$this->upload->do_upload('fst_lampiran')) {
+                    throw new CustomException("Failed to upload images, " . $this->upload->display_errors(),3003,"IMAGES_FAILED",$this->upload->display_errors());                    
+                } 
+                
+                $this->ajxResp["data"] = [
+                    "insertId"=>$insertId,                    
+                    "insertDatetime"=>date("Y-m-d H:i:s"),
+                    "data_lampiran" => $this->upload->data()
+                ];
+            }
+
+
+
+            $this->db->trans_complete();
+
+            $this->ajxResp["status"] = "SUCCESS";
+            $this->ajxResp["message"] = "";
+            $this->ajxResp["data"] = [
+                "data_lampiran" => $this->upload->data()
+            ];
+            $this->json_output();
+
+        }catch(CustomException $e){
+            $this->db->trans_rollback();
+            $this->ajxResp["status"] = $e->getStatus();
+            $this->ajxResp["message"] = $e->getMessage();
+            $this->ajxResp["data"] = $e->getData();
+            $this->json_output();
+        }
+        
+
+
+
+    }
 
 }
