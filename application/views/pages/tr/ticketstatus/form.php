@@ -493,9 +493,8 @@ body {
                             buttons: {
                                 OK : function(){
                                       return;
-                                    }
-                                },
-                            }
+                                }
+                            },
                         });
                     }
 
