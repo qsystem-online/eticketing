@@ -53,7 +53,7 @@ class Servicelevel_model extends MY_MODEL {
     }
 
     public function get_ServiceLevel(){
-        $query = $this->db->get('servicelevel');
+        $query = $this->db->get('msservicelevel');
         return $query->result_array();
     }
 }

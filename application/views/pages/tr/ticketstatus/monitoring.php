@@ -3,6 +3,8 @@
 <script src="<?= COMPONENT_URL?>bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Select2 -->
 <link rel="stylesheet" href="<?=COMPONENT_URL?>bower_components/select2/dist/css/select2.min.css">
+<!-- Bootstrap 3.3.7 -->
+<link rel="stylesheet" href="<?=COMPONENT_URL?>bower_components/bootstrap/dist/css/bootstrap.min.css">
 <style type="text/css">
 body {
   font-family: 'Open Sans', sans-serif;
@@ -112,11 +114,37 @@ h2 a {
 .container td:nth-child(4),
 .container th:nth-child(4) { display: none; }
 }
-.running-text{
-	background-color: #6962de; /*untuk memberikan background, link : https://www.w3schools.com/cssref/css3_pr_background.asp*/
-	color:white; /*untuk memberikan warna pada text, link : https://www.w3schools.com/cssref/pr_text_color.asp*/
-	padding-top: 5px; /*untuk memberikan jarak dalam element di bagian atas (top), link : https://www.w3schools.com/cssref/pr_padding-top.asp*/
-	bottom-top: 5px;
+</style>
+
+<style type="text/css">
+blink {
+  -webkit-animation: 2s linear infinite condemned_blink_effect; /* for Safari 4.0 - 8.0 */
+  animation: 2s linear infinite condemned_blink_effect;
+}
+
+/* for Safari 4.0 - 8.0 */
+@-webkit-keyframes condemned_blink_effect { 
+  0% {
+    visibility: hidden;
+  }
+  50% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
+}
+
+@keyframes condemned_blink_effect {
+  0% {
+    visibility: hidden;
+  }
+  50% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
 }
 </style>
 
@@ -180,21 +208,24 @@ h2 a {
 }
 </style>
 </head>
-<div class="example3">
+<!--<div class="example3">
   <form name="info">
-      <input type="text" name="msg" font-weight="bold" placeholder ="TIKET TIPE PENGUMUMAN" disabled/>
+      <input type="text" name="msg" font-weight="bold" height="pixels" placeholder ="TIKET TIPE PENGUMUMAN" disabled/>
   </form>
+</div>-->
+<div class="col-md-12">
+    <select type="hidden" class="form-control select2" id="fin_dept_id" name="fin_dept_id[]" style="width: 100%" multiple="multiple">
+    </select>
 </div>
 <body>
-<div class="col-md-12">
-  <select class="form-control select2" id="fin_dept_id" name="fin_dept_id[]" style="width: 100%" multiple="multiple">
-      <!--<php
-      $deptList = $this->msdepartments_model->getAllList(); 
-      foreach ($deptList as $dept) {    ?>
-              <option value='<= $dept->fin_department_id ?>'><= $dept->fst_department_name ?> </option>
-          <php
-      } ?>-->
-  </select>
+<div class="container" style="padding-bottom: 5px">
+  <br>
+  <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
+    <!-- Wrapper for slides -->
+    <div id="corousel" class="carousel-inner" role="listbox">
+      
+    </div>
+  </div>
 </div>
   <!--<div class="example3">
   <h3>Libur Natal dan Tahun baru mulai 24 Des 2019 s/d 02 Jan 2020,selamat hari natal dan tahun baru.</h3>
@@ -203,29 +234,16 @@ h2 a {
   <div class="tableticket">
     <table class="container" id="table-ticket">
       <thead>
-      <!--<meta http-equiv="refresh" content="30">-->
         <tr>
-          <th id="init_select2">Penerima</th>
+          <th>Penerima</th>
           <th>Tanggal</th>
           <th>Deadline</th>
           <th>Dari User</th>
           <th>Persetujuan</th>
           <th>Memo Tiket</th>
-          <th id="destroy_select2">Status</th>
+          <th>Status</th>
         </tr>
       </thead>
-      <!--<tbody id="ticketlist">
-          <?php foreach($tickets as $data): ?>
-            <tr>
-              <td><?php echo $data->issuedTo; ?></td>
-              <td><?php echo $data->fst_memo; ?></td>
-              <td><?php echo $data->issuedBy; ?></td>
-              <td><?php echo $data->fdt_ticket_datetime; ?></td>
-              <td><?php echo $data->issuedBy; ?></td>
-              <td><?php echo $data->fst_status; ?></td>
-            </tr>
-            <?php endforeach; ?>
-      </tbody>-->
       <tbody id="ticketlist">
       </tbody>
     </table>
@@ -233,16 +251,16 @@ h2 a {
 </body>
 </html>
 <script type="text/javascript">
-var $fin_department_id = $("#fin_dept_id").val();
   $(function(){
       isiTicketlist();
       setInterval(function(){
         isiTicketlist()        
-      }, 5000);
+      }, 70000);
   });
 
   $(function(){
     $deptList = [];
+    console.log(window.department);
       <?php
       $arrDeptList = $this->msdepartments_model->getAllList();
       //$deptList = [];
@@ -257,21 +275,23 @@ var $fin_department_id = $("#fin_dept_id").val();
           width: '100%',
           data: $deptList
       });
+      $('#fin_dept_id').next(".select2-container").hide();
   });
 
-  $("#destroy_select2").click(function() { 
-    $("#fin_dept_id").select2("destroy"); 
+  /*$("#destroy_select2").click(function() { 
+    $('#fin_dept_id').next(".select2-container").hide(); 
   });
   $("#init_select2").click(function() { 
-    $("#fin_dept_id").select2(); 
-  });
+    $('#fin_dept_id').next(".select2-container").show(); 
+  });*/
 
   function isiTicketlist(){
     //Fungsi Ajax
+    $dept = window.department;
     $.ajax({
       url: "monitoringticket",
       method:"GET",
-      data:{'fin_dept_id':$("#fin_dept_id").val()},
+      data:{'fin_dept_id':$dept},
       datatype:"JSON",
     }).done(function(resp){
       $("#ticketlist").empty();
@@ -285,39 +305,82 @@ var $fin_department_id = $("#fin_dept_id").val();
         }else{
           $memo = v.fst_memo;
         }
+        if (v.issuedTo == null){
+          $issuedTo = "";
+        }else{
+          $issuedTo = v.issuedTo;
+        }
+        if (v.Approved == null){
+          $Approved = "";
+        }else{
+          $Approved = v.Approved;
+        }
         var ticketlist = '<tr>';
-            if(v.fst_status == 'APPROVED/OPEN'){
-              ticketlist +='<td><marquee><font color="#00FF00">'+v.issuedTo+'</font></marquee></td>';
+            if(v.fst_status == 'APPROVED/OPEN' && $issuedTo != ""){
+              ticketlist +='<td><blink><font color="#00FF00">'+$issuedTo+'</font></blink></td>';
             }else{
-              ticketlist +='<td>'+v.issuedTo+'</td>';
+              ticketlist +='<td>'+$issuedTo+'</td>';
             }
             ticketlist +='<td>'+v.fdt_ticket_datetime+'</td>';
             ticketlist +='<td>'+v.fdt_deadline_extended_datetime+'</td>';
-            ticketlist +='<td>'+v.issuedBy+'</td>';
-            //ticketlist +='<td>'+v.fdt_ticket_datetime+'</td>';
-            if(v.fst_status == 'NEED_APPROVAL'){
-              ticketlist +='<td><marquee><font color="#00FF00">'+v.Approved+'</font></marquee></td>';
+            if(v.fst_status == 'NEED_REVISION' || v.fst_status == 'COMPLETED'){
+              ticketlist +='<td><blink><font color="#00FF00">'+v.issuedBy+'</font></blink></td>';
             }else{
-              ticketlist +='<td>'+v.Approved+'</td>';
+              ticketlist +='<td>'+v.issuedBy+'</td>';
+            }
+            //ticketlist +='<td>'+v.fdt_ticket_datetime+'</td>';
+            if(v.fst_status == 'NEED_APPROVAL' && $Approved !="" ){
+              ticketlist +='<td><blink><font color="#00FF00">'+$Approved+'</font></blink></td>';
+            }else{
+              ticketlist +='<td>'+$Approved+'</td>';
             }
             ticketlist +='<td>'+$memo+'</td>';
-            if(v.fst_status == 'NEED_APPROVAL' | v.fst_status == 'APPROVED/OPEN'){
+            if(v.fst_status == 'NEED_APPROVAL' | v.fst_status == 'APPROVED/OPEN' || v.fst_status == 'NEED_REVISION'){
               ticketlist +='<td><font color="#00FF00">'+v.fst_status+'</font></td>';
             }else{
               ticketlist +='<td>'+v.fst_status+'</td>';             
             }
-            ticketlist += '<tr>';
+            ticketlist += '</tr>';
         $("#ticketlist").append(ticketlist);
-        $("#fin_dept_id").hide();
       })
     })
   }
-</script>
+  /*$(function(){
+      isiPengumuman();
+      setInterval(function(){
+        isiPengumuman()        
+      }, 5000);
+  });
 
-<script>
-var announcement = new Array();
+  function isiPengumuman(){
+    //Fungsi Ajax
+    $.ajax({
+      url: "monitoringpengumuman",
+      method:"GET",
+      data:{'fin_dept_id':$("#fin_dept_id").val()},
+      datatype:"JSON",
+    }).done(function(resp){
+      $.each(resp.arrPengumuman,function(i,v){
+        console.log(v);
+        //var announcement = new Array();
+        var i = 0;
+        var announcement = v.fst_memo;
+        var durasi = 15000;
+        id = setInterval('script()',durasi);
+        var c = 0;
+          function script() {
+            app = announcement;
+            if (c == i) c = 0;
+            document.info.msg.value = app;
+            //$("#pengumuman").html(app);
+          }
+        //$("#running_info").append(ticketlist);
+      })
+    })
+  }*/
+/*var announcement = new Array();
 var i = 0;
-<?php foreach($arrPengumuman as $pengumuman){ ?>
+<?php foreach($tickets as $pengumuman){ ?>
   announcement[i++] = '<?= $pengumuman->fst_memo ?>';
 <?php } ?>
 var durasi = 15000;
@@ -328,8 +391,40 @@ var c = 0;
     if (c == i) c = 0;
     document.info.msg.value = app;
     //$("#pengumuman").html(app);
+  }*/
+</script>
+<script type="text/javascript">
+$(function(){
+      setP();
+      setInterval(function(){
+        setP()        
+      }, 50000);
+  });
+
+  function setP(){
+    //$dept = window.department;
+    $.ajax({
+      url: "monitoringpengumuman",
+      method:"GET",
+      //data:{'fin_dept_id':$dept},
+      datatype:"JSON",
+    }).done(function(resp){
+      var pengumuman = resp.arrPengumuman;
+      $("#corousel").empty();
+      $.each(pengumuman,function(i,v){
+        console.log(v);
+        var varactive = "";
+          if(i == 0){
+            varactive = "active";
+          }
+        $("#corousel").append("<div class='item " + varactive + "'><label><font color='#00FF00'>" + v.fst_memo + "</font></label></div>");
+      })
+    })
   }
 </script>
+
 <script src="<?= COMPONENT_URL?>bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Select2 -->
 <script src="<?= COMPONENT_URL?>bower_components/select2/dist/js/select2.full.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="<?=COMPONENT_URL?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>

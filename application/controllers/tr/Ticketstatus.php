@@ -937,9 +937,16 @@ class Ticketstatus extends MY_Controller
             $this->json_output();
         }
         
-
-
-
+	
+    }
+	public function monitoringpengumuman(){
+        $arrDepartment = $this->input->get('fin_dept_id');
+        //var_dump($arrDepartment);
+        //die();
+        //$arrDepartment = ['2'];
+        $this->load->model("monitoringticket_model");
+        $arrPengumuman = $this->monitoringticket_model->get_pengumuman();
+        $this->json_output($arrPengumuman);
     }
 
 }

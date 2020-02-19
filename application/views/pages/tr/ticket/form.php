@@ -125,7 +125,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="select-ticketType" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id">
-                                            <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                            <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $tickettypeList = $this->tickettype_model->getTicketType();
                                                 foreach ($tickettypeList as $ticketType) {
@@ -139,7 +139,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="select-serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id">
-                                            <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                            <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
                                                 foreach ($servicelevelList as $serviceLevel) {
@@ -224,7 +224,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-department" class="form-control select2" name="fin_to_department_id">
-                                        <option value="">-- <?=lang("select")?> --</option>
+                                        <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $deptidList = $this->msdepartments_model->getDepartment();
                                                 foreach ($deptidList as $deptId) {
@@ -240,7 +240,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="fin_approved_by_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Approved By")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id">
-                                            <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                            <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $approvedbyList = $this->users_model->getApprovedBy();
                                                 foreach ($approvedbyList as $approvedBy){
@@ -286,7 +286,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <!--</div>-->
                             <!-- end box body -->
 
-                            <div class="box-footer text-right"></div>
+                            <!--<div class="box-footer text-right"></div>-->
 
                             <!-- end box-footer -->
                         </form>
@@ -313,6 +313,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
                                             <input type="hidden" id="frm-mode" value="<?=$mode?>">
                                             <input type="hidden" class="form-control" id="fin_ticket_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_id" value="<?=$fin_ticket_id?>" readonly>
+                                            <input type="hidden" class="form-control" id="fbl_need_approval" name="fbl_need_approval" readonly>
+                                            <input type="hidden" class="form-control" id="fst_assignment_or_notice" name="fst_assignment_or_notice" readonly>
+                                            <input type="hidden" class="form-control" id="fin_service_level_days" name="fin_service_level_days" readonly>
                                             
                                             <div class="form-group">
                                                 <label for="fst_ticket_no" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket No.")?> #</label>
@@ -326,7 +329,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                 <label for="select-ticketType" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
                                                 <div class="col-xs-6 col-md-4">
                                                     <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id" style="width:100%" disabled>
-                                                        <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                                        <option value="" selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $tickettypeList = $this->tickettype_model->getTicketType();
                                                             foreach ($tickettypeList as $ticketType) {
@@ -340,7 +343,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                 <label for="select-serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
                                                 <div class="col-xs-6 col-md-4">
                                                     <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id" style="width:100%" disabled>
-                                                        <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                                        <option value="" selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
                                                             foreach ($servicelevelList as $serviceLevel) {
@@ -425,7 +428,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                 <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
                                                 <div class="col-xs-6 col-md-4">
                                                     <select id="select-department" class="form-control select2" name="fin_to_department_id" disabled>
-                                                        <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                                        <option value="" selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $deptidList = $this->msdepartments_model->getDepartment();
                                                             foreach ($deptidList as $deptId) {
@@ -440,7 +443,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                 <label for="fin_approved_by_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Approved By")?></label>
                                                 <div class="col-xs-6 col-md-4">
                                                     <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id" disabled>
-                                                        <option value="" disabled selected>-- <?=lang("select")?> --</option>
+                                                        <option value="" selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $approvedbyList = $this->users_model->getToUserList();
                                                             foreach ($approvedbyList as $approvedBy) {
@@ -500,8 +503,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 </section>
 
 <script type="text/javascript">
-    var $userActive ="<?= $this->aauth->get_user_id()?>";
-    var $levelActive ="<?= $this->aauth->user('fin_user_id')->fin_level?>";
 
     $(function(){
 
@@ -636,8 +637,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                     $("#select-serviceLevel").val(null).trigger("change.select2");
                     $("#select-serviceLevel").prop("disabled", true);
-                    
-
                 }else{
                     
                     $("#select-serviceLevel").prop("disabled", false);
@@ -653,7 +652,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 $("#select-ticketType").each(function(index){
                     if($(this).find(":selected").data("notice") == "NOTICE"){
-                        $("#select-serviceLevel").val(null).prop("disabled", true);
+                        $("#select-serviceLevel").val(null).trigger("change.select2");
+                        $("#select-serviceLevel").prop("disabled", true);
                         $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
                         $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("NOTICE");
@@ -664,6 +664,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
                         $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("INFO");
+                        $("#select-serviceLevel").val(null).trigger("change.select2");
                         $("#select-serviceLevel").prop("disabled", true);
                     }
                 });
@@ -671,7 +672,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
             $("#select-serviceLevel").change(function(event){
                 event.preventDefault();
-                alert($("#select-serviceLevel option:selected").data("days"));
+                //alert($("#select-serviceLevel option:selected").data("days"));
                 $("#select-serviceLevel").each(function(index){
                     if ($(this).find(":selected").data("days") == "1"){
                         $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('1 days'))?>")).prop("disabled", true);
@@ -724,7 +725,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             });
         }
 
-    })
+    });
 
     function init_form(fin_ticket_id){
 
@@ -858,7 +859,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         buttons: {
                             OK : function() {
                                 if (resp.status == "SUCCESS") {
-                                    window.location.href = "<?=site_url() ?>tr/ticket/add";
+                                    window.location.href = "<?=site_url() ?>tr/ticket/lizt";
                                     return;
                                 }
                             },
