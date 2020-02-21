@@ -136,8 +136,7 @@ class ticket extends MY_Controller
         $this->openForm("ADD", 0);
     }
 
-    /*public function Edit($fin_ticket_id)
-    {
+    /*public function Edit($fin_ticket_id){
         $this->openForm("EDIT", $fin_ticket_id);
     }*/
 
