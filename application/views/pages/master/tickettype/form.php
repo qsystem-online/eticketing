@@ -34,7 +34,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
     <h1><?= lang("Ticket Type") ?><small><?= lang("form") ?></small></h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> <?= lang("Home") ?></a></li>
-        <li><a href="#"><?= lang("Menus") ?></a></li>
+        <li><a href="#"><?= lang("Master") ?></a></li>
+        <li><a href="#"><?= lang("Ticket Type") ?></a></li>
         <li class="active title"><?= $title ?></li>
     </ol>
 </section>

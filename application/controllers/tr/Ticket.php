@@ -35,6 +35,7 @@ class ticket extends MY_Controller
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Transaksi', 'link' => '#', 'icon' => ''],
             ['title' => 'Ticket', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
@@ -105,7 +106,7 @@ class ticket extends MY_Controller
         $main_header = $this->parser->parse('inc/main_header', [], true);
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $data["mode"] = $mode;
-        $data["title"] = $mode == "ADD" ? "Add Ticket" : "Ticket";
+        $data["title"] = $mode == "ADD" ? "Add Ticket" : "View";
         // tambah ini
         if ($mode == 'ADD'){
             $data["fin_ticket_id"] = 0;
@@ -285,7 +286,7 @@ class ticket extends MY_Controller
             "fdt_acceptance_expiry_datetime" => dBDateTimeFormat($this->input->post("fdt_acceptance_expiry_datetime")),
             "fin_ticket_type_id" => $this->input->post("fin_ticket_type_id"),
             "fin_service_level_id" => $this->input->post("fin_service_level_id"),
-            "fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_datetime")),
+            //"fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_datetime")),
             "fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_deadline_extended_datetime")),
             "fin_issued_by_user_id" => $this->input->post("fin_issued_by_user_id"),
             "fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),

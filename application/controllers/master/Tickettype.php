@@ -33,6 +33,7 @@ class Tickettype extends MY_Controller
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Master', 'link' => '#', 'icon' => ''],
             ['title' => 'Ticket Type', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
@@ -77,7 +78,7 @@ class Tickettype extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
 
         $data["mode"] = $mode;
-        $data["title"] = $mode == "ADD" ? "Add Ticket Type" : "Update Ticket Type";
+        $data["title"] = $mode == "ADD" ? "Add Ticket Type" : "Update";
         $data["fin_ticket_type_id"] = $fin_ticket_type_id;
 
         $page_content = $this->parser->parse('pages/master/tickettype/form', $data, true);

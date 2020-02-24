@@ -36,6 +36,7 @@ class Ticketstatus extends MY_Controller
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Transaksi', 'link' => '#', 'icon' => ''],
             ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
@@ -71,6 +72,7 @@ class Ticketstatus extends MY_Controller
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Transaksi', 'link' => '#', 'icon' => ''],
             ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
@@ -106,6 +108,7 @@ class Ticketstatus extends MY_Controller
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Transaksi', 'link' => '#', 'icon' => ''],
             ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
@@ -141,6 +144,7 @@ class Ticketstatus extends MY_Controller
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Transaksi', 'link' => '#', 'icon' => ''],
             ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
@@ -176,6 +180,7 @@ class Ticketstatus extends MY_Controller
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Transaksi', 'link' => '#', 'icon' => ''],
             ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
@@ -211,6 +216,7 @@ class Ticketstatus extends MY_Controller
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Transaksi', 'link' => '#', 'icon' => ''],
             ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
@@ -246,6 +252,7 @@ class Ticketstatus extends MY_Controller
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Transaksi', 'link' => '#', 'icon' => ''],
             ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
@@ -281,6 +288,7 @@ class Ticketstatus extends MY_Controller
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Transaksi', 'link' => '#', 'icon' => ''],
             ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
@@ -316,6 +324,7 @@ class Ticketstatus extends MY_Controller
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Transaksi', 'link' => '#', 'icon' => ''],
             ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
@@ -351,6 +360,7 @@ class Ticketstatus extends MY_Controller
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Transaksi', 'link' => '#', 'icon' => ''],
             ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
@@ -386,6 +396,7 @@ class Ticketstatus extends MY_Controller
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Transaksi', 'link' => '#', 'icon' => ''],
             ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
@@ -442,7 +453,7 @@ class Ticketstatus extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
 
         $data["mode"] = $mode;
-        $data["title"] = $mode == "ADD" ? "Add Ticket Status" : "Update Ticket Status";
+        $data["title"] = $mode == "ADD" ? "Add Ticket Status" : "Update";
         $data["fin_ticket_id"] = $fin_ticket_id;
 
         $page_content = $this->parser->parse('pages/tr/ticketstatus/form', $data, true);
@@ -558,10 +569,8 @@ class Ticketstatus extends MY_Controller
         //echo($user_active);
 
         if ($last_status =='APPROVED/OPEN' && $deadline_date == "" && $user_received == $user_active){
-            $data["fdt_deadline_datetime"]= $ticketdeadline_datetime;
             $data["fdt_deadline_extended_datetime"]= $ticketdeadline_datetime;
         }else if($last_status =='NEED_REVISION' && $user_issued == $user_active){
-            $data["fdt_deadline_datetime"]= dBDateTimeFormat($this->input->post("fdt_update_deadline_datetime"));
             $data["fdt_deadline_extended_datetime"]= dBDateTimeFormat($this->input->post("fdt_update_deadline_datetime"));
             $data["fin_service_level_id"]= $this->input->post("fin_service_level_id");
         }
@@ -803,7 +812,7 @@ class Ticketstatus extends MY_Controller
             $sheet->setCellValue("F$iRow", $rw->fst_ticket_type_name);
             $sheet->setCellValue("G$iRow", $rw->fst_memo);
             $sheet->setCellValue("H$iRow", $rw->fdt_deadline_datetime);
-            $sheet->setCellValue("I$iRow", $rw->fdt_deadline_datetime);
+            $sheet->setCellValue("I$iRow", $rw->fdt_deadline_extended_datetime);
             $sheet->setCellValue("J$iRow", $rw->fst_status);
             $sheet->setCellValue("K$iRow", $rw->fin_service_level_days);
             $iRow++;

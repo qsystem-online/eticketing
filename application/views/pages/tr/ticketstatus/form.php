@@ -16,93 +16,96 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 	}
 </style>
 <style>
-* {
-  box-sizing: border-box;
-}
+    {
+        box-sizing: border-box;
+    }
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
 
-/* Float four columns side by side 
-.column {
-  float: left;
-  width: 25%;
-  padding: 0 10px;
-}*/
+    /* Float four columns side by side 
+    .column {
+        float: left;
+        width: 25%;
+        padding: 0 10px;
+    }*/
 
-/* Remove extra left and right margins, due to padding */
-.row {margin: 0 -5px;}
+    /* Remove extra left and right margins, due to padding */
+    .row {
+        margin: 0 -5px;
+    }
 
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
 
-/* Responsive columns 
-@media screen and (max-width: 600px) {
-  .column {
-    width: 100%;
-    display: block;
-    margin-bottom: 20px;
-  }
-}*/
+    /* Responsive columns 
+    @media screen and (max-width: 600px) {
+    .column {
+        width: 100%;
+        display: block;
+        margin-bottom: 20px;
+    }
+    }*/
 
-/* Style the counter cards */
-.card-issued {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  padding: 16px;
-  background-color: #f1f1f1;
-  margin-bottom: 20px;
-}
-.card-received {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  padding: 16px;
-  background-color: #3c8dbc;
-  margin-bottom: 20px;
-}
-.card button {
-  border: none;
-  outline: 0;
-  padding: 12px;
-  color: white;
-  background-color: #000;
-  text-align: center;
-  cursor: pointer;
-  width: 100%;
-  font-size: 18px;
-}
+    /* Style the counter cards */
+    .card-issued {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        padding: 16px;
+        background-color: #f1f1f1;
+        margin-bottom: 20px;
+    }
+    .card-received {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        padding: 16px;
+        background-color: #3c8dbc;
+        margin-bottom: 20px;
+    }
+    .card button {
+        border: none;
+        outline: 0;
+        padding: 12px;
+        color: white;
+        background-color: #000;
+        text-align: center;
+        cursor: pointer;
+        width: 100%;
+        font-size: 18px;
+    }
 
-.card button:hover {
-  opacity: 0.7;
-}
+    .card button:hover {
+        opacity: 0.7;
+    }
 
-.card-title {
-  font-weight:bold;
-  /*text-align: center;*/
-}
-.sep {
-  height: 15px;
-  
-}
+    .card-title {
+        font-weight:bold;
+        /*text-align: center;*/
+    }
 
-.list-group {
-    font-style: Italic;
-    height: 100%;
-}
-.btn {
-  margin-bottom: 20px;
-}
+    .sep {
+        height: 15px;
+    }
 
+    .list-group {
+        font-style: Italic;
+        height: 100%;
+    }
+
+    .btn {
+        margin-bottom: 20px;
+    }
 </style>
 
 <section class="content-header">
     <h1><?= lang("Ticket Status") ?><small><?= lang("Form") ?></small></h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> <?= lang("Home") ?></a></li>
-        <li><a href="#"><?= lang("Menus") ?></a></li>
+        <li><a href="#"><?= lang("Transaksi") ?></a></li>
+        <li><a href="#"><?= lang("Ticket Status") ?></a></li>
         <li class="active title"><?= $title ?></li>
     </ol>
 </section>
@@ -137,7 +140,7 @@ body {
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_update_deadline_extended_datetime" name="fdt_update_deadline_datetime">
+                                    <input type="text" class="form-control text-right datetimepicker" id="fdt_update_deadline_extended_datetime" name="fdt_update_deadline_extended_datetime">
                                 </div>
                                 <div id="fdt_deadline_extended_datetime_err" class="text-danger"></div>
                             </div>
@@ -549,7 +552,6 @@ body {
                     $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_ticket_datetime));
                     $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_acceptance_expiry_datetime));
                     $("#fdt_update_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_deadline_extended_datetime));
-                    $("#fdt_deadline_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_deadline_datetime));
                     $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_deadline_extended_datetime));
                     $("#fdt_ticket_expiry_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_ticket_expiry_extended_datetime));
                 }

@@ -33,6 +33,7 @@ class Servicelevel extends MY_Controller
 
         $this->list['breadcrumbs'] = [
             ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Master', 'link' => '#', 'icon' => ''],
             ['title' => 'Service Level', 'link' => '#', 'icon' => ''],
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
@@ -67,7 +68,7 @@ class Servicelevel extends MY_Controller
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
 
         $data["mode"] = $mode;
-        $data["title"] = $mode == "ADD" ? "Add Service Level" : "Update Service Level";
+        $data["title"] = $mode == "ADD" ? "Add Service Level" : "Update";
         $data["fin_service_level_id"] = $fin_service_level_id;
 
         $page_content = $this->parser->parse('pages/master/servicelevel/form', $data, true);

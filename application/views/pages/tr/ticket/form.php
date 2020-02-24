@@ -8,6 +8,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
     .border-0{
         border: 0px;
     }
+    .box-header-1{
+        height: 50px;
+    }
     td{
         padding: 2px; !important
     }
@@ -81,7 +84,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
     <h1><?= lang("Ticket") ?><small><?= lang("form") ?></small></h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> <?= lang("Home") ?></a></li>
-        <li><a href="#"><?= lang("Menus") ?></a></li>
+        <li><a href="#"><?= lang("Transaksi") ?></a></li>
+        <li><a href="#"><?=lang("Ticket") ?></a></li>
         <li class="active title"><?= $title ?></li>
     </ol>
 </section>
@@ -296,13 +300,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     <?php if ($mode == "VIEW") { ?>
                         <div class="nav-tabs-custom" style="display:unset">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#ticket_view" data-toggle="tab" aria-expanded="false"><label><?=lang("Ticket View")?></label></a></li>
-                                <li class=""><a href="#ticket_log" data-toggle="tab" aria-expanded="false"><label><?=lang("Ticket Log")?></label></a></li>
+                                <li class="active"><a href="#ticket_view" data-toggle="tab" aria-expanded="true"><label><?=lang("Ticket View")?></label></a></li>
+                                <li class=""><a href="#ticket_log" data-toggle="tab" aria-expanded="true"><label><?=lang("Ticket Log")?></label></a></li>
                             </ul>
                             
                             <div class="tab-content">
                                 <div class="tab-pane active" id="ticket_view">
-                                    <div class="box-header with-border">
+                                    <div class="box-header-1 with-border">
                                         <div class="btn-group btn-group-md pull-right">
                                             <a id="btnVoid" class="btn btn-primary" href="#" title="<?=lang("Void")?>" style="display:<?= $mode == "ADD" ? "none" : "inline-block" ?>"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
                                             <a id="btnLizt" class="btn btn-primary" href="#" title="<?=lang("Daftar Transaksi")?>" style="display:<?= $mode == "ADD" ? "none" : "inline-block" ?>"><i class="fa fa-list" aria-hidden="true"></i></a>
@@ -313,9 +317,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
                                             <input type="hidden" id="frm-mode" value="<?=$mode?>">
                                             <input type="hidden" class="form-control" id="fin_ticket_id" placeholder="<?=lang("(Autonumber)")?>" name="fin_ticket_id" value="<?=$fin_ticket_id?>" readonly>
-                                            <input type="hidden" class="form-control" id="fbl_need_approval" name="fbl_need_approval" readonly>
-                                            <input type="hidden" class="form-control" id="fst_assignment_or_notice" name="fst_assignment_or_notice" readonly>
-                                            <input type="hidden" class="form-control" id="fin_service_level_days" name="fin_service_level_days" readonly>
+                                            
                                             
                                             <div class="form-group">
                                                 <label for="fst_ticket_no" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket No.")?> #</label>
@@ -649,7 +651,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     $("#select-department").prop("disabled",true);
                 }
                 
-
                 $("#select-ticketType").each(function(index){
                     if($(this).find(":selected").data("notice") == "NOTICE"){
                         $("#select-serviceLevel").val(null).trigger("change.select2");
