@@ -571,7 +571,7 @@ class Ticketstatus extends MY_Controller
         if ($last_status =='APPROVED/OPEN' && $deadline_date == "" && $user_received == $user_active){
             $data["fdt_deadline_extended_datetime"]= $ticketdeadline_datetime;
         }else if($last_status =='NEED_REVISION' && $user_issued == $user_active){
-            $data["fdt_deadline_extended_datetime"]= dBDateTimeFormat($this->input->post("fdt_update_deadline_datetime"));
+            $data["fdt_deadline_extended_datetime"]= dBDateTimeFormat($this->input->post("fdt_update_deadline_extended_datetime"));
             $data["fin_service_level_id"]= $this->input->post("fin_service_level_id");
         }
 
