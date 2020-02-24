@@ -255,7 +255,6 @@ class ticket extends MY_Controller
     }
 
     public function ajx_view_save(){
-
         $this->load->model('ticket_model');
         $fin_ticket_id = $this->input->post("fin_ticket_id");
         $data = $this->ticket_model->getDataById($fin_ticket_id);
