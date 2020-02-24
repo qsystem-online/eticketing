@@ -4,8 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class ticket extends MY_Controller
 {
 
-    public function __construct()
-    {
+    public function __construct(){
         parent::__construct();
         $this->load->library('form_validation');
         $this->load->model('ticket_model');
@@ -16,13 +15,11 @@ class ticket extends MY_Controller
         $this->load->model('usersgroup_model');
     }
 
-    public function index()
-    {
+    public function index(){
         $this->lizt();
     }
 
-    public function lizt()
-    {
+    public function lizt(){
         $this->load->library('menus');
         $this->list['page_name'] = "Ticket";
         $this->list['list_name'] = "Ticket List";
@@ -95,8 +92,7 @@ class ticket extends MY_Controller
         $this->parser->parse('template/main', $this->data);
     }
 
-    private function openForm($mode = "ADD", $fin_ticket_id = 0)
-    {
+    private function openForm($mode = "ADD", $fin_ticket_id = 0){
         $this->load->library("menus");
         $this->load->model("ticket_model");
         $this->load->model("tickettype_model");
@@ -131,8 +127,7 @@ class ticket extends MY_Controller
         $this->parser->parse('template/main', $this->data);
     }
 
-    public function add()
-    {
+    public function add(){
         $this->openForm("ADD", 0);
     }
 
@@ -334,8 +329,7 @@ class ticket extends MY_Controller
         $this->json_output();
     }
 
-    public function fetch_list_data()
-    {
+    public function fetch_list_data(){
         $this->load->library("datatables");
         $this->datatables->setTableName("trticket");
 
@@ -388,8 +382,7 @@ class ticket extends MY_Controller
         $this->json_output();
     }
 
-    public function get_ticket()
-    {
+    public function get_ticket(){
         $term = $this->input->get("term");
         $ssql = "select * from trticket where fst_ticket_no like ? order by fst_ticket_no";
         $qr = $this->db->query($ssql, ['%' . $term . '%']);
@@ -398,8 +391,7 @@ class ticket extends MY_Controller
         $this->json_output($rs);
     }
 
-    public function report_ticket()
-    {
+    public function report_ticket(){
         $this->load->library('pdf');
         //$customPaper = array(0,0,381.89,595.28);
         //$this->pdf->setPaper($customPaper, 'landscape');

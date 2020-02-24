@@ -298,7 +298,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <ul class="nav nav-tabs">
                                 <li class="active"><a href="#ticket_view" data-toggle="tab" aria-expanded="false"><label><?=lang("Ticket View")?></label></a></li>
                                 <li class=""><a href="#ticket_log" data-toggle="tab" aria-expanded="false"><label><?=lang("Ticket Log")?></label></a></li>
-                                <li class=""><a href="#ticket_lampiran" data-toggle="tab" aria-expanded="false"><label><?=lang("Lampiran")?></label></a></li>
                             </ul>
                             
                             <div class="tab-content">
@@ -491,18 +490,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                                 <div class="tab-pane" id="ticket_log">
                                     <div class="col-md-12" id="ticketlog_card"></div>
-                                </div>
-
-                                <div class="tab-pane" id="ticket_lampiran">
-                                    <table class="table" style="width:100%">
-                                        <thead>
-                                            <th style="width:30%"><?=lang("Judul")?></th>
-                                            <th><?=lang("Keterangan")?></th>
-                                            <th style="width:50px"><?=lang("Tanggal")?></th>
-                                        </thead>
-                                        <tbody id="tblbodydocs">
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>																		
                         </div>
@@ -839,9 +826,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     $("#ticketlog_card").append(cardlog);
                     }
                 })
-
-                //untuk menampilkan image lampiran
-                $('#imgLampiran').attr("src",resp.ms_ticket.lampiranURL);
 
             },
             error: function (e) {
