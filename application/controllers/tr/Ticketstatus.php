@@ -534,8 +534,8 @@ class Ticketstatus extends MY_Controller
             return;
         }
         $days = $this->input->post("fin_service_level_days");
-        $days = abs(intval($days));
-        $daysLevel = "{$days} days";
+        $days = abs(intval($days)); //tambahan
+        $daysLevel = "{$days} days"; //tambahan
         $now = date("Y-m-d H:i:s");
         $now = date_create($now);
         date_add($now,date_interval_create_from_date_string($daysLevel));
