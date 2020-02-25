@@ -347,7 +347,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 </form>
                                 <table class="table" style="width:100%">
                                     <thead>
-                                        <th style="width:30%"><?=lang("Judul")?></th>
+                                        <th style="width:20%"><?=lang("Judul")?></th>
                                         <th><?=lang("Keterangan")?></th>
                                         <th style="width:50px"><?=lang("Tanggal")?></th>
                                     </thead>
@@ -508,7 +508,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             $("#" + key + "_err").html(errors[key]);
                         }
                     }else if(resp.status == "SUCCESS") {
-                        $("#tblbodydocs").append("<tr id='doc_"+ resp.insertId +"'><td>"+data.get("fst_doc_title")+"</td><td>"+data.get("fst_memo")+"</td><td>"+ App.dateTime(Formatresp.insertDatetime) +"</td></tr>");
+                        $("#tblbodydocs").append("<tr id='doc_"+ resp.insertId +"'><td>"+data.get("fst_doc_title")+"</td><td>"+data.get("fst_memo")+"</td><td>"+ App.dateTimeFormat("<?= date("Y-m-d H:i:s")?>") +"</td></tr>");
                     }
                 },
                 error: function (e) {

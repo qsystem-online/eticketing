@@ -11,58 +11,35 @@ defined('BASEPATH') or exit ('No direct script access allowed');
     .box-header-1{
         height: 50px;
     }
-    td{
+    .td{
         padding: 2px; !important
     }
     .form-group{
 		margin-bottom:10px;
 	}
-</style>
-<style>
-    {
-        box-sizing: border-box;
-    }
-
-    body {
+    .body {
         font-family: Arial, Helvetica, sans-serif;
     }
-
     .row {
         margin: 0 -5px;
     }
-
     .row:after {
         content: "";
         display: table;
         clear: both;
     }
-
     /* Style the counter cards */
     .card-issued {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
         padding: 16px;
-        background-color: #f1f1f1;
+        background-color: #d8d8d8;
         margin-bottom: 20px;
     }
     .card-received {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
         padding: 16px;
         background-color: #3c8dbc;
         margin-bottom: 20px;
-    }
-    .card button {
-        border: none;
-        outline: 0;
-        padding: 12px;
-        color: white;
-        background-color: #000;
-        text-align: center;
-        cursor: pointer;
-        width: 100%;
-        font-size: 18px;
-    }
-    .card button:hover {
-        opacity: 0.7;
     }
     .card-title {
         font-weight:bold;
@@ -302,6 +279,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             <ul class="nav nav-tabs">
                                 <li class="active"><a href="#ticket_view" data-toggle="tab" aria-expanded="true"><label><?=lang("Ticket View")?></label></a></li>
                                 <li class=""><a href="#ticket_log" data-toggle="tab" aria-expanded="true"><label><?=lang("Ticket Log")?></label></a></li>
+                                <li class=""><a href="#ticket_lampiran" data-toggle="tab" aria-expanded="true"><label><?=lang("Lampiran")?></label></a></li>
                             </ul>
                             
                             <div class="tab-content">
@@ -492,6 +470,19 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                                 <div class="tab-pane" id="ticket_log">
                                     <div class="col-md-12" id="ticketlog_card"></div>
+                                </div>
+
+                                <div class="tab-pane" id="ticket_lampiran">
+                                    <table class="table" style="width:100%">
+                                        <thead>
+                                            <th><?=lang("Judul")?></th>
+                                            <th><?=lang("Photo")?></th>
+                                            <th><?=lang("Keterangan")?></th>
+                                            <th><?=lang("Tanggal")?></th>
+                                        </thead>
+                                        <tbody id="tblbodydocs">
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>																		
                         </div>
@@ -825,6 +816,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     $("#ticketlog_card").append(cardlog);
                     }
                 })
+
+                //Image Load
+                $('#imgLampiran').attr("src",resp.ms_ticket.lampiranURL);
 
             },
             error: function (e) {
