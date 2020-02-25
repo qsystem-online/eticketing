@@ -468,17 +468,16 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     </form>
                                 </div>
 
-                                <div class="tab-pane" id="ticket_log">
+                                <div class="tab-pane fade" id="ticket_log">
                                     <div class="col-md-12" id="ticketlog_card"></div>
                                 </div>
 
-                                <div class="tab-pane" id="ticket_lampiran">
+                                <div class="tab-pane fade" id="ticket_lampiran">
                                     <table class="table" style="width:100%">
                                         <thead>
-                                            <th><?=lang("Judul")?></th>
-                                            <th><?=lang("Photo")?></th>
+                                            <th style="width:20%"><?=lang("Judul")?></th>
                                             <th><?=lang("Keterangan")?></th>
-                                            <th><?=lang("Tanggal")?></th>
+                                            <th style="width:50px"><?=lang("Tanggal")?></th>
                                         </thead>
                                         <tbody id="tblbodydocs">
                                         </tbody>

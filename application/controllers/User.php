@@ -239,7 +239,7 @@ class User extends MY_Controller
 		//Save File
 		if (!empty($_FILES['fst_avatar']['tmp_name'])) {
 			$config['upload_path']          = './assets/app/users/avatar';
-			$config['file_name']			= 'avatar_' . $fin_id . '.jpg';
+			$config['file_name']			= 'avatar_' . $fin_user_id . '.jpg';
 			$config['overwrite']			= TRUE;
 			$config['file_ext_tolower']		= TRUE;
 			$config['allowed_types']        = 'gif|jpg|png';
