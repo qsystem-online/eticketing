@@ -15,7 +15,8 @@ class Monitoringticket_model extends MY_MODEL {
         INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id
         INNER JOIN users c ON a.fin_issued_to_user_id = c.fin_user_id
         INNER JOIN users d ON a.fin_approved_by_user_id = d.fin_user_id
-        WHERE b.fin_department_id IN (SELECT c.fin_department_id FROM users) OR b.fin_department_id NOT IN (SELECT c.fin_department_id FROM users) AND a.fst_status != 'CLOSED' AND a.fst_status != 'REJECTED' AND a.fst_status != 'VOID' AND a.fst_status != 'TICKET_EXPIRED' ORDER BY a.fdt_ticket_datetime ";
+        WHERE b.fin_department_id IN (SELECT c.fin_department_id FROM users) OR b.fin_department_id NOT IN (SELECT c.fin_department_id FROM users) 
+        AND a.fst_status != 'CLOSED' AND a.fst_status != 'REJECTED' AND a.fst_status != 'VOID' AND a.fst_status != 'TICKET_EXPIRED' ORDER BY a.fdt_ticket_datetime ";
         $qr = $this->db->query($ssql,[$arrDepartment,$arrDepartment]);
         //echo $this->db->last_query();
         //die();
