@@ -16,7 +16,7 @@ class Ticketstatus_model extends MY_MODEL {
         left join msservicelevel c on a.fin_service_level_id = c.fin_service_level_id
         left join users d on a.fin_issued_by_user_id = d.fin_user_id
         left join users e on a.fin_issued_to_user_id = e.fin_user_id
-        INNER JOIN usersgroup f ON d.fin_group_id = f.fin_group_id
+        left join usersgroup f ON d.fin_group_id = f.fin_group_id
         where fin_ticket_id = ?";
         $qr = $this->db->query($ssql,[$fin_ticket_id]);
         $rwTicketstatus = $qr->row();
@@ -31,9 +31,8 @@ class Ticketstatus_model extends MY_MODEL {
 			$rwTicketstatus->lampiranURL = $lampiranURL;
 		}
 
-        $ssql = "select a.*,b.fst_username,c.fin_level from trticket_log a
+        $ssql = "select a.*,b.fst_username from trticket_log a
         left join users b on a.fin_status_by_user_id = b.fin_user_id
-        INNER JOIN usersgroup c ON b.fin_group_id = c.fin_group_id
         where a.fin_ticket_id = ? order by a.fin_rec_id desc";
         $qr = $this->db->query($ssql, [$fin_ticket_id]);
         $rwTicketlog = $qr->result();

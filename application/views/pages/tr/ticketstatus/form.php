@@ -578,7 +578,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         dis_op = ''; 
                         $('<option ' + sel_op + ' ' + dis_op + '/>').val(item).html(item).appendTo('#fst_update_status');
                     })
-                    if(resp.ms_ticketstatus.fin_level != $levelActive){
+                    if(resp.ms_ticketstatus.fin_level == $levelActive){
                         $("#frmTicketStatus").hide();
                     }else{
                         $("#select_update_serviceLevel").prop("disabled",true);

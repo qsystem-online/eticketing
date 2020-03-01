@@ -12,6 +12,12 @@ body {
   line-height: 1.42em;
   color:#eee8f5;
   background-color:#1F2739;
+  margin: 0px 8px 0px 8px;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 2;
 }
 
 h1 {
@@ -43,57 +49,57 @@ h2 a {
 .yellow { color: #FFF842; }
 
 .container th h1 {
-	  font-weight: bold;
-	  font-size: 1em;
+  font-weight: bold;
+  font-size: 1em;
   text-align: left;
   color: #185875;
 }
 
 .container td {
-	  font-weight: normal;
-	  font-size: 1em;
+  font-weight: normal;
+  font-size: 1em;
   -webkit-box-shadow: 0 2px 2px -2px #0E1119;
-	   -moz-box-shadow: 0 2px 2px -2px #0E1119;
-	        box-shadow: 0 2px 2px -2px #0E1119;
+	-moz-box-shadow: 0 2px 2px -2px #0E1119;
+	box-shadow: 0 2px 2px -2px #0E1119;
 }
 
 .container {
-	  text-align: left;
-	  overflow: hidden;
-	  width: 100%;
-	  margin: 0 auto;
+  text-align: left;
+  overflow: hidden;
+  width: 100%;
+  margin: 0 auto;
   display: table;
   padding: 0 0 4em 0;
 }
 
 .container td, .container th {
-	  padding-bottom: 0.5%;
-	  padding-top: 0.5%;
+  padding-bottom: 0.5%;
+  padding-top: 0.5%;
   padding-left:0%;  
 }
 
 /* Background-color of the odd rows */
 .container tr:nth-child(odd) {
-	  background-color: #2a2a2d;
+  background-color: #2a2a2d;
 }
 
 /* Background-color of the even rows */
 .container tr:nth-child(even) {
-	  background-color: #2C3446;
+  background-color: #2C3446;
 }
 
 .container th {
-	  background-color: #093cf9;
-	  color:#dee8ec;
+  background-color: #093cf9;
+  color:#dee8ec;
 }
 
 .container td:last-child { color: #FB667A; }
 
 .container tr:hover {
-   background-color: #464A52;
--webkit-box-shadow: 0 6px 6px -6px #0E1119;
-	   -moz-box-shadow: 0 6px 6px -6px #0E1119;
-	        box-shadow: 0 6px 6px -6px #0E1119;
+  background-color: #464A52;
+  -webkit-box-shadow: 0 6px 6px -6px #0E1119;
+  -moz-box-shadow: 0 6px 6px -6px #0E1119;
+  box-shadow: 0 6px 6px -6px #0E1119;
 }
 
 .container td:hover {
@@ -105,8 +111,8 @@ h2 a {
   transform: translate3d(6px, -6px, 0);
   
   transition-delay: 0s;
-	  transition-duration: 0.4s;
-	  transition-property: all;
+  transition-duration: 0.4s;
+  transition-property: all;
   transition-timing-function: line;
 }
 
@@ -147,19 +153,82 @@ blink {
   }
 }
 </style>
+
+<style type="text/css">
+.example3 {
+ /*height: 100px;	*/
+ overflow: hidden;
+ position: relative;
+}
+.example3 h3 {
+ display:inline-block;
+ position: relative;
+ width: 100%;
+ /*height: 100%; */
+ margin: 0;
+ line-height: 20px;
+ text-align: center;
+ /* Starting position */
+ -moz-transform:translateX(100%);
+ -webkit-transform:translateX(100%);	
+ transform:translateX(100%);
+ /* Apply animation to this element */	
+ -moz-animation: example3 20s ease infinite;
+ -webkit-animation: example3 20s ease infinite;
+ animation: example3 20s ease infinite;
+}
+/* Move it (define the animation) */
+@-moz-keyframes example3 {
+ 0%   { -moz-transform: translateX(100%); }
+ 40%   { -moz-transform: translateX(0%); }
+ 60%   { -moz-transform: translateX(0%); }
+ 100% { -moz-transform: translateX(-100%); }
+}
+@-webkit-keyframes example3 {
+ 0%   { -webkit-transform: translateX(100%); }
+ 40%   { -webkit-transform: translateX(0%); }
+ 60%   { -webkit-transform: translateX(0%); }
+ 100% { -webkit-transform: translateX(-100%); }
+}
+@keyframes example3 {
+ 0%   { 
+ -moz-transform: translateX(100%); /* Firefox bug fix */
+ -webkit-transform: translateX(100%); /* Firefox bug fix */
+ transform: translateX(100%); 		
+ }
+ 40%   { 
+ -moz-transform: translateX(0%); /* Firefox bug fix */
+ -webkit-transform: translateX(0%); /* Firefox bug fix */
+ transform: translateX(0%); 		
+ }
+ 60%   { 
+ -moz-transform: translateX(0%); /* Firefox bug fix */
+ -webkit-transform: translateX(0%); /* Firefox bug fix */
+ transform: translateX(0%); 		
+ }
+ 100% { 
+ -moz-transform: translateX(-100%); /* Firefox bug fix */
+ -webkit-transform: translateX(-100%); /* Firefox bug fix */
+ transform: translateX(-100%); 
+ }
+}
+</style>
 </head>
 <div class="col-md-12">
     <select type="hidden" class="form-control select2" id="fin_dept_id" name="fin_dept_id[]" style="width: 100%" multiple="multiple">
     </select>
 </div>
 <body>
-  <div class="container" style="padding-bottom: 5px">
+  <!--<div style="padding-bottom: 5px">-->
   <br>
-    <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
-      <!-- Wrapper for slides -->
+    <!--<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">-->
+      <!-- Wrapper for slides
       <div id="corousel" class="carousel-inner" role="listbox">
       </div>
     </div>
+  </div>-->
+  <div class="example3" id="animation">
+  <h3 name="msg"></h3>
   </div>
   <div class="tableticket">
     <table class="container" id="table-ticket">
@@ -185,7 +254,7 @@ blink {
       isiTicketlist();
       setInterval(function(){
         isiTicketlist()        
-      }, 50000);
+      }, 60000);
   });
 
   $(function(){
@@ -217,6 +286,7 @@ blink {
       datatype:"JSON",
     }).done(function(resp){
       $("#ticketlist").empty();
+      $("#animation").empty();
       $.each(resp.tickets,function(i,v){
         //console.log(v);
         if (v.fst_memo.length > 65){
@@ -228,14 +298,19 @@ blink {
           $memo = v.fst_memo;
         }
         var ticketlist = '<tr>';
-            if(v.fst_status == 'APPROVED/OPEN'){
+            if(v.fst_status == 'APPROVED/OPEN' | v.fst_status == 'COMPLETION_REVISED'){
               ticketlist +='<td><blink><font color="#00FF00">'+v.issuedTo+'</font></blink></td>';
             }else{
               ticketlist +='<td>'+v.issuedTo+'</td>';
             }
             ticketlist +='<td>'+v.fdt_ticket_datetime+'</td>';
             ticketlist +='<td>'+v.fdt_deadline_extended_datetime+'</td>';
-            ticketlist +='<td>'+v.issuedBy+'</td>';
+            if(v.fst_status == 'NEED_REVISION'){
+              ticketlist +='<td><blink><font color="#00FF00">'+v.issuedBy+'</font></blink></td>';
+            }else{
+              ticketlist +='<td>'+v.issuedBy+'</td>';
+            }
+            //ticketlist +='<td>'+v.issuedBy+'</td>';
             //ticketlist +='<td>'+v.fdt_ticket_datetime+'</td>';
             if(v.fst_status == 'NEED_APPROVAL'){
               ticketlist +='<td><blink><font color="#00FF00">'+v.Approved+'</font></blink></td>';
@@ -243,7 +318,7 @@ blink {
               ticketlist +='<td>'+v.Approved+'</td>';
             }
             ticketlist +='<td>'+$memo+'</td>';
-            if(v.fst_status == 'NEED_APPROVAL' | v.fst_status == 'APPROVED/OPEN'){
+            if(v.fst_status == 'NEED_APPROVAL' | v.fst_status == 'APPROVED/OPEN' | v.fst_status == 'NEED_REVISION' | v.fst_status == 'COMPLETION_REVISED'){
               ticketlist +='<td><font color="#00FF00">'+v.fst_status+'</font></td>';
             }else{
               ticketlist +='<td>'+v.fst_status+'</td>';             
@@ -251,6 +326,48 @@ blink {
             ticketlist += '</tr>';
         $("#ticketlist").append(ticketlist);
         $('#fin_dept_id').next(".select2-container").hide();
+      })
+
+      //populate pengumuman
+      $.each(resp.pengumuman,function(i,v){
+        console.log(v);
+        //var varactive = "";
+          //if(i == 0){
+            //varactive = "active";
+          //}
+        //$("#corousel").append("<div class='item " + varactive + "'><label><font color='#00FF00'>" + v.fst_memo + "</font></label></div>");
+
+          //interval between items (in milliseconds)
+          /*var itemInterval = 1000;        
+          //count number of items
+          var numberOfItems = v.fst_memo.length;
+          //set current item
+          var currentItem = 0;
+          //show first item
+          //$("#animation").eq(currentItem).append("<h3>" + v.fst_memo + "</h3>");
+	
+          setInterval(function(){
+            if(currentItem == numberOfItems -1){
+              currentItem = 0;
+            }else{
+              currentItem++;
+            }
+            $("#animation").eq(currentItem).append("<h3>" + v.fst_memo + "</h3>");
+          }, 1000);*/
+        var announcement = new Array();
+        var i = 0;
+        announcement[i++] = v.fst_memo;
+        var durasi = 15000;
+        //id = setInterval('script()',durasi);
+        var c = 0;
+        setInterval(function(){
+          function script() {
+            app = announcement[c++];
+            if (c == i) c = 0;
+            document.msg.value = app;
+            //$("#pengumuman").html(app);
+          }        
+        }, durasi);
       })
     })
   }

@@ -948,7 +948,7 @@ class Ticketstatus extends MY_Controller
         
 	
     }
-	public function monitoringpengumuman(){
+	public function monitoringpengumumanX(){
         $arrDepartment = $this->input->get('fin_dept_id');
         //var_dump($arrDepartment);
         //die();
