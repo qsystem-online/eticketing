@@ -347,9 +347,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 </form>
                                 <table class="table" style="width:100%">
                                     <thead>
-                                        <th style="width:20%"><?=lang("Judul")?></th>
+                                        <th style="width:30%"><?=lang("Judul")?></th>
                                         <th><?=lang("Keterangan")?></th>
-                                        <th style="width:50px"><?=lang("Tanggal")?></th>
+                                        <th style="width:30%"><?=lang("Tanggal")?></th>
                                     </thead>
                                     <tbody id="tblbodydocs">
                                     </tbody>
@@ -517,7 +517,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     $("#btnSubmit").prop("disabled", false);
                 }
             });
-
 
         })
 
@@ -745,6 +744,17 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         cardlog +=  '</div>';
                     $("#ticketlog_card").append(cardlog);
                     }
+                })
+
+                //Ticket Docs 03/03/2020 enny
+                $.each(resp.ms_ticketdocs, function(name, val) {
+                    console.log(val);
+                        var tbody = '<tr>';
+                            tbody += '<td style="width:30%"><a href="<?=site_url()?>assets/app/tickets/image/yellow_ticket.jpg" target="_blank">'+val.fst_doc_title+'</td>';
+                            tbody += '<td style="width:50%">'+val.fst_memo+'</td>';
+                            tbody += '<td style="width:30%">'+val.fdt_insert_datetime+'</td>';
+                        tbody += '</tr>';
+                    $("#tblbodydocs").append(tbody);
                 })
 
                 //Image Load 

@@ -9,6 +9,7 @@ class Ticketstatus extends MY_Controller
         parent::__construct();
         $this->load->library('form_validation');
         $this->load->model('ticketstatus_model');
+        $this->load->model("ticket_model");
         $this->load->model('servicelevel_model');
         $this->load->model('tickettype_model');
         $this->load->model('users_model');

@@ -35,11 +35,19 @@ class Ticketstatus_model extends MY_MODEL {
         left join users b on a.fin_status_by_user_id = b.fin_user_id
         where a.fin_ticket_id = ? order by a.fin_rec_id desc";
         $qr = $this->db->query($ssql, [$fin_ticket_id]);
-        $rwTicketlog = $qr->result();
+        $rsTicketlog = $qr->result();
+
+        // Ticket Lampiran 27/02/2020 enny
+        $ssql = "SELECT a.*,b.fin_ticket_id,b.fst_status FROM trticket_docs a
+        LEFT JOIN trticket_log b ON b.fin_rec_id = a.fin_rec_id 
+        WHERE b.fin_ticket_id = ? ORDER BY a.fin_rec_id DESC";
+        $qr = $this->db->query($ssql, [$fin_ticket_id]);
+        $rsTicketDocs = $qr->result();
 
         $data = [
             "ms_ticketstatus" => $rwTicketstatus,
-            "ms_ticketlog" => $rwTicketlog
+            "ms_ticketlog" => $rsTicketlog,
+            "ms_ticketdocs" => $rsTicketDocs
         ];
 
         return $data;
@@ -373,4 +381,5 @@ class Ticketstatus_model extends MY_MODEL {
 
         }
     }
+
 }

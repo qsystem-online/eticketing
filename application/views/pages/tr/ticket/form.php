@@ -28,6 +28,11 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         display: table;
         clear: both;
     }
+
+    .tbody {
+		font-family: "Lucida Sans Unicode", "Lucida Grande", "Segoe Ui";
+	}
+
     /* Style the counter cards */
     .card-issued {
         box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
@@ -475,9 +480,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div class="tab-pane fade" id="ticket_lampiran">
                                     <table class="table" style="width:100%">
                                         <thead>
-                                            <th style="width:20%"><?=lang("Judul")?></th>
+                                            <th style="width:30%"><?=lang("Judul")?></th>
                                             <th><?=lang("Keterangan")?></th>
-                                            <th style="width:50px"><?=lang("Tanggal")?></th>
+                                            <th style="width:30%"><?=lang("Tanggal")?></th>
                                         </thead>
                                         <tbody id="tblbodydocs">
                                         </tbody>
@@ -814,6 +819,17 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         cardlog +=  '</div>';
                     $("#ticketlog_card").append(cardlog);
                     }
+                })
+
+                //Ticket Docs
+                $.each(resp.ms_ticketdocs, function(name, val) {
+                    console.log(val);
+                        var tbody = '<tr>';
+                            tbody += '<td style="width:30%"><a href="<?=site_url()?>assets/app/tickets/image/yellow_ticket.jpg" target="_blank">'+val.fst_doc_title+'</a></td>';
+                            tbody += '<td style="width:50%">'+val.fst_memo+'</td>';
+                            tbody += '<td style="width:30%">'+val.fdt_insert_datetime+'</td>';
+                        tbody += '</tr>';
+                    $("#tblbodydocs").append(tbody);
                 })
 
                 //Image Load

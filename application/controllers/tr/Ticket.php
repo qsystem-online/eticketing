@@ -8,6 +8,7 @@ class ticket extends MY_Controller
         parent::__construct();
         $this->load->library('form_validation');
         $this->load->model('ticket_model');
+        $this->load->model('ticketdocs_model');
         $this->load->model('servicelevel_model');
         $this->load->model('tickettype_model');
         $this->load->model('users_model');
@@ -96,6 +97,7 @@ class ticket extends MY_Controller
     private function openForm($mode = "ADD", $fin_ticket_id = 0){
         $this->load->library("menus");
         $this->load->model("ticket_model");
+        $this->load->model('ticketdocs_model');
         $this->load->model("tickettype_model");
         $this->load->model("servicelevel_model");
 
@@ -321,6 +323,43 @@ class ticket extends MY_Controller
             "fin_status_by_user_id" => $user_status
         ];
         $insertId = $this->ticketlog_model->insert($data);
+
+        // Ticket Docs 27/02/2020
+        $this->load->model("ticketdocs_model");
+        /*$data = [
+            "fin_rec_id" => $fin_rec_id,
+            "fst_doc_title" => $this->input->post("fst_doc_title"),
+            "fst_status" => $this->ticket_model->getLastLogStatus($this->input->post("fin_ticket_id")),
+            "fst_filename" => $this->input->post("fst_filename"),
+            "fst_memo"=> $this->input->post("fst_memo"),
+            "fdt_insert_datetime" => dBDateTimeFormat($this->input->post("fdt_insert_datetime")),
+            "fst_active"=>"A",
+        ];
+        $insertId = $this->ticketdocs_model->insert($data);
+
+        /*if (!empty($_FILES['fst_lampiran']['tmp_name'])) {
+			$config['upload_path']          = './assets/app/tickets/image';
+			$config['file_name']			= $data["fst_filename"]. '.jpg';
+			$config['overwrite']			= TRUE;
+			$config['file_ext_tolower']		= TRUE;
+			$config['allowed_types']        = 'gif|jpg|png';
+			$config['max_size']             = 0; //kilobyte
+			$config['max_width']            = 0; //1024; //pixel
+			$config['max_height']           = 0; //768; //pixel
+			$this->load->library('upload', $config);
+
+			if (!$this->upload->do_upload('fst_lampiran')) {
+				$this->ajxResp["status"] = "IMAGES_FAILED";
+				$this->ajxResp["message"] = "Failed to upload images, " . $this->upload->display_errors();
+				$this->ajxResp["data"] = $this->upload->display_errors();
+				$this->json_output();
+				$this->db->trans_rollback();
+				return;
+			} else {
+				//$data = array('upload_data' => $this->upload->data());			
+			}
+			$this->ajxResp["data"]["data_image"] = $this->upload->data();
+		}*/
 
         $this->db->trans_complete();
         $this->ajxResp["status"] = "SUCCESS";
