@@ -69,6 +69,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <?php
                 } ?>
             </select>
+            <div id="fin_dept_id_err" class="text-danger"></div>
         </div>
     </div>
 </section>
@@ -193,13 +194,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		});
         $("#btnMonitoring").click(function(e){
             e.preventDefault();
-			window.open("<?= site_url() ?>tr/ticketstatus/monitoring")
+            var monitoringDepart = $("#fin_dept_id").val();
+            if (monitoringDepart == null || monitoringDepart == "") {
+                $("#fin_dept_id_err").html("Please select Department");
+                $("#fin_dept_id_err").show();
+                return;
+            } else {
+                $("#fin_dept_id_err").hide();
+                var monitoring = window.open("<?= site_url() ?>tr/ticketstatus/monitoring");
+                monitoring.department = $("#fin_dept_id").val();
+            }
 		});
 
 		$("#btnPrint").click(function(e){
             layoutColumn = [];
 			url = "<?= site_url() ?>tr/ticketstatus/get_print_ticketReport/" + $("#fdt_ticket_date_start").val() + '/' + $("#fdt_ticket_date_End").val() + '/' + $("#select-user_issuedBy").val() + '/' + $("#select-user_issuedTo").val() + '/' + $("#fst_status_report").val();
             MdlPrint.showPrint(layoutColumn,url);
+        });
+
+        $('#fin_dept_id, #fin_dept_id').select2({
+            placeholder: 'Pilih divisi monitoring',
+                width: '100%'
         });
     });
 </script>

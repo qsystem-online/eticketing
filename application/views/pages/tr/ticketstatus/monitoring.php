@@ -3,6 +3,8 @@
 <script src="<?= COMPONENT_URL?>bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Select2 -->
 <link rel="stylesheet" href="<?=COMPONENT_URL?>bower_components/select2/dist/css/select2.min.css">
+<!-- Bootstrap 3.3.7 -->
+<link rel="stylesheet" href="<?=COMPONENT_URL?>bower_components/bootstrap/dist/css/bootstrap.min.css">
 <style type="text/css">
 body {
   font-family: 'Open Sans', sans-serif;
@@ -112,120 +114,66 @@ h2 a {
 .container td:nth-child(4),
 .container th:nth-child(4) { display: none; }
 }
-.running-text{
-	background-color: #6962de; /*untuk memberikan background, link : https://www.w3schools.com/cssref/css3_pr_background.asp*/
-	color:white; /*untuk memberikan warna pada text, link : https://www.w3schools.com/cssref/pr_text_color.asp*/
-	padding-top: 5px; /*untuk memberikan jarak dalam element di bagian atas (top), link : https://www.w3schools.com/cssref/pr_padding-top.asp*/
-	bottom-top: 5px;
-}
 </style>
 
 <style type="text/css">
-.example3 {
- height: 30px;	
- overflow: hidden;
- position: relative;
+blink {
+  -webkit-animation: 2s linear infinite condemned_blink_effect; /* for Safari 4.0 - 8.0 */
+  animation: 2s linear infinite condemned_blink_effect;
 }
-.example3 input {
- position: absolute;
- width: 100%;
- height: 100%;
- margin: 0;
- line-height: 30px;
- text-align: center;
- font-size:20px;
- /* Starting position */
- -moz-transform:translateX(100%);
- -webkit-transform:translateX(100%);	
- transform:translateX(100%);
- /* Apply animation to this element */	
- -moz-animation: example3 15s ease infinite;
- -webkit-animation: example3 15s ease infinite;
- animation: example3 15s ease infinite;
+
+/* for Safari 4.0 - 8.0 */
+@-webkit-keyframes condemned_blink_effect { 
+  0% {
+    visibility: hidden;
+  }
+  50% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
 }
-/* Move it (define the animation) */
-@-moz-keyframes example3 {
- 0%   { -moz-transform: translateX(100%); }
- 40%   { -moz-transform: translateX(0%); }
- 60%   { -moz-transform: translateX(0%); }
- 100% { -moz-transform: translateX(-100%); }
-}
-@-webkit-keyframes example3 {
- 0%   { -webkit-transform: translateX(100%); }
- 40%   { -webkit-transform: translateX(0%); }
- 60%   { -webkit-transform: translateX(0%); }
- 100% { -webkit-transform: translateX(-100%); }
-}
-@keyframes example3 {
- 0%   { 
- -moz-transform: translateX(100%); /* Firefox bug fix */
- -webkit-transform: translateX(100%); /* Firefox bug fix */
- transform: translateX(100%); 		
- }
- 40%   { 
- -moz-transform: translateX(0%); /* Firefox bug fix */
- -webkit-transform: translateX(0%); /* Firefox bug fix */
- transform: translateX(0%); 		
- }
- 60%   { 
- -moz-transform: translateX(0%); /* Firefox bug fix */
- -webkit-transform: translateX(0%); /* Firefox bug fix */
- transform: translateX(0%); 		
- }
- 100% { 
- -moz-transform: translateX(-100%); /* Firefox bug fix */
- -webkit-transform: translateX(-100%); /* Firefox bug fix */
- transform: translateX(-100%); 
- }
+
+@keyframes condemned_blink_effect {
+  0% {
+    visibility: hidden;
+  }
+  50% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
 }
 </style>
 </head>
-<div class="example3">
-  <form name="info">
-      <input type="text" name="msg" font-weight="bold" placeholder ="TIKET TIPE PENGUMUMAN" disabled/>
-  </form>
+<div class="col-md-12">
+    <select type="hidden" class="form-control select2" id="fin_dept_id" name="fin_dept_id[]" style="width: 100%" multiple="multiple">
+    </select>
 </div>
 <body>
-<div class="col-md-12">
-  <select class="form-control select2" id="fin_dept_id" name="fin_dept_id[]" style="width: 100%" multiple="multiple">
-      <!--<php
-      $deptList = $this->msdepartments_model->getAllList(); 
-      foreach ($deptList as $dept) {    ?>
-              <option value='<= $dept->fin_department_id ?>'><= $dept->fst_department_name ?> </option>
-          <php
-      } ?>-->
-  </select>
-</div>
-  <!--<div class="example3">
-  <h3>Libur Natal dan Tahun baru mulai 24 Des 2019 s/d 02 Jan 2020,selamat hari natal dan tahun baru.</h3>
-  </div>-->
-
+  <div class="container" style="padding-bottom: 5px">
+  <br>
+    <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
+      <!-- Wrapper for slides -->
+      <div id="corousel" class="carousel-inner" role="listbox">
+      </div>
+    </div>
+  </div>
   <div class="tableticket">
     <table class="container" id="table-ticket">
       <thead>
-      <!--<meta http-equiv="refresh" content="30">-->
         <tr>
-          <th id="init_select2">Penerima</th>
+          <th>Penerima</th>
           <th>Tanggal</th>
           <th>Deadline</th>
           <th>Dari User</th>
           <th>Persetujuan</th>
           <th>Memo Tiket</th>
-          <th id="destroy_select2">Status</th>
+          <th>Status</th>
         </tr>
       </thead>
-      <!--<tbody id="ticketlist">
-          <?php foreach($tickets as $data): ?>
-            <tr>
-              <td><?php echo $data->issuedTo; ?></td>
-              <td><?php echo $data->fst_memo; ?></td>
-              <td><?php echo $data->issuedBy; ?></td>
-              <td><?php echo $data->fdt_ticket_datetime; ?></td>
-              <td><?php echo $data->issuedBy; ?></td>
-              <td><?php echo $data->fst_status; ?></td>
-            </tr>
-            <?php endforeach; ?>
-      </tbody>-->
       <tbody id="ticketlist">
       </tbody>
     </table>
@@ -233,12 +181,11 @@ h2 a {
 </body>
 </html>
 <script type="text/javascript">
-var $fin_department_id = $("#fin_dept_id").val();
   $(function(){
       isiTicketlist();
       setInterval(function(){
         isiTicketlist()        
-      }, 5000);
+      }, 50000);
   });
 
   $(function(){
@@ -257,21 +204,16 @@ var $fin_department_id = $("#fin_dept_id").val();
           width: '100%',
           data: $deptList
       });
-  });
-
-  $("#destroy_select2").click(function() { 
-    $("#fin_dept_id").select2("destroy"); 
-  });
-  $("#init_select2").click(function() { 
-    $("#fin_dept_id").select2(); 
+      $('#fin_dept_id').next(".select2-container").hide();
   });
 
   function isiTicketlist(){
     //Fungsi Ajax
+    $dept = window.department;
     $.ajax({
       url: "monitoringticket",
       method:"GET",
-      data:{'fin_dept_id':$("#fin_dept_id").val()},
+      data:{'fin_dept_id':$dept},
       datatype:"JSON",
     }).done(function(resp){
       $("#ticketlist").empty();
@@ -287,7 +229,7 @@ var $fin_department_id = $("#fin_dept_id").val();
         }
         var ticketlist = '<tr>';
             if(v.fst_status == 'APPROVED/OPEN'){
-              ticketlist +='<td><marquee><font color="#00FF00">'+v.issuedTo+'</font></marquee></td>';
+              ticketlist +='<td><blink><font color="#00FF00">'+v.issuedTo+'</font></blink></td>';
             }else{
               ticketlist +='<td>'+v.issuedTo+'</td>';
             }
@@ -296,7 +238,7 @@ var $fin_department_id = $("#fin_dept_id").val();
             ticketlist +='<td>'+v.issuedBy+'</td>';
             //ticketlist +='<td>'+v.fdt_ticket_datetime+'</td>';
             if(v.fst_status == 'NEED_APPROVAL'){
-              ticketlist +='<td><marquee><font color="#00FF00">'+v.Approved+'</font></marquee></td>';
+              ticketlist +='<td><blink><font color="#00FF00">'+v.Approved+'</font></blink></td>';
             }else{
               ticketlist +='<td>'+v.Approved+'</td>';
             }
@@ -306,30 +248,46 @@ var $fin_department_id = $("#fin_dept_id").val();
             }else{
               ticketlist +='<td>'+v.fst_status+'</td>';             
             }
-            ticketlist += '<tr>';
+            ticketlist += '</tr>';
         $("#ticketlist").append(ticketlist);
-        $("#fin_dept_id").hide();
+        $('#fin_dept_id').next(".select2-container").hide();
       })
     })
   }
 </script>
 
-<script>
-var announcement = new Array();
-var i = 0;
-<?php foreach($arrPengumuman as $pengumuman){ ?>
-  announcement[i++] = '<?= $pengumuman->fst_memo ?>';
-<?php } ?>
-var durasi = 15000;
-id = setInterval('script()',durasi);
-var c = 0;
-  function script() {
-    app = announcement[c++];
-    if (c == i) c = 0;
-    document.info.msg.value = app;
-    //$("#pengumuman").html(app);
-  }
+<script type="text/javascript">
+/*$(function(){
+      setP();
+      setInterval(function(){
+        setP()        
+      }, 100000);
+  });
+
+  function setP(){
+      //$dept = window.department;
+      $.ajax({
+        url: "monitoringpengumuman",
+        method:"GET",
+        //data:{'fin_dept_id':$dept},
+        datatype:"JSON",
+      }).done(function(resp){
+        var pengumuman = resp.arrPengumuman;
+        $("#corousel").empty();
+        $.each(pengumuman,function(i,v){
+          console.log(v);
+          var varactive = "";
+            if(i == 0){
+              varactive = "active";
+            }
+          $("#corousel").append("<div class='item " + varactive + "'><label><font color='#00FF00'>" + v.fst_memo + "</font></label></div>");
+        });
+      });
+    }*/
 </script>
+
 <script src="<?= COMPONENT_URL?>bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Select2 -->
 <script src="<?= COMPONENT_URL?>bower_components/select2/dist/js/select2.full.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="<?=COMPONENT_URL?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
