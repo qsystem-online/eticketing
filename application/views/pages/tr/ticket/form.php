@@ -825,7 +825,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 $.each(resp.ms_ticketdocs, function(name, val) {
                     console.log(val);
                         var tbody = '<tr>';
-                            tbody += '<td style="width:30%"><a href="<?=site_url()?>/assets/app/tickets/image/13.jpg">'+val.fst_doc_title+'</a></td>';
+                            tbody += '<td style="width:30%"><a href="<?=site_url()?>/assets/app/tickets/image/14.jpg">'+val.fst_doc_title+'</a></td>';
                             tbody += '<td style="width:50%">'+val.fst_memo+'</td>';
                             tbody += '<td style="width:30%">'+val.fdt_insert_datetime+'</td>';
                         tbody += '</tr>';
