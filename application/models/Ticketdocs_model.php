@@ -10,5 +10,14 @@ class Ticketdocs_model extends MY_MODEL {
         parent::__construct();
     }
 
+    public function getDataById($fin_rec_id){
+        $ssql = "select * from " . $this->tableName . " where fin_rec_id = ? and fst_active = 'A'";
+        $qr = $this->db->query($ssql, [$fin_rec_id]);
+        $rw = $qr->row();
+        $data = [
+            "ticket_Docs" => $rw
+        ];
+        return $data;
+    }
     
 }

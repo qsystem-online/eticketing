@@ -24,15 +24,34 @@ class Ticket_model extends MY_MODEL {
         $qr = $this->db->query($ssql,[$fin_ticket_id]);
         $rwTicket = $qr->row();
 
+        // Ticket Log
         $ssql = "select a.*,b.fst_username,c.fin_level from trticket_log a left join users b on a.fin_status_by_user_id = b.fin_user_id
         INNER JOIN usersgroup c ON b.fin_group_id = c.fin_group_id
         where a.fin_ticket_id = ? order by a.fin_rec_id desc";
         $qr = $this->db->query($ssql, [$fin_ticket_id]);
         $rsTicketlog = $qr->result();
 
+        // Ticket Docs 27/02/2020
+        $ssql = "SELECT a.*,b.fin_ticket_id,b.fst_status FROM trticket_docs a
+        LEFT JOIN trticket_log b ON a.fin_rec_id = b.fin_rec_id 
+        WHERE b.fin_ticket_id = ? ORDER BY a.fin_rec_id DESC";
+        $qr = $this->db->query($ssql, [$fin_ticket_id]);
+        $rsTicketDocs = $qr->result();
+
+        if ($rwTicket) {
+			if (file_exists(FCPATH . 'assets/app/tickets/image/' . $rwTicket->fin_ticket_id . '.jpg')) {
+				$lampiranURL = site_url() . 'assets/app/tickets/image/' . $rwTicket->fin_ticket_id . '.jpg';
+			} else {
+
+				$lampiranURL = site_url() . 'assets/app/tickets/image/default.jpg';
+			}
+			$rwTicket->lampiranURL = $lampiranURL;
+		}
+
         $data = [
             "ms_ticket" => $rwTicket,
-            "ms_ticketlog" => $rsTicketlog
+            "ms_ticketlog" => $rsTicketlog,
+            "ms_ticketdocs" => $rsTicketDocs
         ];
 
         return $data;
@@ -109,5 +128,5 @@ class Ticket_model extends MY_MODEL {
         }
 
     }
-    
+
 }

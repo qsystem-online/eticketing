@@ -8,6 +8,7 @@ class ticket extends MY_Controller
         parent::__construct();
         $this->load->library('form_validation');
         $this->load->model('ticket_model');
+        $this->load->model('ticketdocs_model');
         $this->load->model('servicelevel_model');
         $this->load->model('tickettype_model');
         $this->load->model('users_model');
@@ -96,6 +97,7 @@ class ticket extends MY_Controller
     private function openForm($mode = "ADD", $fin_ticket_id = 0){
         $this->load->library("menus");
         $this->load->model("ticket_model");
+        $this->load->model('ticketdocs_model');
         $this->load->model("tickettype_model");
         $this->load->model("servicelevel_model");
 
@@ -321,6 +323,19 @@ class ticket extends MY_Controller
             "fin_status_by_user_id" => $user_status
         ];
         $insertId = $this->ticketlog_model->insert($data);
+
+        // Ticket Docs 27/02/2020
+        $this->load->model("ticketdocs_model");
+        $data = [
+            "fin_rec_id" => $fin_rec_id,
+            "fst_doc_title" => $this->input->post("fst_doc_title"),
+            "fst_status" => $this->ticket_model->getLastLogStatus($this->input->post("fin_ticket_id")),
+            "fst_filename" => $file["name"],
+            "fst_memo"=> $this->input->post("fst_memo"),
+            "fdt_insert_datetime" => dBDateTimeFormat($this->input->post("fdt_insert_datetime")),
+            "fst_active"=>"A",
+        ];
+        $insertId = $this->ticketdocs_model->insert($data);
 
         $this->db->trans_complete();
         $this->ajxResp["status"] = "SUCCESS";
