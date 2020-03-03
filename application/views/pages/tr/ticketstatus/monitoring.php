@@ -257,7 +257,7 @@ blink {
 </script>
 
 <script type="text/javascript">
-$(function(){
+/*$(function(){
       setP();
       setInterval(function(){
         setP()        
@@ -283,7 +283,7 @@ $(function(){
           $("#corousel").append("<div class='item " + varactive + "'><label><font color='#00FF00'>" + v.fst_memo + "</font></label></div>");
         });
       });
-    }
+    }*/
 </script>
 
 <script src="<?= COMPONENT_URL?>bower_components/jquery/dist/jquery.min.js"></script>
