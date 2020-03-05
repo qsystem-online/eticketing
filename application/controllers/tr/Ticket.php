@@ -337,6 +337,31 @@ class ticket extends MY_Controller
         ];
         $insertId = $this->ticketdocs_model->insert($data);
 
+        if (!empty($_FILES['fst_lampiran']['tmp_name'])) {
+			$config['upload_path']          = './assets/app/tickets/image';
+			$config['file_name']			= 'image_' . $fin_ticket_id . '.jpg';
+			$config['overwrite']			= TRUE;
+			$config['file_ext_tolower']		= TRUE;
+			$config['allowed_types']        = 'gif|jpg|png';
+			$config['max_size']             = 0; //kilobyte
+			$config['max_width']            = 0; //1024; //pixel
+			$config['max_height']           = 0; //768; //pixel
+
+			$this->load->library('upload', $config);
+
+			if (!$this->upload->do_upload('fst_lampiran')) {
+				$this->ajxResp["status"] = "IMAGES_FAILED";
+				$this->ajxResp["message"] = "Failed to upload images, " . $this->upload->display_errors();
+				$this->ajxResp["data"] = $this->upload->display_errors();
+				$this->json_output();
+				$this->db->trans_rollback();
+				return;
+			} else {
+				//$data = array('upload_data' => $this->upload->data());			
+			}
+			$this->ajxResp["data"]["data_image"] = $this->upload->data();
+		}
+
         $this->db->trans_complete();
         $this->ajxResp["status"] = "SUCCESS";
         $this->ajxResp["message"] = "Data Saved !";
