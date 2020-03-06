@@ -54,7 +54,7 @@ class ticket extends MY_Controller
                     }else if(data == 'ACCEPTED'){
                         return 'ACCEPTED';
                     }else if(data == 'NEED_REVISION'){
-                        return 'NEED_REVISION';
+                        return 'NEED REVISION';
                     }else if(data == 'COMPLETED'){
                         return 'COMPLETED';
                     }else if(data == 'COMPLETION_REVISED'){
