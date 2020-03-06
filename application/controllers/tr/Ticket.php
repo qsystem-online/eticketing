@@ -326,27 +326,26 @@ class ticket extends MY_Controller
 
         // Ticket Docs 27/02/2020
         $this->load->model("ticketdocs_model");
-        $data = [
+        /*$data = [
             "fin_rec_id" => $fin_rec_id,
             "fst_doc_title" => $this->input->post("fst_doc_title"),
             "fst_status" => $this->ticket_model->getLastLogStatus($this->input->post("fin_ticket_id")),
-            "fst_filename" => $file["name"],
+            "fst_filename" => $this->input->post("fst_filename"),
             "fst_memo"=> $this->input->post("fst_memo"),
             "fdt_insert_datetime" => dBDateTimeFormat($this->input->post("fdt_insert_datetime")),
             "fst_active"=>"A",
         ];
         $insertId = $this->ticketdocs_model->insert($data);
 
-        if (!empty($_FILES['fst_lampiran']['tmp_name'])) {
+        /*if (!empty($_FILES['fst_lampiran']['tmp_name'])) {
 			$config['upload_path']          = './assets/app/tickets/image';
-			$config['file_name']			= 'image_' . $fin_ticket_id . '.jpg';
+			$config['file_name']			= $data["fst_filename"]. '.jpg';
 			$config['overwrite']			= TRUE;
 			$config['file_ext_tolower']		= TRUE;
 			$config['allowed_types']        = 'gif|jpg|png';
 			$config['max_size']             = 0; //kilobyte
 			$config['max_width']            = 0; //1024; //pixel
 			$config['max_height']           = 0; //768; //pixel
-
 			$this->load->library('upload', $config);
 
 			if (!$this->upload->do_upload('fst_lampiran')) {
@@ -360,7 +359,7 @@ class ticket extends MY_Controller
 				//$data = array('upload_data' => $this->upload->data());			
 			}
 			$this->ajxResp["data"]["data_image"] = $this->upload->data();
-		}
+		}*/
 
         $this->db->trans_complete();
         $this->ajxResp["status"] = "SUCCESS";
