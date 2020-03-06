@@ -24,8 +24,18 @@ class Monitoringticket_model extends MY_MODEL {
         //return $qr->result_array();
         $rwtickets = $qr->result();
 
+        $ssql = "SELECT a.* FROM trticket a
+        LEFT JOIN mstickettype b ON b.fin_ticket_type_id = a.fin_ticket_type_id
+        WHERE b.fst_assignment_or_notice = 'INFO' AND a.fst_status ='APPROVED/OPEN'
+        ORDER BY a.fin_ticket_id desc";
+        $qr = $this->db->query($ssql, []);
+        //echo $this->db->last_query();
+        //die();
+        $rwInfo = $qr->result_array();
+
         $data = [
-            "tickets" => $rwtickets
+            "tickets" => $rwtickets,
+            "pengumuman" => $rwInfo
         ];
         return $data;
     }
