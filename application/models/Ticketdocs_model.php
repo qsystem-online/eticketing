@@ -19,5 +19,20 @@ class Ticketdocs_model extends MY_MODEL {
         ];
         return $data;
     }
+
+    public function getRules($mode = "ADD", $id = 0){
+        $rules = [];
+
+        $rules[] = [
+            'field' => 'fst_doc_title',
+            'label' => 'Judul',
+            'rules' => 'required',
+            'errors' => array(
+                'required' => '%s tidak boleh kosong'
+            )
+        ];
+
+        return $rules;
+    }
     
 }

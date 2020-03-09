@@ -329,7 +329,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <div class="form-group">
                                         <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"><?=lang("Keterangan")?></label>
                                         <div class="col-xs-6 col-md-9">
-                                            <textarea class="form-control" id="fst_doc_memo"  name="fst_memo"></textarea>
+                                            <textarea class="form-control" id="fst_doc_memo"  name="fst_memo" readonly></textarea>
                                         </div>
                                         <div class="col-xs-12 col-md-1">
                                             <button id="btn-add-doc" class="btn btn-primary">Add</button>
