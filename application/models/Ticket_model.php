@@ -25,8 +25,8 @@ class Ticket_model extends MY_MODEL {
         $rwTicket = $qr->row();
 
         // Ticket Log
-        $ssql = "select a.*,b.fst_username,c.fin_level from trticket_log a left join users b on a.fin_status_by_user_id = b.fin_user_id
-        INNER JOIN usersgroup c ON b.fin_group_id = c.fin_group_id
+        $ssql = "select a.*,b.fst_username from trticket_log a 
+        left join users b on a.fin_status_by_user_id = b.fin_user_id
         where a.fin_ticket_id = ? order by a.fin_rec_id desc";
         $qr = $this->db->query($ssql, [$fin_ticket_id]);
         $rsTicketlog = $qr->result();
