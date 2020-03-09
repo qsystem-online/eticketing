@@ -28,11 +28,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         display: table;
         clear: both;
     }
-
-    .tbody {
-		font-family: "Lucida Sans Unicode", "Lucida Grande", "Segoe Ui";
-	}
-
     /* Style the counter cards */
     .card-issued {
         box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
