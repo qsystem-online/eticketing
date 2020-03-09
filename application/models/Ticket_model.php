@@ -32,8 +32,8 @@ class Ticket_model extends MY_MODEL {
         $rsTicketlog = $qr->result();
 
         // Ticket Docs 27/02/2020
-        $ssql = "SELECT a.*,b.fin_ticket_id,b.fst_status FROM trticket_docs a
-        LEFT JOIN trticket_log b ON b.fin_rec_id = a.fin_rec_id 
+        $ssql = "SELECT a.*,b.fin_ticket_id,b.fst_status_memo FROM trticket_docs a
+        INNER JOIN trticket_log b ON a.fst_memo = b.fst_status_memo 
         WHERE b.fin_ticket_id = ? ORDER BY a.fin_rec_id DESC";
         $qr = $this->db->query($ssql, [$fin_ticket_id]);
         $rsTicketDocs = $qr->result();
@@ -126,6 +126,7 @@ class Ticket_model extends MY_MODEL {
         return $max_tr_no;
     }
 
+    // Devi 20/02/2020
     public function getLastLogStatus($finTicketId){
         $ssql = "SELECT fst_status from trticket_log where fin_ticket_id = ? order by fin_rec_id desc limit 1";
         $qr = $this->db->query($ssql,[$finTicketId]);
