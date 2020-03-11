@@ -11,12 +11,14 @@ class Ticketstatus_model extends MY_MODEL {
     }
 
     public function getDataById($fin_ticket_id){
-        $ssql = "select a.*,b.fst_ticket_type_name,c.fst_service_level_name,c.fin_service_level_days,d.fst_username as useractive,e.fst_username,f.fin_level from ". $this->tableName ." a
+        $ssql = "select a.*,b.fst_ticket_type_name,c.fst_service_level_name,c.fin_service_level_days,d.fst_username as useractive,e.fst_username,f.fin_level,g.fst_department_name,h.fst_username from ". $this->tableName ." a
         left join mstickettype b on a.fin_ticket_type_id = b.fin_ticket_type_id
         left join msservicelevel c on a.fin_service_level_id = c.fin_service_level_id
         left join users d on a.fin_issued_by_user_id = d.fin_user_id
         left join users e on a.fin_issued_to_user_id = e.fin_user_id
         left join usersgroup f ON d.fin_group_id = f.fin_group_id
+        left join departments g on a.fin_to_department_id = g.fin_department_id
+        left join users h on a.fin_approved_by_user_id = h.fin_user_id
         where fin_ticket_id = ?";
         $qr = $this->db->query($ssql,[$fin_ticket_id]);
         $rwTicketstatus = $qr->row();
@@ -122,7 +124,7 @@ class Ticketstatus_model extends MY_MODEL {
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id
-            WHERE a.fst_status = 'APPROVED/OPEN' AND a.fin_issued_by_user_id =? AND fdt_acceptance_expiry_datetime >'$expiryaccepted' ";
+            WHERE a.fst_status = 'APPROVED/OPEN' AND a.fin_issued_by_user_id =? AND fdt_acceptance_expiry_datetime <'$expiryaccepted' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         //echo $this->db->last_query();
         return $qr->result_array();
@@ -138,7 +140,7 @@ class Ticketstatus_model extends MY_MODEL {
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id 
-            where a.fst_status = 'ACCEPTED' and a.fin_issued_by_user_id =? AND fdt_deadline_extended_datetime >'$expirydeadline' ";
+            where a.fst_status = 'ACCEPTED' and a.fin_issued_by_user_id =? AND fdt_deadline_extended_datetime <'$expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 
@@ -153,7 +155,7 @@ class Ticketstatus_model extends MY_MODEL {
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id 
-            where (a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED') and a.fin_issued_by_user_id =? AND fdt_deadline_extended_datetime >'$expirydeadline' ";
+            where (a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED') and a.fin_issued_by_user_id =? AND fdt_deadline_extended_datetime <'$expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 
@@ -168,7 +170,7 @@ class Ticketstatus_model extends MY_MODEL {
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id 
-            where a.fst_status = 'COMPLETED' and a.fin_issued_by_user_id =? AND fdt_deadline_extended_datetime >'$expirydeadline' ";
+            where a.fst_status = 'COMPLETED' and a.fin_issued_by_user_id =? AND fdt_deadline_extended_datetime <'$expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 
@@ -183,7 +185,7 @@ class Ticketstatus_model extends MY_MODEL {
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
-            where a.fst_status = 'APPROVED/OPEN' and a.fin_issued_to_user_id =? AND fdt_acceptance_expiry_datetime >'$expiryaccepted' ";
+            where a.fst_status = 'APPROVED/OPEN' and a.fin_issued_to_user_id =? AND fdt_acceptance_expiry_datetime <'$expiryaccepted' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 
@@ -198,7 +200,7 @@ class Ticketstatus_model extends MY_MODEL {
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
-            where a.fst_status = 'ACCEPTED' and a.fin_issued_to_user_id =? AND fdt_deadline_extended_datetime >'$expirydeadline' ";
+            where a.fst_status = 'ACCEPTED' and a.fin_issued_to_user_id =? AND fdt_deadline_extended_datetime <'$expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 
@@ -213,7 +215,7 @@ class Ticketstatus_model extends MY_MODEL {
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
-            where (a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED') and a.fin_issued_to_user_id =? AND fdt_deadline_extended_datetime >'$expirydeadline' ";
+            where (a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED') and a.fin_issued_to_user_id =? AND fdt_deadline_extended_datetime <'$expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 
@@ -228,7 +230,7 @@ class Ticketstatus_model extends MY_MODEL {
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
-            where a.fst_status = 'COMPLETED' and a.fin_issued_to_user_id =? AND fdt_deadline_extended_datetime >'$expirydeadline' ";
+            where a.fst_status = 'COMPLETED' and a.fin_issued_to_user_id =? AND fdt_deadline_extended_datetime <'$expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 

@@ -852,21 +852,6 @@ class Ticketstatus extends MY_Controller
         $data["arrDeptList"] =$this->msdepartments_model->getAllList();
         $this->parser->parse('pages/tr/ticketstatus/monitoring.php',$tickets);
     }
-    
-
-    public function monitoring1(){
-
-        $this->load->model("monitoringticket_model");
-        $tickets = $this->monitoringticket_model->get_monitoringticket();
-        $data = [
-			"datas" => $tickets['tickets']
-        ];
-        $this->load->view('pages/tr/ticketstatus/monitoring.php',$tickets);
-        //$url = 'https://gocleanlaundry.herokuapp.com/api/users/';
-        //$result = $this->scripts->get_data_api($url);
-        //$data_row = $result;
-    
-    }
 
     public function monitoringticket(){
 
@@ -949,7 +934,7 @@ class Ticketstatus extends MY_Controller
         
 	
     }
-	public function monitoringpengumumanX(){
+	public function monitoringpengumuman(){
         $arrDepartment = $this->input->get('fin_dept_id');
         //var_dump($arrDepartment);
         //die();

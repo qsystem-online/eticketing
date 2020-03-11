@@ -284,6 +284,36 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
+                                    <div class="col-xs-6 col-md-4">
+                                        <select id="select-department" class="form-control select2" name="fin_to_department_id" style="width: 100%" disabled>
+                                        <option value="" selected>-- <?=lang("select")?> --</option>
+                                            <?php
+                                                $deptidList = $this->msdepartments_model->getDepartment();
+                                                foreach ($deptidList as $deptId) {
+                                                    echo "<option value='$deptId->fin_department_id'>$deptId->fst_department_name</option>";
+                                                }
+                                            ?>
+                                        </select>
+                                        <div id="fin_to_department_id" class="text-danger"></div>
+                                    </div>
+
+                                    <label for="fin_approved_by_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Approved By")?></label>
+                                    <div class="col-xs-6 col-md-4">
+                                        <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id" style="width: 100%" disabled>
+                                            <option value="" selected>-- <?=lang("select")?> --</option>
+                                            <?php
+                                                $approvedbyList = $this->users_model->getApprovedBy();
+                                                foreach ($approvedbyList as $approvedBy){
+                                                    echo "<option value='$approvedBy->fin_user_id'>$approvedBy->fst_username</option>";
+                                                }
+                                            ?>
+                                        </select>
+                                        <div id="fin_approved_by_user_id_err" class="text-danger"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Last Status")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-status" class="form-control" name="fst_status" style="width: 100%" disabled>
@@ -568,6 +598,12 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 $('#select-users').append(newOption).trigger('change');
                 var newOption = new Option(resp.ms_ticketstatus.fin_issued_to_user_id, true);
                 $('#select-toUser').append(newOption).trigger('change');
+
+                var newOption = new Option(resp.ms_ticketstatus.fst_username, true);
+                $('#select-approvedby').append(newOption).trigger('change');
+
+                var newOption = new Option(resp.ms_ticketstatus.fin_department_id, true);
+                $('#select-department').append(newOption).trigger('change');
 
                 if (resp.ms_ticketstatus.fst_status == "NEED_APPROVAL"){
                     //$('#fst_update_status').val("NEED_APPROVAL",true).prop(disabled="disabled");

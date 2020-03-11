@@ -34,8 +34,8 @@ class Monitoringticket_model extends MY_MODEL {
         $rwInfo = $qr->result_array();
 
         $data = [
-            "tickets" => $rwtickets,
-            "pengumuman" => $rwInfo
+            "tickets" => $rwtickets
+            //"pengumuman" => $rwInfo
         ];
         return $data;
     }

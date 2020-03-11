@@ -219,17 +219,17 @@ blink {
     </select>
 </div>
 <body>
-  <!--<div style="padding-bottom: 5px">-->
+  <div style="padding-bottom: 5px">
   <br>
-    <!--<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">-->
-      <!-- Wrapper for slides
-      <div id="corousel" class="carousel-inner" role="listbox">
+    <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+      <!-- Wrapper for slides-->
+      <div id="carousel-pengumuman" class="carousel-inner" role="listbox">
       </div>
     </div>
-  </div>-->
-  <div class="example3" id="animation">
-  <h3 name="msg"></h3>
   </div>
+  <!--<div class="example3" id="animation">
+  <h3 name="msg"></h3>
+  </div>-->
   <div class="tableticket">
     <table class="container" id="table-ticket">
       <thead>
@@ -247,14 +247,13 @@ blink {
       </tbody>
     </table>
   </div>
-</body>
 </html>
 <script type="text/javascript">
   $(function(){
       isiTicketlist();
       setInterval(function(){
         isiTicketlist()        
-      }, 60000);
+      }, 90000);
   });
 
   $(function(){
@@ -286,7 +285,7 @@ blink {
       datatype:"JSON",
     }).done(function(resp){
       $("#ticketlist").empty();
-      $("#animation").empty();
+      //$("#carousel-pengumuman").empty();
       $.each(resp.tickets,function(i,v){
         //console.log(v);
         if (v.fst_memo.length > 65){
@@ -324,18 +323,19 @@ blink {
               ticketlist +='<td>'+v.fst_status+'</td>';             
             }
             ticketlist += '</tr>';
-        $("#ticketlist").append(ticketlist);
-        $('#fin_dept_id').next(".select2-container").hide();
-      })
+          $("#ticketlist").append(ticketlist);
+          $('#fin_dept_id').next(".select2-container").hide();
+        })
 
       //populate pengumuman
-      $.each(resp.pengumuman,function(i,v){
-        console.log(v);
-        //var varactive = "";
-          //if(i == 0){
-            //varactive = "active";
-          //}
-        //$("#corousel").append("<div class='item " + varactive + "'><label><font color='#00FF00'>" + v.fst_memo + "</font></label></div>");
+      /*$.each(resp.pengumuman,function(i,v){
+        //console.log(v);
+        var varactive = "";
+          if(i == 0){
+            varactive = "active";
+          }
+        $("#carousel-pengumuman").append("<div class='item " + varactive + "'><label><font color='#00FF00'>" + v.fst_memo + "</font></label></div>");
+        //$("<div class='carousel-item " + varactive + "'><label><font color='#00FF00'>" + v.fst_memo + "</font></label></div>").append('#carousel-pengumuman');
 
           //interval between items (in milliseconds)
           /*var itemInterval = 1000;        
@@ -354,31 +354,20 @@ blink {
             }
             $("#animation").eq(currentItem).append("<h3>" + v.fst_memo + "</h3>");
           }, 1000);*/
-        var announcement = new Array();
-        var i = 0;
-        announcement[i++] = v.fst_memo;
-        var durasi = 15000;
-        //id = setInterval('script()',durasi);
-        var c = 0;
-        setInterval(function(){
-          function script() {
-            app = announcement[c++];
-            if (c == i) c = 0;
-            document.msg.value = app;
-            //$("#pengumuman").html(app);
-          }        
-        }, durasi);
-      })
-    })
+
+        /*$('#myCarousel').carousel({
+          interval: 9000
+          });*/
+       });
   }
 </script>
 
 <script type="text/javascript">
-/*$(function(){
+$(function(){
       setP();
       setInterval(function(){
-        setP()        
-      }, 100000);
+        //setP()        
+      }, 9000);
   });
 
   function setP(){
@@ -390,17 +379,20 @@ blink {
         datatype:"JSON",
       }).done(function(resp){
         var pengumuman = resp.arrPengumuman;
-        $("#corousel").empty();
+        $("#carousel-pengumuman").empty();
         $.each(pengumuman,function(i,v){
           console.log(v);
           var varactive = "";
             if(i == 0){
               varactive = "active";
             }
-          $("#corousel").append("<div class='item " + varactive + "'><label><font color='#00FF00'>" + v.fst_memo + "</font></label></div>");
+          $("#carousel-pengumuman").append("<div class='item " + varactive + "'><label><font color='#00FF00'>" + v.fst_memo + "</font></label></div>");
         });
       });
-    }*/
+      //$('#carousel-pengumuman').carousel({
+        //interval: 9000
+      //});
+    }
 </script>
 
 <script src="<?= COMPONENT_URL?>bower_components/jquery/dist/jquery.min.js"></script>
