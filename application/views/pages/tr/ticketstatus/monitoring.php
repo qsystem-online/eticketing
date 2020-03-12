@@ -304,7 +304,7 @@ blink {
             }
             ticketlist +='<td>'+v.fdt_ticket_datetime+'</td>';
             ticketlist +='<td>'+v.fdt_deadline_extended_datetime+'</td>';
-            if(v.fst_status == 'NEED_REVISION'){
+            if(v.fst_status == 'NEED_REVISION' | v.fst_status == 'COMPLETED'){
               ticketlist +='<td><blink><font color="#00FF00">'+v.issuedBy+'</font></blink></td>';
             }else{
               ticketlist +='<td>'+v.issuedBy+'</td>';
