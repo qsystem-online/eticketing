@@ -68,7 +68,7 @@ class Ticketstatus_model extends MY_MODEL {
         $rules[] = [
             'field' => 'fst_update_status',
             'label' => 'New Status',
-            'rules' => 'required',
+            'rules' => 'required',            
             'errors' => array(
                 'required' => '%s not selected'
             )
