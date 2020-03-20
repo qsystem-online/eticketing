@@ -744,8 +744,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     }
                 });
 
-                $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
-                $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
+                if (resp.ms_ticket.fdt_deadline_extended_datetime != null) {
+                    $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
+                    $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
+                    $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
+                } else {
+                    $("#fdt_deadline_extended_datetime").datetimepiker(null);
+                }
 
                 var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, true);
                 $('#select-ticketType').append(newOption).trigger('change');
