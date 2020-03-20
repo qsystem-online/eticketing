@@ -40,7 +40,7 @@ class Ticketstatus_model extends MY_MODEL {
         $rsTicketlog = $qr->result();
 
         // Ticket Docs 27/02/2020 enny
-        $ssql = "SELECT a.* FROM trticket_docs a WHERE a.fin_ticket_id = 9 ORDER BY a.fin_rec_id DESC";
+        $ssql = "SELECT a.* FROM trticket_docs a WHERE a.fin_ticket_id = ? ORDER BY a.fin_rec_id DESC";
         $qr = $this->db->query($ssql, [$fin_ticket_id]);
         $rsTicketDocs = $qr->result();
 
