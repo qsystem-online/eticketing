@@ -645,15 +645,15 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     if($(this).find(":selected").data("notice") == "NOTICE"){
                         $("#select-serviceLevel").val(null).trigger("change.select2");
                         $("#select-serviceLevel").prop("disabled", true);
-                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
-                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
+                        //$("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true); // 19/03/2020 dimatikan
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('01-01-3000 00:00:00'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("NOTICE");
                     }else if($(this).find(":selected").data("notice") == "ASSIGNMENT"){
                         $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("ASSIGNMENT");
                     }else if($(this).find(":selected").data("notice") == "INFO"){
-                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
-                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("INFO");
                         $("#select-serviceLevel").val(null).trigger("change.select2");
                         $("#select-serviceLevel").prop("disabled", true);
@@ -661,7 +661,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 });
             });
 
-            $("#select-serviceLevel").change(function(event){
+            /*$("#select-serviceLevel").change(function(event){
                 event.preventDefault();
                 //alert($("#select-serviceLevel option:selected").data("days"));
                 $("#select-serviceLevel").each(function(index){
@@ -685,7 +685,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         $("#fin_service_level_days").val("6");
                     }
                 });
-            });
+            });*/   // 19/03/2020 enny jangan dihapus utk dokumentasi
         }
 
         mode = $("#frm-mode").val();
@@ -746,7 +746,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
                 $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
-                $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
 
                 var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, true);
                 $('#select-ticketType').append(newOption).trigger('change');
