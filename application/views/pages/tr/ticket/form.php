@@ -745,7 +745,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 });
 
                 if (resp.ms_ticket.fdt_deadline_extended_datetime == null) {
-                    $("#fdt_deadline_extended_datetime").datetimepicker("00-00-0000 00:00:00");
+                    $("#fdt_deadline_extended_datetime").datetimepicker();
                     $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
                     $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
                 }
