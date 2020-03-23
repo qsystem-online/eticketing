@@ -744,10 +744,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     }
                 });
 
-                if (resp.ms_ticket.fdt_deadline_extended_datetime == null) {
-                    $("#fdt_deadline_extended_datetime").datetimepicker();
-                    $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
-                    $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
+                $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
+                $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
+
+                if (resp.ms_ticket.fdt_deadline_extended_datetime != NULL) {
+                    $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
+                } else {
+                    $("#fdt_deadline_extended_datetime").datetimepicker(NULL);
                 }
 
                 var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, true);
@@ -787,12 +790,11 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 cardlog += '<div class ="col-md-4">'+val.fdt_status_datetime+'</div></span>';
                                 cardlog += '<div class ="col-md-4"><span class="badge badge-primary badge-pill">'+val.fst_status+'</span></div>';
                                 cardlog += '</p>';
-                                cardlog += '<ul class="list-group">';
-                            cardlog +=  '</ul>';
                         cardlog +=  '</div>';
-                        cardlog +='<div class="card-footer">';
-                        cardlog +='<li class="list-group-item list-group-item-light"><i class="fa fa-sticky-note-o"style="font-size:20px;">:</i>'+val.fst_status_memo+'</li>';
-                        cardlog +=  '</div>';
+                        cardlog += '<div class="direct-chat-msg">';
+                            cardlog += '<div class="direct-chat-text">'+val.fst_status_memo+'</div>';
+                        cardlog += '</div>';
+                        
                         cardlog +=  '</div>';
                         cardlog +=  '</div>';
                     $("#ticketlog_card").append(cardlog);
@@ -806,12 +808,11 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 cardlog += '<div class ="col-md-4">'+val.fdt_status_datetime+'</div></span>';
                                 cardlog += '<div class ="col-md-4"><span class="badge badge-primary badge-pill">'+val.fst_status+'</span></div>';
                                 cardlog += '</p>';
-                                cardlog += '<ul class="list-group">';
-                            cardlog +=  '</ul>';
                         cardlog +=  '</div>';
-                        cardlog +='<div class="card-footer">';
-                        cardlog +='<li class="list-group-item list-group-item-light"><i class="fa fa-sticky-note-o"style="font-size:20px;"> --</i>'+val.fst_status_memo+'</li>';
-                        cardlog +=  '</div>';
+                        cardlog += '<div class="direct-chat-msg">';
+                            cardlog += '<div class="direct-chat-text">'+val.fst_status_memo+'</div>';
+                        cardlog += '</div>';
+
                         cardlog +=  '</div>';
                         cardlog +=  '</div>';
                     $("#ticketlog_card").append(cardlog);
