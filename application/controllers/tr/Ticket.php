@@ -149,25 +149,29 @@ class ticket extends MY_Controller
         $fdt_ticket_datetime = date("Y-m-d H:i:s");
         $fst_ticket_no = $this->ticket_model->GenerateTicketNo();
 
-        $notifyDeadline = getDbConfig("notify_deadline");
+        $notifyDeadline = getDbConfig("notify_deadline"); // +7 hari
         $noW = date("Y-m-d H:i:s");
         $noW = date_create($noW);
         date_add($noW,date_interval_create_from_date_string("$notifyDeadline days"));
         $deadlineDatetime = date_format($noW,"Y-m-d H:i:s");
 
-        $acceptDate = getDbConfig("acceptance_expiry");
+        $acceptDate = getDbConfig("acceptance_expiry"); // +3 hari
         $dateNow = date("Y-m-d H:i:s");
         $dateNow = date_create($dateNow);
         date_add($dateNow,date_interval_create_from_date_string("$acceptDate days"));
         $acceptDatetime = date_format($dateNow,"Y-m-d H:i:s");
 
-        $finServiceLevelDays = $this->input->post("fin_service_level_days");
+        $timestamp = strtotime('01-01-3000 00:00:00'); // hard coded
+        $newDate = date('Y-m-d H:i:s', $timestamp);
+        //echo $newdate;
+
+        /*$finServiceLevelDays = $this->input->post("fin_service_level_days");
         $finServiceLevelDays = abs(intval($finServiceLevelDays));
         $serVlevelDays = "{$finServiceLevelDays} days";
         $dateLevel = date("Y-m-d H:i:s");
         $dateLevel = date_create($dateLevel);
         date_add($dateLevel,date_interval_create_from_date_string($serVlevelDays));
-        $serviceLevel =  date_format($dateLevel,"Y-m-d H:i:s");
+        $serviceLevel =  date_format($dateLevel,"Y-m-d H:i:s");*/
 
         $this->form_validation->set_rules($this->ticket_model->getRules("ADD", 0));
         $this->form_validation->set_error_delimiters('<div class="text-danger">* ', '</div>');
@@ -208,17 +212,17 @@ class ticket extends MY_Controller
 
         $fst_assignment_or_notice = $this->input->post("fst_assignment_or_notice");
         if ($fst_assignment_or_notice == "NOTICE"){
-            $data["fdt_deadline_datetime"] = $deadlineDatetime;
-            $data["fdt_deadline_extended_datetime"] = $deadlineDatetime;
-            $data["fdt_acceptance_expiry_datetime"] = $acceptDatetime;
+            //$data["fdt_deadline_datetime"] = $deadlineDatetime;       // 19/03/2020 dimatikan
+            //$data["fdt_deadline_extended_datetime"] = $deadlineDatetime;      // 19/03/2020 dimatikan
+            $data["fdt_acceptance_expiry_datetime"] = $newDate;
         }else if ($fst_assignment_or_notice == "ASSIGNMENT"){
             $data["fdt_acceptance_expiry_datetime"] = $acceptDatetime;
-            $data["fdt_deadline_datetime"]= $serviceLevel;
-            $data["fdt_deadline_extended_datetime"] = $serviceLevel;
+            //$data["fdt_deadline_datetime"]= $serviceLevel;        // 19/03/2020 dimatikan
+            //$data["fdt_deadline_extended_datetime"] = $serviceLevel;      // 19/03/2020 dimatikan
         }else if ($fst_assignment_or_notice == "INFO"){
-            $data["fdt_acceptance_expiry_datetime"] = $acceptDatetime;
-            $data["fdt_deadline_datetime"] = $acceptDatetime;
-            $data["fdt_deadline_extended_datetime"] = $acceptDatetime;
+            $data["fdt_acceptance_expiry_datetime"] = $deadlineDatetime;
+            $data["fdt_deadline_datetime"] = $deadlineDatetime;
+            $data["fdt_deadline_extended_datetime"] = $deadlineDatetime;
         }
 
         //save data
@@ -326,40 +330,6 @@ class ticket extends MY_Controller
 
         // Ticket Docs 27/02/2020
         $this->load->model("ticketdocs_model");
-        /*$data = [
-            "fin_rec_id" => $fin_rec_id,
-            "fst_doc_title" => $this->input->post("fst_doc_title"),
-            "fst_status" => $this->ticket_model->getLastLogStatus($this->input->post("fin_ticket_id")),
-            "fst_filename" => $this->input->post("fst_filename"),
-            "fst_memo"=> $this->input->post("fst_memo"),
-            "fdt_insert_datetime" => dBDateTimeFormat($this->input->post("fdt_insert_datetime")),
-            "fst_active"=>"A",
-        ];
-        $insertId = $this->ticketdocs_model->insert($data);
-
-        /*if (!empty($_FILES['fst_lampiran']['tmp_name'])) {
-			$config['upload_path']          = './assets/app/tickets/image';
-			$config['file_name']			= $data["fst_filename"]. '.jpg';
-			$config['overwrite']			= TRUE;
-			$config['file_ext_tolower']		= TRUE;
-			$config['allowed_types']        = 'gif|jpg|png';
-			$config['max_size']             = 0; //kilobyte
-			$config['max_width']            = 0; //1024; //pixel
-			$config['max_height']           = 0; //768; //pixel
-			$this->load->library('upload', $config);
-
-			if (!$this->upload->do_upload('fst_lampiran')) {
-				$this->ajxResp["status"] = "IMAGES_FAILED";
-				$this->ajxResp["message"] = "Failed to upload images, " . $this->upload->display_errors();
-				$this->ajxResp["data"] = $this->upload->display_errors();
-				$this->json_output();
-				$this->db->trans_rollback();
-				return;
-			} else {
-				//$data = array('upload_data' => $this->upload->data());			
-			}
-			$this->ajxResp["data"]["data_image"] = $this->upload->data();
-		}*/
 
         $this->db->trans_complete();
         $this->ajxResp["status"] = "SUCCESS";

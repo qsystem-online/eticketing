@@ -32,9 +32,7 @@ class Ticket_model extends MY_MODEL {
         $rsTicketlog = $qr->result();
 
         // Ticket Docs 27/02/2020
-        $ssql = "SELECT a.*,b.fin_ticket_id,b.fst_status_memo FROM trticket_docs a
-        LEFT JOIN trticket_log b ON a.fst_memo = b.fst_status_memo 
-        WHERE b.fin_ticket_id = ? ORDER BY a.fin_rec_id DESC";
+        $ssql = "SELECT a.* FROM trticket_docs a WHERE a.fin_ticket_id = ? ORDER BY a.fin_rec_id DESC";
         $qr = $this->db->query($ssql, [$fin_ticket_id]);
         $rsTicketDocs = $qr->result();
 

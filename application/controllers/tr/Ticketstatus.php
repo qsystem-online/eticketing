@@ -886,6 +886,7 @@ class Ticketstatus extends MY_Controller
 
         
         $data = [
+            "fin_ticket_id"=>$this->input->post("fin_ticket_id"),
             "fst_doc_title"=>$this->input->post("fst_doc_title"),
             "fst_status"=>$this->ticket_model->getLastLogStatus($this->input->post("fin_ticket_id")),
             "fst_filename"=>$file["name"],
