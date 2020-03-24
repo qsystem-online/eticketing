@@ -299,7 +299,7 @@ blink {
         if (v.fst_assignment_or_notice =='NOTICE'){
             $days = 7;
         }else{
-            $days = v.fin_service_level_days;
+            $days = Number(v.fin_service_level_days -1);
         }
         //$days = (Math.abs(parseInt($days))); //tambahan
         //$daysLevel = "{$days} days"; //tambahan
@@ -308,7 +308,8 @@ blink {
         //$ticketdeadline_datetime = new Date($now,"Y-m-d H:i:s");
         now = new Date();
         ticketdeadline_datetime = new Date();
-        ticketdeadline_datetime.setDate(now.getDate()+$days);
+        //ticketdeadline_datetime = JSON.stringify(now)
+        ticketdeadline_datetime.setDate(ticketdeadline_datetime.getDate() + $days) + '/' + ticketdeadline_datetime.getMonth() + '/' + ticketdeadline_datetime.getFullYear();
 
         if (v.fdt_deadline_extended_datetime == null){
             v.fdt_deadline_datetime = ticketdeadline_datetime;

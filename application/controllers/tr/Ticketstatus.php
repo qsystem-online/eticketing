@@ -568,17 +568,17 @@ class Ticketstatus extends MY_Controller
         //echo($deadline_date);
         //die();
 
-        if ($last_status =='APPROVED/OPEN' && $deadline_date == null && $user_received == $user_active){
+        if ($last_status =='APPROVED/OPEN' && $deadline_date == 'NULL' && $user_received == $user_active){
             $data["fdt_deadline_datetime"]= $ticketdeadline_datetime;
             $data["fdt_deadline_extended_datetime"]= $ticketdeadline_datetime;
-        }else if ($last_status =='APPROVED/OPEN' && $deadline_date == null && $user_received == $user_active && $type_ticket == 'NOTICE'){
+        }else if ($last_status =='APPROVED/OPEN' && $deadline_date == 'NULL' && $user_received == $user_active && $type_ticket == 'NOTICE'){
             $data["fdt_deadline_datetime"]= date("Y-m-d H:i:s");
             $data["fdt_deadline_extended_datetime"]= date("Y-m-d H:i:s");
         }
         
         if ($last_status =='NEED_REVISION' && $user_issued == $user_active){
             $data["fdt_deadline_extended_datetime"]= dBDateTimeFormat($this->input->post("fdt_update_deadline_extended_datetime"));
-        }else if ($last_status =='NEED_REVISION' && $deadline_date == null && $user_issued == $user_active){
+        }else if ($last_status =='NEED_REVISION' && $deadline_date == 'NULL' && $user_issued == $user_active){
             $data["fin_service_level_id"]= $this->input->post("fin_service_level_id");
         }
         $this->db->trans_start();
