@@ -309,7 +309,8 @@ blink {
         now = new Date();
         ticketdeadline_datetime = new Date();
         //ticketdeadline_datetime = JSON.stringify(now)
-        ticketdeadline_datetime.setDate(ticketdeadline_datetime.getDate() + $days) + '/' + ticketdeadline_datetime.getMonth() + '/' + ticketdeadline_datetime.getFullYear();
+        ticketdeadline_datetime = ticketdeadline_datetime.setDate(now.getDate() + $days) + '/' + now.getMonth() + '/' + now.getFullYear();
+        //ticketdeadline_datetime = ticketdeadline_datetime.toDateString();
 
         if (v.fdt_deadline_extended_datetime == null){
             v.fdt_deadline_datetime = ticketdeadline_datetime;

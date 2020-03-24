@@ -46,7 +46,7 @@ class Ticketstatus_model extends MY_MODEL {
         $ticketdeadline_datetime = date_format($now,"Y-m-d H:i:s");
 
         if ($rwTicketstatus->fdt_deadline_datetime == null){
-            $rwTicketstatus->fdt_deadline_datetime = $ticketdeadline_datetime;
+            //$rwTicketstatus->fdt_deadline_datetime = $ticketdeadline_datetime;
             $rwTicketstatus->fdt_deadline_extended_datetime = $ticketdeadline_datetime; 
         }
 
