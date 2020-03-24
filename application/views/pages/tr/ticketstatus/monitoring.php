@@ -306,11 +306,24 @@ blink {
         //$now = new Date("Y-m-d H:i:s");
         //$now.setDate($now.getDate() + $daysLevel);
         //$ticketdeadline_datetime = new Date($now,"Y-m-d H:i:s");
-        now = new Date();
+        /*now = new Date();
         ticketdeadline_datetime = new Date();
-        //ticketdeadline_datetime = JSON.stringify(now)
-        ticketdeadline_datetime = ticketdeadline_datetime.setDate(now.getDate() + $days) + '/' + now.getMonth() + '/' + now.getFullYear();
-        //ticketdeadline_datetime = ticketdeadline_datetime.toDateString();
+        ticketdeadline_datetime.setDate(now.getDate() + $days);
+        ticketdeadline_datetime = ticketdeadline_datetime.toDateString();*/
+
+        var ticketdeadline_datetime = new Date(); 
+        //el_up.innerHTML = today; 
+        var dd = ticketdeadline_datetime.getDate() + $days; 
+        var mm = ticketdeadline_datetime.getMonth() + 1; 
+  
+        var yyyy = ticketdeadline_datetime.getFullYear(); 
+        if (dd < 10) { 
+            dd = '0' + dd; 
+        } 
+        if (mm < 10) { 
+            mm = '0' + mm; 
+        } 
+        var ticketdeadline_datetime = yyyy + '-' + mm + '-' + dd; 
 
         if (v.fdt_deadline_extended_datetime == null){
             v.fdt_deadline_datetime = ticketdeadline_datetime;
