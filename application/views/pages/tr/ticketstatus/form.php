@@ -584,7 +584,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_deadline_extended_datetime));
                     $("#fdt_ticket_expiry_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticketstatus.fdt_ticket_expiry_extended_datetime));
                 }
-
                 var newOption = new Option(resp.ms_ticketstatus.fst_ticket_type_name, resp.ms_ticketstatus.fin_ticket_type_id, true, true);
                 $('#select-ticketType').append(newOption).trigger('change');
                 
@@ -625,6 +624,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     $("#frmTicketStatus").hide();
                 }
 
+                // UPDATE DEADLINE EXTENDED DISINI BERDASARKAN SLA
                 if (resp.ms_ticketstatus.fst_status == "APPROVED/OPEN"){
                     //$('#fst_update_status').val("NEED_APPROVAL",true).prop(disabled="disabled");
                     array_of_options = ['SELECT...','ACCEPTED', 'NEED_REVISION']
@@ -646,6 +646,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     }
                 }
 
+                // CEK NEED_REVISION BEFORE OR AFTER ACCEPT (BEFORE ENABLE SLA ,AFTER ENABLE DEADLINE EXTENDED)
                 if (resp.ms_ticketstatus.fst_status == "NEED_REVISION"){
                     array_of_options = ['APPROVED/OPEN']
                     $.each(array_of_options, function(i, item) {
@@ -655,8 +656,11 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     })
                     if(resp.ms_ticketstatus.fin_issued_by_user_id != $userActive){
                         $("#frmTicketStatus").hide();
-                    }else{
+                    }else if(resp.ms_ticketstatus.fdt_deadline_extended_datetime == ""){
                         $("#select_update_serviceLevel").prop("disabled",false);
+                        $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
+                    }else if(resp.ms_ticketstatus.fdt_deadline_extended_datetime != ""){
+                        $("#select_update_serviceLevel").prop("disabled",true);
                         $("#fdt_update_deadline_extended_datetime").prop("disabled",false);
                     }
                 }

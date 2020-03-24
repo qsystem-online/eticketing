@@ -296,6 +296,24 @@ blink {
         }else{
           $memo = v.fst_memo;
         }
+        if (v.fst_assignment_or_notice =='NOTICE'){
+            $days = 7;
+        }else{
+            $days = v.fin_service_level_days;
+        }
+        //$days = (Math.abs(parseInt($days))); //tambahan
+        //$daysLevel = "{$days} days"; //tambahan
+        //$now = new Date("Y-m-d H:i:s");
+        //$now.setDate($now.getDate() + $daysLevel);
+        //$ticketdeadline_datetime = new Date($now,"Y-m-d H:i:s");
+        now = new Date();
+        ticketdeadline_datetime = new Date();
+        ticketdeadline_datetime.setDate(now.getDate()+$days);
+
+        if (v.fdt_deadline_extended_datetime == null){
+            v.fdt_deadline_datetime = ticketdeadline_datetime;
+            v.fdt_deadline_extended_datetime = ticketdeadline_datetime; 
+        }
         var ticketlist = '<tr>';
             if(v.fst_status == 'APPROVED/OPEN' | v.fst_status == 'COMPLETION_REVISED'){
               ticketlist +='<td><blink><font color="#00FF00">'+v.issuedTo+'</font></blink></td>';

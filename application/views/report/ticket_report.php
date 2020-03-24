@@ -208,7 +208,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 		$("#btnPrint").click(function(e){
             layoutColumn = [];
-			url = "<?= site_url() ?>tr/ticketstatus/get_print_ticketReport/" + $("#fdt_ticket_date_start").val() + '/' + $("#fdt_ticket_date_End").val() + '/' + $("#select-user_issuedBy").val() + '/' + $("#select-user_issuedTo").val() + '/' + $("#fst_status_report").val();
+            var statusReport = $("#fst_status_report").val();
+            if (statusReport == "APPROVED/OPEN"){
+                statusReport = "OPEN";
+            }
+			url = "<?= site_url() ?>tr/ticketstatus/get_print_ticketReport/" + $("#fdt_ticket_date_start").val() + '/' + $("#fdt_ticket_date_End").val() + '/' + $("#select-user_issuedBy").val() + '/' + $("#select-user_issuedTo").val() + '/' + statusReport;
             MdlPrint.showPrint(layoutColumn,url);
         });
 
