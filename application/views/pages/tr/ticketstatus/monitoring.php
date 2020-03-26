@@ -296,8 +296,10 @@ blink {
         }else{
           $memo = v.fst_memo;
         }
+        //$notifyDeadline = getDbConfig("notify_deadline");
+        $notifyDeadline = 7;
         if (v.fst_assignment_or_notice =='NOTICE'){
-            $days = 7;
+            $days = $notifyDeadline;
         }else{
             $days = Number(v.fin_service_level_days -1);
         }
@@ -312,10 +314,9 @@ blink {
         ticketdeadline_datetime = ticketdeadline_datetime.toDateString();*/
 
         var ticketdeadline_datetime = new Date(); 
-        //el_up.innerHTML = today; 
-        var dd = ticketdeadline_datetime.getDate() + $days; 
+        ticketdeadline_datetime.setDate(ticketdeadline_datetime.getDate() + $days)
+        var dd = ticketdeadline_datetime.getDate() ; 
         var mm = ticketdeadline_datetime.getMonth() + 1; 
-  
         var yyyy = ticketdeadline_datetime.getFullYear(); 
         if (dd < 10) { 
             dd = '0' + dd; 
