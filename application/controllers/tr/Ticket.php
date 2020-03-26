@@ -163,7 +163,7 @@ class ticket extends MY_Controller
 
         $timestamp = strtotime('01-01-3000 00:00:00'); // hard coded
         $newDate = date('Y-m-d H:i:s', $timestamp);
-        //echo $newdate;
+        //echo $newDate;
 
         /*$finServiceLevelDays = $this->input->post("fin_service_level_days");
         $finServiceLevelDays = abs(intval($finServiceLevelDays));
