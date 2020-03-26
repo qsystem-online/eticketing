@@ -330,6 +330,9 @@ blink {
             v.fdt_deadline_datetime = ticketdeadline_datetime;
             v.fdt_deadline_extended_datetime = ticketdeadline_datetime; 
         }
+        if (v.Approved == null){
+            v.Approved = 'OPEN';
+        }
         var ticketlist = '<tr>';
             if(v.fst_status == 'APPROVED/OPEN' | v.fst_status == 'COMPLETION_REVISED'){
               ticketlist +='<td><blink><font color="#00FF00">'+v.issuedTo+'</font></blink></td>';

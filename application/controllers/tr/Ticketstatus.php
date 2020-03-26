@@ -546,6 +546,7 @@ class Ticketstatus extends MY_Controller
             return;
         }
         $days = $this->input->post("fin_service_level_days");
+        $newStatus = $this->input->post("fst_update_status");
         $days = abs(intval($days)); //tambahan
         $daysLevel = "{$days} days"; //tambahan
         $now = date("Y-m-d H:i:s");
@@ -555,7 +556,7 @@ class Ticketstatus extends MY_Controller
         //echo ($ticketdeadline_datetime);
         $data = [
             "fin_ticket_id" => $fin_ticket_id,
-            "fst_status" => $this->input->post("fst_update_status"),
+            "fst_status" => $newStatus,
             "fst_active" => 'A'
         ];
 
@@ -568,12 +569,12 @@ class Ticketstatus extends MY_Controller
         //echo($deadline_date);
         //die();
 
-        if ($last_status =='APPROVED/OPEN' && $deadline_date == NULL && $user_received == $user_active && $type_ticket != "NOTICE"){
+        if ($last_status =='APPROVED/OPEN' && $deadline_date == NULL && $user_received == $user_active && $newStatus == 'ACCEPTED' && $type_ticket != "NOTICE"){
             //echo("NULL BUKAN NOTICE");
             //die();
             $data["fdt_deadline_datetime"]= $ticketdeadline_datetime;
             $data["fdt_deadline_extended_datetime"]= $ticketdeadline_datetime;
-        }else if ($last_status =='APPROVED/OPEN' && $deadline_date == NULL && $user_received == $user_active && $type_ticket == "NOTICE"){
+        }else if ($last_status =='APPROVED/OPEN' && $deadline_date == NULL && $user_received == $user_active && $newStatus == 'ACCEPTED' && $type_ticket == "NOTICE"){
             //echo("NULL & NOTICE");
             //die();
             $data["fdt_deadline_datetime"]= date("Y-m-d H:i:s");

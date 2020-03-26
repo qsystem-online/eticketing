@@ -656,10 +656,12 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     })
                     if(resp.ms_ticketstatus.fin_issued_by_user_id != $userActive){
                         $("#frmTicketStatus").hide();
-                    }else if(resp.ms_ticketstatus.fdt_deadline_extended_datetime == ""){
+                    }else if(resp.ms_ticketstatus.fdt_deadline_datetime ==null){
+                        //alert ("NULL");
                         $("#select_update_serviceLevel").prop("disabled",false);
                         $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
-                    }else if(resp.ms_ticketstatus.fdt_deadline_extended_datetime != ""){
+                    }else if(resp.ms_ticketstatus.fdt_deadline_datetime !=null){
+                        //alert ("NOT NULL");
                         $("#select_update_serviceLevel").prop("disabled",true);
                         $("#fdt_update_deadline_extended_datetime").prop("disabled",false);
                     }

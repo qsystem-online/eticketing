@@ -73,7 +73,7 @@ class Dashboard_model extends CI_Model {
         $expirydeadline = date("Y-m-d");
 
         $ssql = "select count(*) as ttl_need_revision from trticket 
-            where (fst_status = 'NEED_REVISION' OR fst_status ='COMPLETION_REVISED') and fin_issued_by_user_id =? and CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' ";
+            where (fst_status = 'NEED_REVISION' OR fst_status ='COMPLETION_REVISED') and fin_issued_by_user_id =? and (CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' or fdt_deadline_extended_datetime is null) ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         //echo $this->db->last_query();
         $rw = $qr->row();
@@ -140,7 +140,7 @@ class Dashboard_model extends CI_Model {
         $expirydeadline = date("Y-m-d");
 
         $ssql = "select count(*) as ttl_need_revision from trticket 
-            where (fst_status = 'NEED_REVISION' OR fst_status ='COMPLETION_REVISED') and fin_issued_to_user_id =? and CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' ";
+            where (fst_status = 'NEED_REVISION' OR fst_status ='COMPLETION_REVISED') and fin_issued_to_user_id =? and (CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' or fdt_deadline_extended_datetime is null)";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         //echo $this->db->last_query();
         $rw = $qr->row();

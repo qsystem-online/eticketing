@@ -172,7 +172,7 @@ class Ticketstatus_model extends MY_MODEL {
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id 
-            where (a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED') and a.fin_issued_by_user_id =? AND CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' ";
+            where (a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED') and a.fin_issued_by_user_id =? AND ( CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' OR fdt_deadline_extended_datetime IS NULL )";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 
@@ -236,7 +236,7 @@ class Ticketstatus_model extends MY_MODEL {
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
-            where (a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED') and a.fin_issued_to_user_id =? AND CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' ";
+            where (a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED') and a.fin_issued_to_user_id =? AND ( CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' OR fdt_deadline_extended_datetime IS NULL ) ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 
