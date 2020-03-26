@@ -161,9 +161,9 @@ class ticket extends MY_Controller
         date_add($dateNow,date_interval_create_from_date_string("$acceptDate days"));
         $acceptDatetime = date_format($dateNow,"Y-m-d H:i:s");
 
-        $timestamp = strtotime('01-01-3000 00:00:00'); // hard coded
-        $newDate = date('Y-m-d H:i:s', $timestamp);
-        //echo $newdate;
+        //$timestamp = strtotime('01-01-3000 00:00:00'); // hard coded
+        $newDate = date('3000-01-01 00:00:00');
+        //echo $newDate;
 
         /*$finServiceLevelDays = $this->input->post("fin_service_level_days");
         $finServiceLevelDays = abs(intval($finServiceLevelDays));
