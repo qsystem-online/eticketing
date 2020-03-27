@@ -581,9 +581,13 @@ class Ticketstatus extends MY_Controller
             $data["fdt_deadline_extended_datetime"]= date("Y-m-d H:i:s");
         }
         
-        if ($last_status =='NEED_REVISION' && $user_issued == $user_active){
+        if ($last_status =='NEED_REVISION' && $deadline_date != NULL && $user_issued == $user_active){
+            //echo("SET DEADNLINE");
+            //die();
             $data["fdt_deadline_extended_datetime"]= dBDateTimeFormat($this->input->post("fdt_update_deadline_extended_datetime"));
         }else if ($last_status =='NEED_REVISION' && $deadline_date == NULL && $user_issued == $user_active){
+            //echo($this->input->post("fin_service_level_id"));
+            //die();
             $data["fin_service_level_id"]= $this->input->post("fin_service_level_id");
         }
         $this->db->trans_start();

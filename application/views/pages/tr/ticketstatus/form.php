@@ -493,7 +493,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             d.setDate(d.getDate() + days);
             var dtdeadline = $("#fdt_update_deadline_extended_datetime").val();
             $("#select-status").each(function(index){
-                if ($(this).val() == "APPROVED/OPEN" && dtdeadline == ""){
+                if ($(this).val() == "APPROVED/OPEN"){
                     $("#fdt_update_deadline_extended_datetime").val(dateTimeFormat(d));
                 }
             });
