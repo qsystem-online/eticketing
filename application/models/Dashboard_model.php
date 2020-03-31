@@ -106,8 +106,9 @@ class Dashboard_model extends CI_Model {
         //$expiryaccepted = date_format($now,"Y-m-d H:i:s");
         $expiryaccepted = date("Y-m-d");
 
-        $ssql = "select count(*) as ttl_received_approved from trticket 
-            where fst_status = 'APPROVED/OPEN' and fin_issued_to_user_id =? and CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' ";
+        $ssql = "select count(*) as ttl_received_approved from trticket a
+            LEFT JOIN mstickettype b ON b.fin_ticket_type_id = a.fin_ticket_type_id
+            where fst_status = 'APPROVED/OPEN' and b.fst_assignment_or_notice != 'INFO' and fin_issued_to_user_id =? and CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         $rw = $qr->row();
         return $rw->ttl_received_approved;

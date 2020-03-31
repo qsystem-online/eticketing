@@ -331,7 +331,7 @@ blink {
             v.fdt_deadline_extended_datetime = ticketdeadline_datetime; 
         }
         if (v.Approved == null){
-            v.Approved = 'OPEN';
+            v.Approved = '';
         }
         var ticketlist = '<tr>';
             if(v.fst_status == 'APPROVED/OPEN' | v.fst_status == 'COMPLETION_REVISED'){

@@ -139,7 +139,8 @@ class Ticketstatus_model extends MY_MODEL {
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id
-            WHERE a.fst_status = 'APPROVED/OPEN' AND a.fin_issued_by_user_id =? AND CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' ";
+            LEFT JOIN mstickettype c ON c.fin_ticket_type_id = a.fin_ticket_type_id
+            WHERE a.fst_status = 'APPROVED/OPEN' AND c.fst_assignment_or_notice != 'INFO' AND a.fin_issued_by_user_id =? AND CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         //echo $this->db->last_query();
         return $qr->result_array();
@@ -202,8 +203,9 @@ class Ticketstatus_model extends MY_MODEL {
         $expiryaccepted = date("Y-m-d");
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
-            INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
-            where a.fst_status = 'APPROVED/OPEN' and a.fin_issued_to_user_id =? AND CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' ";
+            INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id
+            LEFT JOIN mstickettype c ON c.fin_ticket_type_id = a.fin_ticket_type_id 
+            where a.fst_status = 'APPROVED/OPEN' AND c.fst_assignment_or_notice != 'INFO' AND a.fin_issued_to_user_id =? AND CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         //echo $this->db->last_query();
         return $qr->result_array();

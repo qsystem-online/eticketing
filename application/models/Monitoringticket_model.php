@@ -18,7 +18,7 @@ class Monitoringticket_model extends MY_MODEL {
         LEFT JOIN mstickettype e ON a.fin_ticket_type_id = e.fin_ticket_type_id
         LEFT JOIN msservicelevel f on a.fin_service_level_id = f.fin_service_level_id
         WHERE (b.fin_department_id IN ? OR c.fin_department_id IN ?) 
-        AND a.fst_status != 'CLOSED' AND a.fst_status != 'REJECTED' AND a.fst_status != 'VOID' AND a.fst_status != 'TICKET_EXPIRED' AND e.fst_assignment_or_notice != 'INFO' ORDER BY a.fdt_ticket_datetime ";
+        AND a.fst_status != 'CLOSED' AND a.fst_status != 'REJECTED' AND a.fst_status != 'VOID' AND a.fst_status != 'ACCEPTANCE_EXPIRED' AND a.fst_status != 'TICKET_EXPIRED' AND e.fst_assignment_or_notice != 'INFO' ORDER BY a.fdt_ticket_datetime ";
         $qr = $this->db->query($ssql,[$arrDepartment,$arrDepartment]);
         //echo $this->db->last_query();
         //die();

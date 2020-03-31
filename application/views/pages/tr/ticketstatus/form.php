@@ -590,8 +590,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 var newOption = new Option(resp.ms_ticketstatus.fst_service_level_name, true);
                 $('#select-serviceLevel').append(newOption).trigger('change');
 
-                var newOption = new Option(resp.ms_ticketstatus.fst_service_level_name, true);
-                $('#select_update_serviceLevel').append(newOption).trigger('change');
+                if (resp.ms_ticketstatus.fin_service_level_id != null){
+                    var newOption = new Option(resp.ms_ticketstatus.fst_service_level_name, true);
+                    $('#select_update_serviceLevel').append(newOption).trigger('change');
+                }else{
+                    //alert("SLA NULL");
+                    $("#select_update_serviceLevel").append('NULL').trigger('change');
+                }
 
                 var newOption = new Option(resp.ms_ticketstatus.fin_issued_by_user_id, true);
                 $('#select-users').append(newOption).trigger('change');
@@ -625,9 +630,27 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 }
 
                 // UPDATE DEADLINE EXTENDED DISINI BERDASARKAN SLA
-                if (resp.ms_ticketstatus.fst_status == "APPROVED/OPEN"){
+                if (resp.ms_ticketstatus.fst_status == "APPROVED/OPEN" && resp.ms_ticketstatus.fst_assignment_or_notice !='NOTICE'){
                     //$('#fst_update_status').val("NEED_APPROVAL",true).prop(disabled="disabled");
                     array_of_options = ['SELECT...','ACCEPTED', 'NEED_REVISION']
+                    $.each(array_of_options, function(i, item) {
+                        if(i==0) { 
+                            sel_op = 'selected'; 
+                            dis_op = 'disabled';
+                        } else { 
+                            sel_op = ''; 
+                            dis_op = ''; 
+                        }
+                        $('<option ' + sel_op + ' ' + dis_op + '/>').val(item).html(item).appendTo('#fst_update_status');
+                    })
+                    if(resp.ms_ticketstatus.fin_issued_to_user_id != $userActive){
+                        $("#frmTicketStatus").hide();
+                    }else{
+                        $("#select_update_serviceLevel").prop("disabled",true);
+                        $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
+                    }
+                }else if(resp.ms_ticketstatus.fst_status == "APPROVED/OPEN" && resp.ms_ticketstatus.fst_assignment_or_notice =='NOTICE'){
+                    array_of_options = ['SELECT...','ACCEPTED']
                     $.each(array_of_options, function(i, item) {
                         if(i==0) { 
                             sel_op = 'selected'; 
@@ -682,7 +705,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     }
                 }
 
-                if (resp.ms_ticketstatus.fst_status == "ACCEPTED"){
+                if (resp.ms_ticketstatus.fst_status == "ACCEPTED" && resp.ms_ticketstatus.fst_assignment_or_notice !='NOTICE'){
                     array_of_options = ['NEED_REVISION','COMPLETED']
                     $.each(array_of_options, function(i, item) {
                         sel_op = ''; 
@@ -695,6 +718,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         $("#select_update_serviceLevel").prop("disabled",true);
                         $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
                     }
+                }else if(resp.ms_ticketstatus.fst_status == "ACCEPTED" && resp.ms_ticketstatus.fst_assignment_or_notice =='NOTICE'){
+                    $("#frmTicketStatus").hide();
                 }
 
                 if (resp.ms_ticketstatus.fst_status == "COMPLETED"){
