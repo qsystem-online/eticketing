@@ -654,10 +654,18 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 }
 
                 if (ticketType == "INFO" ){
-                    $("#select-department").prop("disabled",false);
+                    $("#select-department").prop("disabled", false);
                 }else{
                     $("#select-department").val(null).trigger("change.select2");
-                    $("#select-department").prop("disabled",true);
+                    $("#select-department").prop("disabled", true);
+                }
+
+                // Tambahan 31/03/2020 16.15
+                if (ticketType == "ASSIGNMENT" || ticketType == "NOTICE" ) {
+                    $("#select-toUser").prop("disabled", false);
+                } else {
+                    $("#select-toUser").val(null).trigger("change.select2");
+                    $("#select-toUser").prop("disabled", true);
                 }
                 
                 $("#select-ticketType").each(function(index){
@@ -667,9 +675,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         //$("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true); // 19/03/2020 dimatikan
                         $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('01-01-3000 00:00:00'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("NOTICE");
+                        $("#fdt_deadline_extended_datetime").val(null);                 //tambahan 31/03/2020 17.24
+                        $("#fdt_deadline_extended_datetime").prop("disabled", true);    //tambahan 31/03/2020 17.24
                     }else if($(this).find(":selected").data("notice") == "ASSIGNMENT"){
                         $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("ASSIGNMENT");
+                        $("#fdt_deadline_extended_datetime").val(null);                 //tambahan 31/03/2020 17.24
+                        $("#fdt_deadline_extended_datetime").prop("disabled", true);    //tambahan 31/03/2020 17.24
                     }else if($(this).find(":selected").data("notice") == "INFO"){
                         $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
                         $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
@@ -724,14 +736,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     $("#fbl_need_approval").val("1");
                     $("#select-approvedby").prop("disabled", false);
                 }
-            });
-
-            $("#select-toUser").change(function(){
-                $("#select-department").val(null).trigger("change.select2");                
-            });
-
-            $("#select-department").change(function(){
-                $("#select-toUser").val(null).trigger("change.select2");
             });
         }
 
