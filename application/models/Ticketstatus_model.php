@@ -11,14 +11,14 @@ class Ticketstatus_model extends MY_MODEL {
     }
 
     public function getDataById($fin_ticket_id){
-        $ssql = "select a.*,b.fst_ticket_type_name,c.fst_service_level_name,c.fin_service_level_days,d.fst_username as useractive,e.fst_username,f.fin_level,g.fst_department_name,h.fst_username from ". $this->tableName ." a
-        left join mstickettype b on a.fin_ticket_type_id = b.fin_ticket_type_id
-        left join msservicelevel c on a.fin_service_level_id = c.fin_service_level_id
-        left join users d on a.fin_issued_by_user_id = d.fin_user_id
-        left join users e on a.fin_issued_to_user_id = e.fin_user_id
-        left join usersgroup f ON d.fin_group_id = f.fin_group_id
-        left join departments g on a.fin_to_department_id = g.fin_department_id
-        left join users h on a.fin_approved_by_user_id = h.fin_user_id
+        $ssql = "SELECT a.*,b.fst_ticket_type_name,b.fst_assignment_or_notice,c.fst_service_level_name,c.fin_service_level_days,d.fst_username AS useractive,e.fst_username,f.fin_level,g.fst_department_name,h.fst_username FROM ". $this->tableName ." a
+        LEFT JOIN mstickettype b on a.fin_ticket_type_id = b.fin_ticket_type_id
+        LEFT JOIN msservicelevel c on a.fin_service_level_id = c.fin_service_level_id
+        LEFT JOIN users d on a.fin_issued_by_user_id = d.fin_user_id
+        LEFT JOIN users e on a.fin_issued_to_user_id = e.fin_user_id
+        LEFT JOIN usersgroup f ON d.fin_group_id = f.fin_group_id
+        LEFT JOIN departments g on a.fin_to_department_id = g.fin_department_id
+        LEFT JOIN users h on a.fin_approved_by_user_id = h.fin_user_id
         where fin_ticket_id = ?";
         $qr = $this->db->query($ssql,[$fin_ticket_id]);
         $rwTicketstatus = $qr->row();
@@ -31,17 +31,33 @@ class Ticketstatus_model extends MY_MODEL {
 				$lampiranURL = site_url() . 'assets/app/tickets/image/default.jpg';
 			}
 			$rwTicketstatus->lampiranURL = $lampiranURL;
-		}
+        }
 
-        $ssql = "select a.*,b.fst_username from trticket_log a
-        left join users b on a.fin_status_by_user_id = b.fin_user_id
-        where a.fin_ticket_id = ? order by a.fin_rec_id desc";
+        if ($rwTicketstatus->fst_assignment_or_notice =='NOTICE'){
+            $days = 7;
+        }else{
+            $days = $rwTicketstatus->fin_service_level_days;
+        }
+        $days = abs(intval($days)); //tambahan
+        $daysLevel = "{$days} days"; //tambahan
+        $now = date("Y-m-d H:i:s");
+        $now = date_create($now);
+        date_add($now,date_interval_create_from_date_string($daysLevel));
+        $ticketdeadline_datetime = date_format($now,"Y-m-d H:i:s");
+
+        if ($rwTicketstatus->fdt_deadline_datetime == null){
+            //$rwTicketstatus->fdt_deadline_datetime = $ticketdeadline_datetime;
+            $rwTicketstatus->fdt_deadline_extended_datetime = $ticketdeadline_datetime; 
+        }
+
+        $ssql = "SELECT a.*,b.fst_username FROM trticket_log a
+        LEFT JOIN users b ON a.fin_status_by_user_id = b.fin_user_id
+        WHERE a.fin_ticket_id = ? ORDER BY a.fin_rec_id DESC";
         $qr = $this->db->query($ssql, [$fin_ticket_id]);
         $rsTicketlog = $qr->result();
 
-        // Ticket Lampiran 27/02/2020 enny
+        // Ticket Docs 27/02/2020 enny
         $ssql = "SELECT a.* FROM trticket_docs a WHERE a.fin_ticket_id = ? ORDER BY a.fin_rec_id DESC";
-                
         $qr = $this->db->query($ssql, [$fin_ticket_id]);
         $rsTicketDocs = $qr->result();
 
@@ -67,7 +83,7 @@ class Ticketstatus_model extends MY_MODEL {
         $rules[] = [
             'field' => 'fst_update_status',
             'label' => 'New Status',
-            'rules' => 'required',            
+            'rules' => 'required',
             'errors' => array(
                 'required' => '%s not selected'
             )
@@ -123,7 +139,8 @@ class Ticketstatus_model extends MY_MODEL {
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id
-            WHERE a.fst_status = 'APPROVED/OPEN' AND a.fin_issued_by_user_id =? AND CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' ";
+            LEFT JOIN mstickettype c ON c.fin_ticket_type_id = a.fin_ticket_type_id
+            WHERE a.fst_status = 'APPROVED/OPEN' AND c.fst_assignment_or_notice != 'INFO' AND a.fin_issued_by_user_id =? AND CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         //echo $this->db->last_query();
         return $qr->result_array();
@@ -156,7 +173,7 @@ class Ticketstatus_model extends MY_MODEL {
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id 
-            where (a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED') and a.fin_issued_by_user_id =? AND CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' ";
+            where (a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED') and a.fin_issued_by_user_id =? AND ( CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' OR fdt_deadline_extended_datetime IS NULL )";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 
@@ -186,9 +203,11 @@ class Ticketstatus_model extends MY_MODEL {
         $expiryaccepted = date("Y-m-d");
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
-            INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
-            where a.fst_status = 'APPROVED/OPEN' and a.fin_issued_to_user_id =? AND CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' ";
+            INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id
+            LEFT JOIN mstickettype c ON c.fin_ticket_type_id = a.fin_ticket_type_id 
+            where a.fst_status = 'APPROVED/OPEN' AND c.fst_assignment_or_notice != 'INFO' AND a.fin_issued_to_user_id =? AND CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        //echo $this->db->last_query();
         return $qr->result_array();
 
     }
@@ -219,7 +238,7 @@ class Ticketstatus_model extends MY_MODEL {
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
-            where (a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED') and a.fin_issued_to_user_id =? AND CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' ";
+            where (a.fst_status = 'NEED_REVISION' OR a.fst_status ='COMPLETION_REVISED') and a.fin_issued_to_user_id =? AND ( CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' OR fdt_deadline_extended_datetime IS NULL ) ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 
@@ -280,11 +299,11 @@ class Ticketstatus_model extends MY_MODEL {
     }
 
     public function update_rejectedview($fin_ticket_id){
-        $ssql = "select * from trticket where fin_ticket_id = ? and fst_status ='REJECTED'";
+        $ssql = "SELECT * FROM trticket WHERE fin_ticket_id = ? AND fst_status ='REJECTED'";
         $qr = $this->db->query($ssql,$fin_ticket_id);
         if ($qr->row() != null){
             //--Ticket Rejected viewed--
-            $ssql = "update trticket set fbl_rejected_view = 1 where fin_ticket_id = ?";
+            $ssql = "UPDATE trticket SET fbl_rejected_view = 1 WHERE fin_ticket_id = ?";
             $this->db->query($ssql,[$fin_ticket_id]);
         }
     }
@@ -302,7 +321,7 @@ class Ticketstatus_model extends MY_MODEL {
         $expiryUpdate = false;
         $newLog = false;
 
-        $ssql = "select * from trticketexpiry_log where fdt_log_start_datetime like ? ";
+        $ssql = "SELECT * FROM trticketexpiry_log WHERE fdt_log_start_datetime LIKE ? ";
         $qr = $this->db->query($ssql,["%".$dateToday."%"]);
         $rw = $qr->row();
 
@@ -334,7 +353,7 @@ class Ticketstatus_model extends MY_MODEL {
                 $this->db->where('rec_id', $log_id);
                 $this->db->update('trticketexpiry_log', $data);
             }
-            $ssql = "select * from trticket where fdt_acceptance_expiry_datetime < ? and fst_status ='APPROVED/OPEN' and fdt_deadline_extended_datetime is null";
+            $ssql = "SELECT * FROM trticket WHERE fdt_acceptance_expiry_datetime < ? AND fst_status ='APPROVED/OPEN' AND fdt_deadline_extended_datetime IS NULL";
             $qr = $this->db->query($ssql,[$expirydeadline]);
             //echo $this->db->last_query();
             //die();
@@ -342,7 +361,7 @@ class Ticketstatus_model extends MY_MODEL {
             if ($qr->row() != null){
                 foreach($rwTicketAcceptanceExpiry as $dataA){
                     //---Update Expiry Acceptance Ticket---
-                    $ssql = "update trticket set fst_status = 'ACCEPTANCE_EXPIRED' where fin_ticket_id = ?";
+                    $ssql = "UPDATE trticket SET fst_status = 'ACCEPTANCE_EXPIRED' WHERE fin_ticket_id = ?";
                     $this->db->query($ssql,[$dataA->fin_ticket_id]);
     
                     //--Ticket LOG--
@@ -358,13 +377,13 @@ class Ticketstatus_model extends MY_MODEL {
                 }
             }
     
-            $ssql = "select * from trticket where fdt_deadline_extended_datetime < ? and (fst_status ='ACCEPTED' or fst_status ='NEED_REVISION' or fst_status ='COMPLETED' or fst_status ='COMPLETION_REVISED' or (fst_status ='APPROVED/OPEN'  and fdt_deadline_extended_datetime is not null)) ";
+            $ssql = "SELECT * FROM trticket WHERE fdt_deadline_extended_datetime < ? AND (fst_status ='ACCEPTED' OR fst_status ='NEED_REVISION' OR fst_status ='COMPLETED' OR fst_status ='COMPLETION_REVISED' OR (fst_status ='APPROVED/OPEN'  AND fdt_deadline_extended_datetime IS NOT NULL)) ";
             $qr = $this->db->query($ssql,[$expirydeadline]);
             $rwTicketDeadlineExpiry = $qr->result();
             if ($qr->row() != null){
                 foreach($rwTicketDeadlineExpiry as $dataD){
                     //---Update Expiry Deadline Ticket---
-                    $ssql = "update trticket set fst_status = 'TICKET_EXPIRED' where fin_ticket_id = ?";
+                    $ssql = "UPDATE trticket SET fst_status = 'TICKET_EXPIRED' WHERE fin_ticket_id = ?";
                     $this->db->query($ssql,[$dataD->fin_ticket_id]);
     
                     //--Ticket LOG--

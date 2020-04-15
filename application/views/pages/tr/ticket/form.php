@@ -30,28 +30,47 @@ defined('BASEPATH') or exit ('No direct script access allowed');
     }
     /* Style the counter cards */
     .card-issued {
-        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
         padding: 16px;
-        background-color: #d8d8d8;
+        background-color: #f1f1f1;
         margin-bottom: 20px;
     }
     .card-received {
-        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
         padding: 16px;
         background-color: #3c8dbc;
         margin-bottom: 20px;
     }
+    .card button {
+        border: none;
+        outline: 0;
+        padding: 12px;
+        color: white;
+        background-color: #000;
+        text-align: center;
+        cursor: pointer;
+        width: 100%;
+        font-size: 18px;
+    }
+
+    .card button:hover {
+        opacity: 0.7;
+    }
+
     .card-title {
         font-weight:bold;
         /*text-align: center;*/
     }
+
     .sep {
         height: 15px;
     }
+
     .list-group {
         font-style: Italic;
         height: 100%;
     }
+
     .btn {
         margin-bottom: 20px;
     }
@@ -635,25 +654,37 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 }
 
                 if (ticketType == "INFO" ){
-                    $("#select-department").prop("disabled",false);
+                    $("#select-department").prop("disabled", false);
                 }else{
                     $("#select-department").val(null).trigger("change.select2");
-                    $("#select-department").prop("disabled",true);
+                    $("#select-department").prop("disabled", true);
+                }
+
+                // Tambahan 31/03/2020 16.15
+                if (ticketType == "ASSIGNMENT" || ticketType == "NOTICE" ) {
+                    $("#select-toUser").prop("disabled", false);
+                } else {
+                    $("#select-toUser").val(null).trigger("change.select2");
+                    $("#select-toUser").prop("disabled", true);
                 }
                 
                 $("#select-ticketType").each(function(index){
                     if($(this).find(":selected").data("notice") == "NOTICE"){
                         $("#select-serviceLevel").val(null).trigger("change.select2");
                         $("#select-serviceLevel").prop("disabled", true);
-                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
-                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
+                        //$("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true); // 19/03/2020 dimatikan
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('01-01-3000 00:00:00'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("NOTICE");
+                        $("#fdt_deadline_extended_datetime").val(null);                 //tambahan 31/03/2020 17.24
+                        $("#fdt_deadline_extended_datetime").prop("disabled", true);    //tambahan 31/03/2020 17.24
                     }else if($(this).find(":selected").data("notice") == "ASSIGNMENT"){
                         $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("ASSIGNMENT");
+                        $("#fdt_deadline_extended_datetime").val(null);                 //tambahan 31/03/2020 17.24
+                        $("#fdt_deadline_extended_datetime").prop("disabled", true);    //tambahan 31/03/2020 17.24
                     }else if($(this).find(":selected").data("notice") == "INFO"){
-                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
-                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("INFO");
                         $("#select-serviceLevel").val(null).trigger("change.select2");
                         $("#select-serviceLevel").prop("disabled", true);
@@ -661,7 +692,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 });
             });
 
-            $("#select-serviceLevel").change(function(event){
+            /*$("#select-serviceLevel").change(function(event){
                 event.preventDefault();
                 //alert($("#select-serviceLevel option:selected").data("days"));
                 $("#select-serviceLevel").each(function(index){
@@ -685,7 +716,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         $("#fin_service_level_days").val("6");
                     }
                 });
-            });
+            });*/   // 19/03/2020 enny jangan dihapus utk dokumentasi
         }
 
         mode = $("#frm-mode").val();
@@ -705,14 +736,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     $("#fbl_need_approval").val("1");
                     $("#select-approvedby").prop("disabled", false);
                 }
-            });
-
-            $("#select-toUser").change(function(){
-                $("#select-department").val(null).trigger("change.select2");                
-            });
-
-            $("#select-department").change(function(){
-                $("#select-toUser").val(null).trigger("change.select2");
             });
         }
 
@@ -746,7 +769,12 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_ticket_datetime));
                 $("#fdt_acceptance_expiry_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_acceptance_expiry_datetime));
-                $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
+
+                if (resp.ms_ticket.fdt_deadline_extended_datetime == null) {
+                    $("#fdt_deadline_extended_datetime").datetimepicker();
+                } else {
+                    $("#fdt_deadline_extended_datetime").datetimepicker('update', dateTimeFormat(resp.ms_ticket.fdt_deadline_extended_datetime));
+                }
 
                 var newOption = new Option(resp.ms_ticket.fst_ticket_type_name, true);
                 $('#select-ticketType').append(newOption).trigger('change');
@@ -785,12 +813,11 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 cardlog += '<div class ="col-md-4">'+val.fdt_status_datetime+'</div></span>';
                                 cardlog += '<div class ="col-md-4"><span class="badge badge-primary badge-pill">'+val.fst_status+'</span></div>';
                                 cardlog += '</p>';
-                                cardlog += '<ul class="list-group">';
-                            cardlog +=  '</ul>';
                         cardlog +=  '</div>';
-                        cardlog +='<div class="card-footer">';
-                        cardlog +='<li class="list-group-item list-group-item-light"><i class="fa fa-sticky-note-o"style="font-size:20px;">:</i>'+val.fst_status_memo+'</li>';
-                        cardlog +=  '</div>';
+                        cardlog += '<div class="direct-chat-msg">';
+                            cardlog += '<div class="direct-chat-text">'+val.fst_status_memo+'</div>';
+                        cardlog += '</div>';
+                        
                         cardlog +=  '</div>';
                         cardlog +=  '</div>';
                     $("#ticketlog_card").append(cardlog);
@@ -804,12 +831,11 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 cardlog += '<div class ="col-md-4">'+val.fdt_status_datetime+'</div></span>';
                                 cardlog += '<div class ="col-md-4"><span class="badge badge-primary badge-pill">'+val.fst_status+'</span></div>';
                                 cardlog += '</p>';
-                                cardlog += '<ul class="list-group">';
-                            cardlog +=  '</ul>';
                         cardlog +=  '</div>';
-                        cardlog +='<div class="card-footer">';
-                        cardlog +='<li class="list-group-item list-group-item-light"><i class="fa fa-sticky-note-o"style="font-size:20px;"> --</i>'+val.fst_status_memo+'</li>';
-                        cardlog +=  '</div>';
+                        cardlog += '<div class="direct-chat-msg">';
+                            cardlog += '<div class="direct-chat-text">'+val.fst_status_memo+'</div>';
+                        cardlog += '</div>';
+
                         cardlog +=  '</div>';
                         cardlog +=  '</div>';
                     $("#ticketlog_card").append(cardlog);

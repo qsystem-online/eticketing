@@ -69,7 +69,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <input type="text" class="form-control" id="fin_service_level_days" placeholder="<?=lang("Service Level Days")?>" name="fin_service_level_days">
                                 <div id="fin_service_level_days_err" class="text-danger"></div>
                             </div>
-                            <!--<label for="fin_terms_payment" class="col-sm-0 control-label"><?=lang("Day")?></label>-->
+                            <label class="col-md-2 control-label" style="text-align:left;padding-left:0px"><?=lang("Hari")?> </label>
                         </div>
                     </div>
                     <!-- end box body -->

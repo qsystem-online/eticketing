@@ -546,6 +546,7 @@ class Ticketstatus extends MY_Controller
             return;
         }
         $days = $this->input->post("fin_service_level_days");
+        $newStatus = $this->input->post("fst_update_status");
         $days = abs(intval($days)); //tambahan
         $daysLevel = "{$days} days"; //tambahan
         $now = date("Y-m-d H:i:s");
@@ -555,27 +556,40 @@ class Ticketstatus extends MY_Controller
         //echo ($ticketdeadline_datetime);
         $data = [
             "fin_ticket_id" => $fin_ticket_id,
-            //"fin_service_level_id" => $this->input->post("fin_service_level_id"),
-            //"fdt_deadline_datetime" => dBDateTimeFormat($this->input->post("fdt_update_deadline_datetime")),
-            //"fdt_deadline_extended_datetime" => dBDateTimeFormat($this->input->post("fdt_update_deadline_datetime")),
-            "fst_status" => $this->input->post("fst_update_status"),
+            "fst_status" => $newStatus,
             "fst_active" => 'A'
         ];
 
         $last_status = $ticket->fst_status;
-        $deadline_date = $ticket->fdt_deadline_extended_datetime;
+        $deadline_date = $ticket->fdt_deadline_datetime;
         $user_received = $ticket->fin_issued_to_user_id;
         $user_issued = $ticket->fin_issued_by_user_id;
         $user_active = $this->aauth->get_user_id();
-        //echo($user_active);
+        $type_ticket = $ticket->fst_assignment_or_notice;
+        //echo($deadline_date);
+        //die();
 
-        if ($last_status =='APPROVED/OPEN' && $deadline_date == "" && $user_received == $user_active){
+        if ($last_status =='APPROVED/OPEN' && $deadline_date == NULL && $user_received == $user_active && $newStatus == 'ACCEPTED' && $type_ticket != "NOTICE"){
+            //echo("NULL BUKAN NOTICE");
+            //die();
+            $data["fdt_deadline_datetime"]= $ticketdeadline_datetime;
             $data["fdt_deadline_extended_datetime"]= $ticketdeadline_datetime;
-        }else if($last_status =='NEED_REVISION' && $user_issued == $user_active){
+        }else if ($last_status =='APPROVED/OPEN' && $deadline_date == NULL && $user_received == $user_active && $newStatus == 'ACCEPTED' && $type_ticket == "NOTICE"){
+            //echo("NULL & NOTICE");
+            //die();
+            $data["fdt_deadline_datetime"]= date("Y-m-d H:i:s");
+            $data["fdt_deadline_extended_datetime"]= date("Y-m-d H:i:s");
+        }
+        
+        if ($last_status =='NEED_REVISION' && $deadline_date != NULL && $user_issued == $user_active){
+            //echo("SET DEADNLINE");
+            //die();
             $data["fdt_deadline_extended_datetime"]= dBDateTimeFormat($this->input->post("fdt_update_deadline_extended_datetime"));
+        }else if ($last_status =='NEED_REVISION' && $deadline_date == NULL && $user_issued == $user_active){
+            //echo($this->input->post("fin_service_level_id"));
+            //die();
             $data["fin_service_level_id"]= $this->input->post("fin_service_level_id");
         }
-
         $this->db->trans_start();
 
         $this->ticketstatus_model->update($data);
@@ -684,6 +698,11 @@ class Ticketstatus extends MY_Controller
     public function get_print_ticketReport($ticketdate_awal,$ticketdate_akhir,$issuedBy,$issuedTo,$status) {
         $layout = $this->input->post("layoutColumn");
         $arrLayout = json_decode($layout);
+        if ($status == "OPEN"){
+            $status = "APPROVED/OPEN";
+        }
+        //echo ($status);
+        //die();
         //$issuedBy = urldecode($issuedBy);
         //$issuedTo = urldecode($issuedTo);
         

@@ -11,13 +11,14 @@ class Monitoringticket_model extends MY_MODEL {
 
     public function get_monitoringticket($arrDepartment){
 
-        $ssql = "SELECT a.*,b.fin_user_id,b.fst_username AS issuedBy,b.fin_department_id as produksi,c.fst_username AS issuedTo,d.fst_username AS Approved,e.fst_assignment_or_notice FROM trticket a 
+        $ssql = "SELECT a.*,b.fin_user_id,b.fst_username AS issuedBy,b.fin_department_id as produksi,c.fst_username AS issuedTo,d.fst_username AS Approved,e.fst_assignment_or_notice,f.fin_service_level_days FROM trticket a 
         INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id
         LEFT JOIN users c ON a.fin_issued_to_user_id = c.fin_user_id
         LEFT JOIN users d ON a.fin_approved_by_user_id = d.fin_user_id
-        LEFT JOIN mstickettype e ON e.fin_ticket_type_id = a.fin_ticket_type_id
+        LEFT JOIN mstickettype e ON a.fin_ticket_type_id = e.fin_ticket_type_id
+        LEFT JOIN msservicelevel f on a.fin_service_level_id = f.fin_service_level_id
         WHERE (b.fin_department_id IN ? OR c.fin_department_id IN ?) 
-        AND a.fst_status != 'CLOSED' AND a.fst_status != 'REJECTED' AND a.fst_status != 'VOID' AND a.fst_status != 'TICKET_EXPIRED' AND e.fst_assignment_or_notice != 'INFO' ORDER BY a.fdt_ticket_datetime ";
+        AND a.fst_status != 'CLOSED' AND a.fst_status != 'REJECTED' AND a.fst_status != 'VOID' AND a.fst_status != 'ACCEPTANCE_EXPIRED' AND a.fst_status != 'TICKET_EXPIRED' AND e.fst_assignment_or_notice != 'INFO' ORDER BY a.fdt_ticket_datetime ";
         $qr = $this->db->query($ssql,[$arrDepartment,$arrDepartment]);
         //echo $this->db->last_query();
         //die();
