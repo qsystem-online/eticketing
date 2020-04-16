@@ -530,7 +530,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
             if ($("#select-approvedby").val() == 0){
                 alert("<?=lang('Pilih Approved By ...!')?>");
-                return;
+                return true;
             }
 
             mode = $("#frm-mode").val();
