@@ -259,6 +259,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
                                             <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
                                             <option value="NEED_REVISION"><?=lang("NEED REVISION")?></option>
+                                            <option value="REVISED"><?=lang("REVISED")?></option>
                                             <option value="COMPLETED"><?=lang("COMPLETED")?></option>
                                             <option value="COMPLETION_REVISED"><?=lang("COMPLETION REVISED")?></option>
                                             <option value="CLOSED"><?=lang("CLOSED")?></option>
@@ -459,6 +460,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                         <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
                                                         <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
                                                         <option value="NEED_REVISION"><?=lang("NEED REVISION")?></option>
+                                                        <option value="REVISED"><?=lang("REVISED")?></option>
                                                         <option value="COMPLETED"><?=lang("COMPLETED")?></option>
                                                         <option value="COMPLETION_REVISED"><?=lang("COMPLETION REVISED")?></option>
                                                         <option value="CLOSED"><?=lang("CLOSED")?></option>
@@ -525,6 +527,11 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             event.preventDefault();
             //data = new FormData($("#frmticket")[0]);
             data = $("#frmTicket").serializeArray();
+
+            if ($("#select-status").val() == "NEED_APPROVAL"){
+                alert("<?=lang('Pilih Approved By ...!')?>");
+                return;
+            }
 
             mode = $("#frm-mode").val();
             if (mode == "ADD"){
