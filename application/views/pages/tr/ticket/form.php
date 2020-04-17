@@ -528,9 +528,24 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             //data = new FormData($("#frmticket")[0]);
             data = $("#frmTicket").serializeArray();
 
-            if ($("#select-approvedby").val() == 0){
+            /*if ($("#select-approvedby").val() == 0){
                 alert("<?=lang('Pilih Approved By ...!')?>");
                 return true;
+            }*/
+
+            // TAMBAHAN 17/04/2020 19.34
+            if ($("#select-ticketType").find(":selected").data("fbl") == "0"){
+                $("#select-status").html("<option value='APPROVED/OPEN'><?=lang("APPROVED/OPEN")?></option>");
+                $("#fbl_need_approval").val("0");
+                $("#select-approvedby").val(null).prop("disabled", true);
+            } else if ($("#select-ticketType").find(":selected").data("fbl") == "1"){
+                $("#select-status").html("<option value='NEED_APPROVAL'><?=lang("NEED APPROVAL")?></option>");
+                $("#fbl_need_approval").val("1");
+                $("#select-approvedby").prop("disabled", false);
+                if ($("#select-approvedby").val() == 0){
+                    alert("<?=lang('Pilih Approved By ....!')?>");
+                    return true;
+                }
             }
 
             mode = $("#frm-mode").val();
