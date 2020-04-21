@@ -345,16 +345,14 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
                                     <div class="form-group">
                                         <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"><?=lang("Lampiran Gambar")?></label>
-                                        <div class="col-xs-6 col-md-2">
+                                        <div class="col-xs-6 col-md-4">
                                             <input type="file" class="form-control" id="fst_lampiran"  name="fst_lampiran">
                                         </div>
 
-                                        <div class="col-xs-12 col-md-8">
-                                            <input type="text" class="form-control" id="fst_doc_title"  name="fst_doc_title">
+                                        <div class="col-xs-12 col-md-6">
+                                            <input type="text" class="form-control" id="fst_doc_title"  name="fst_doc_title" placeholder="<?= lang("Judul") ?>">
+                                            <div id="fst_doc_title_err" class="text-danger"></div>
                                         </div>
-                                        
-                                        
-
                                     </div>
                                     <div class="form-group">
                                         <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"><?=lang("Keterangan")?></label>
@@ -379,7 +377,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <thead>
                                         <th style="width:30%"><?=lang("Judul")?></th>
                                         <th><?=lang("Keterangan")?></th>
-                                        <th style="width:30%"><?=lang("Tanggal")?></th>
+                                        <th style="width:15%"><?=lang("Tanggal")?></th>
+                                        <th style="width:5%"><?=lang("Action")?></th>
                                     </thead>
                                     <tbody id="tblbodydocs">
                                     </tbody>
@@ -502,54 +501,102 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
         $("#btn-add-doc").click(function(event){
             event.preventDefault();
-            data = new FormData($("#frmTicketlampiran")[0]);
+            var docTitle = $("#fst_doc_title").val();
+            if (docTitle == null || docTitle == "") {
+                $("#fst_doc_title_err").html("Judul harus diisi !!!");
+                $("#fst_doc_title_err").show();
+                return;
+            }else{
+                $("#fst_doc_title_err").hide();
+                data = new FormData($("#frmTicketlampiran")[0]);
 
-            data.append("fin_ticket_id", $("#fin_ticket_id").val());
-            
-            url = "<?= site_url() ?>tr/ticketstatus/ajx_add_doc";
+                data.append("fin_ticket_id", $("#fin_ticket_id").val());
+                
+                url = "<?= site_url() ?>tr/ticketstatus/ajx_add_doc";
 
-            App.blockUIOnAjaxRequest("Please wait while update ticket status.....");
-            $.ajax({
-                type: "POST",
-                //enctype: 'multipart/form-data',
-                url: url,
-                data: data,
-                processData: false,
-                contentType: false,
-                cache: false,
-                timeout: 600000,
-                success: function (resp) {
-                    if (resp.message != "") {
-                        $.alert({
-                            title: 'Message',
-                            content: resp.message,
-                            buttons: {
-                                OK : function(){
-                                      return;
-                                }
-                            },
-                        });
-                    }
-
-                    if (resp.status == "VALIDATION_FORM_FAILED"){
-                        //Show Error
-                        errors = resp.data;
-                        for (key in errors) {
-                            $("#" + key + "_err").html(errors[key]);
+                App.blockUIOnAjaxRequest("Please wait while update ticket status.....");
+                $.ajax({
+                    type: "POST",
+                    //enctype: 'multipart/form-data',
+                    url: url,
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    timeout: 600000,
+                    success: function (resp) {
+                        if (resp.message != "") {
+                            $.alert({
+                                title: 'Message',
+                                content: resp.message,
+                                buttons: {
+                                    OK : function(){
+                                        return;
+                                    }
+                                },
+                            });
                         }
-                    }else if(resp.status == "SUCCESS") {
-                        $("#tblbodydocs").append("<tr id='doc_"+ resp.insertId +"'><td>"+data.get("fst_doc_title")+"</td><td>"+data.get("fst_memo")+"</td><td>"+ App.dateTimeFormat("<?= date("Y-m-d H:i:s")?>") +"</td></tr>");
+
+                        if (resp.status == "VALIDATION_FORM_FAILED"){
+                            //Show Error
+                            errors = resp.data;
+                            for (key in errors) {
+                                $("#" + key + "_err").html(errors[key]);
+                            }
+                        }else if(resp.status == "SUCCESS") {                            
+                            
+                            var tbody = '<tr id="doc_' + resp.data.insertId + '">';                            
+                            tbody += '<td>';
+                            tbody += '<a href="<?=site_url()?>assets/app/tickets/image/'+resp.data.insertId+'.jpg" target="_blank">';
+                            tbody += '<img src="<?=site_url()?>assets/app/tickets/image/'+resp.data.insertId+'.jpg" width="50" height="50" style="vertical-align: text-top;margin-right:10px;" />';
+                            tbody +=  data.get("fst_doc_title");
+                            tbody +=  '</a>';
+                            tbody +=  '</td>';
+                            tbody += '<td>'+data.get("fst_memo")+'</td>';
+                            tbody += '<td>'+App.dateTimeFormat("<?= date("Y-m-d H:i:s")?>")+'</td>';
+                            tbody += '<td class="text-center">';                            
+                            tbody += '<a class="btn btn-delete-doc" data-docid="'+resp.data.insertId+'" ><i class="fa fa-trash"></i></a>';
+                            tbody += '</td>';
+                            tbody += '</tr>';
+
+
+                            $("#tblbodydocs").prepend(tbody);
+                        }
+                    },
+                    error: function (e) {
+                        $("#result").text(e.responseText);
+                        console.log("ERROR : ", e);
+                        $("#btnSubmit").prop("disabled", false);
                     }
-                },
-                error: function (e) {
-                    $("#result").text(e.responseText);
-                    console.log("ERROR : ", e);
-                    $("#btnSubmit").prop("disabled", false);
-                }
-            });
+                });
+            }   
 
         })
 
+
+
+        $("#tblbodydocs").on("click",".btn-delete-doc",function(event){
+            event.preventDefault();
+            var docId = $(this).data("docid");
+            var confirmDelete = confirm("Delete Lampiran");
+            if (confirmDelete){
+                row = $(this).parents('tr');
+                App.blockUIOnAjaxRequest("Delete attachment .....");
+                $.ajax({
+                    url:"<?=site_url()?>tr/ticketstatus/ajx_delete_doc/" + docId,
+                    method:"GET",
+                }).done(function(resp){
+                    if (resp.message !=""){
+                        alert(resp.message);
+                    }
+
+                    if (resp.status =="SUCCESS"){
+                        row.remove();
+                    }
+                });
+            }
+
+        });
     })
 
     function init_form(fin_ticket_id){
@@ -815,12 +862,22 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 //Ticket Docs 03/03/2020 enny
                 $.each(resp.ms_ticketdocs, function(name, val) {
-                    console.log(val);
-                        var tbody = '<tr>';
-                            tbody += '<td style="width:30%"><a href="<?=site_url()?>assets/app/tickets/image/'+val.fin_rec_id+'.jpg" target="_blank">'+val.fst_doc_title+'</td>';
-                            tbody += '<td style="width:50%">'+val.fst_memo+'</td>';
-                            tbody += '<td style="width:30%">'+val.fdt_insert_datetime+'</td>';
-                        tbody += '</tr>';
+                    console.log(val);                    
+                    var tbody = '<tr id="doc_' + val.fin_rec_id + '">';                            
+                        tbody += '<td>';
+                        tbody += '<a href="<?=site_url()?>assets/app/tickets/image/'+val.fin_rec_id+'.jpg" target="_blank">';
+                        tbody += '<img src="<?=site_url()?>assets/app/tickets/image/'+val.fin_rec_id+'.jpg" width="50" height="50" style="vertical-align: text-top;margin-right:10px;" />';
+                        tbody +=  val.fst_doc_title;
+                        tbody +=  '</a>';
+                        tbody +=  '</td>';
+                        tbody += '<td>'+val.fst_memo+'</td>';
+                        tbody += '<td>'+val.fdt_insert_datetime+'</td>';
+                        tbody += '<td class="text-center">';
+                        if ( <?= $this->aauth->get_user_id() ?> == val.fin_insert_id){
+                            tbody += '<a class="btn btn-delete-doc" data-docid="'+val.fin_rec_id+'" ><i class="fa fa-trash"></i></a>';
+                        }                        
+                        tbody += '</td>';
+                    tbody += '</tr>';
                     $("#tblbodydocs").append(tbody);
                 })
 

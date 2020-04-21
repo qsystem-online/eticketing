@@ -95,7 +95,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     <div class="btn-group btn-group-sm pull-right">
                         <a id="btnNew" class="btn btn-primary" href="#" title="<?=lang("Tambah Baru")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-plus" aria-hidden="true"></i></a>
                         <a id="btnSubmitAjax" class="btn btn-primary" href="#" title="<?=lang("Simpan")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
-                        <a id="btnDelete" class="btn btn-primary" href="#" title="<?=lang("Delete")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        <a id="btnDelete" class="btn btn-primary" href="#" title="<?=lang("Void")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
                         <a id="btnList" class="btn btn-primary" href="#" title="<?=lang("Daftar Transaksi")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-list" aria-hidden="true"></i></a>
                     </div>
                 </div>
@@ -259,7 +259,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
                                             <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
                                             <option value="NEED_REVISION"><?=lang("NEED REVISION")?></option>
-                                            <option value="REVISED"><?=lang("REVISED")?></option>
                                             <option value="COMPLETED"><?=lang("COMPLETED")?></option>
                                             <option value="COMPLETION_REVISED"><?=lang("COMPLETION REVISED")?></option>
                                             <option value="CLOSED"><?=lang("CLOSED")?></option>
@@ -460,7 +459,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                         <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
                                                         <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
                                                         <option value="NEED_REVISION"><?=lang("NEED REVISION")?></option>
-                                                        <option value="REVISED"><?=lang("REVISED")?></option>
                                                         <option value="COMPLETED"><?=lang("COMPLETED")?></option>
                                                         <option value="COMPLETION_REVISED"><?=lang("COMPLETION REVISED")?></option>
                                                         <option value="CLOSED"><?=lang("CLOSED")?></option>
@@ -559,6 +557,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 }
             }
 
+            // TAMBAHAN 21/04/2020 15.00 filter issued to
             if ($("#select-toUser").val() == $active_user){
                 alert("<?=lang('Nama penerima sama dengan nama pengirim, silahkan input ulang nama penerima ...!')?>");
                 return;
@@ -910,10 +909,10 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
         $("#btnVoid").confirmation({
             title:"<?=lang("Void data ini ?")?>",
-            rootSelector: '#btnSubmit',
+            rootSelector: '#btnDelete',
             placement: 'left',
         });
-        /*$("#btnVoid").click(function(e){
+        $("#btnVoid").click(function(e){
             e.preventDefault();
             blockUIOnAjaxRequest("<h5>Void ....</h5>");
             $.ajax({
@@ -947,7 +946,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     $('#fst_ticket_no').prop('readonly', true);
                 }
             });
-        });*/
+        });
     }
 
 </script>

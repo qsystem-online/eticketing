@@ -19,6 +19,8 @@ class Ticketdocs_model extends MY_MODEL {
         ];
         return $data;
     }
+    
+
 
     public function getRules($mode = "ADD", $id = 0){
         $rules = [];
