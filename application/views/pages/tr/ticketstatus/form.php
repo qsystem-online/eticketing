@@ -345,16 +345,14 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
                                     <div class="form-group">
                                         <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"><?=lang("Lampiran Gambar")?></label>
-                                        <div class="col-xs-6 col-md-2">
+                                        <div class="col-xs-6 col-md-4">
                                             <input type="file" class="form-control" id="fst_lampiran"  name="fst_lampiran">
                                         </div>
 
-                                        <div class="col-xs-12 col-md-8">
-                                            <input type="text" class="form-control" id="fst_doc_title"  name="fst_doc_title">
+                                        <div class="col-xs-12 col-md-6">
+                                            <input type="text" class="form-control" id="fst_doc_title"  name="fst_doc_title" placeholder="<?= lang("Judul") ?>">
+                                            <div id="fst_doc_title_err" class="text-danger"></div>
                                         </div>
-                                        
-                                        
-
                                     </div>
                                     <div class="form-group">
                                         <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"><?=lang("Keterangan")?></label>
@@ -502,51 +500,59 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
         $("#btn-add-doc").click(function(event){
             event.preventDefault();
-            data = new FormData($("#frmTicketlampiran")[0]);
+            var docTitle = $("#fst_doc_title").val();
+            if (docTitle == null || docTitle == "") {
+                $("#fst_doc_title_err").html("Judul harus diisi !!!");
+                $("#fst_doc_title_err").show();
+                return;
+            }else{
+                $("#fst_doc_title_err").hide();
+                data = new FormData($("#frmTicketlampiran")[0]);
 
-            data.append("fin_ticket_id", $("#fin_ticket_id").val());
-            
-            url = "<?= site_url() ?>tr/ticketstatus/ajx_add_doc";
+                data.append("fin_ticket_id", $("#fin_ticket_id").val());
+                
+                url = "<?= site_url() ?>tr/ticketstatus/ajx_add_doc";
 
-            App.blockUIOnAjaxRequest("Please wait while update ticket status.....");
-            $.ajax({
-                type: "POST",
-                //enctype: 'multipart/form-data',
-                url: url,
-                data: data,
-                processData: false,
-                contentType: false,
-                cache: false,
-                timeout: 600000,
-                success: function (resp) {
-                    if (resp.message != "") {
-                        $.alert({
-                            title: 'Message',
-                            content: resp.message,
-                            buttons: {
-                                OK : function(){
-                                      return;
-                                }
-                            },
-                        });
-                    }
-
-                    if (resp.status == "VALIDATION_FORM_FAILED"){
-                        //Show Error
-                        errors = resp.data;
-                        for (key in errors) {
-                            $("#" + key + "_err").html(errors[key]);
+                App.blockUIOnAjaxRequest("Please wait while update ticket status.....");
+                $.ajax({
+                    type: "POST",
+                    //enctype: 'multipart/form-data',
+                    url: url,
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    timeout: 600000,
+                    success: function (resp) {
+                        if (resp.message != "") {
+                            $.alert({
+                                title: 'Message',
+                                content: resp.message,
+                                buttons: {
+                                    OK : function(){
+                                        return;
+                                    }
+                                },
+                            });
                         }
-                    }else if(resp.status == "SUCCESS") {
-                        $("#tblbodydocs").append("<tr id='doc_"+ resp.insertId +"'><td>"+data.get("fst_doc_title")+"</td><td>"+data.get("fst_memo")+"</td><td>"+ App.dateTimeFormat("<?= date("Y-m-d H:i:s")?>") +"</td></tr>");
+
+                        if (resp.status == "VALIDATION_FORM_FAILED"){
+                            //Show Error
+                            errors = resp.data;
+                            for (key in errors) {
+                                $("#" + key + "_err").html(errors[key]);
+                            }
+                        }else if(resp.status == "SUCCESS") {
+                            $("#tblbodydocs").append("<tr id='doc_"+ resp.insertId +"'><td>"+data.get("fst_doc_title")+"</td><td>"+data.get("fst_memo")+"</td><td>"+ App.dateTimeFormat("<?= date("Y-m-d H:i:s")?>") +"</td></tr>");
+                        }
+                    },
+                    error: function (e) {
+                        $("#result").text(e.responseText);
+                        console.log("ERROR : ", e);
+                        $("#btnSubmit").prop("disabled", false);
                     }
-                },
-                error: function (e) {
-                    $("#result").text(e.responseText);
-                    console.log("ERROR : ", e);
-                    $("#btnSubmit").prop("disabled", false);
-                }
-            });
+                });
+            }   
 
         })
 
