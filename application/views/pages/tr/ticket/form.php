@@ -516,6 +516,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 </section>
 
 <script type="text/javascript">
+    var $active_user = "<?= $this->aauth->get_user_id()?>";
 
     $(function(){
 
@@ -528,12 +529,22 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             //data = new FormData($("#frmticket")[0]);
             data = $("#frmTicket").serializeArray();
 
-            /*if ($("#select-approvedby").val() == 0){
-                alert("<?=lang('Pilih Approved By ...!')?>");
-                return true;
-            }*/
+            // TAMBAHAN 21/04/2020 11.40 service level harus diisi
+            if ($("#select-ticketType").find(":selected").data("notice") == "NOTICE" && "INFO"){
+                $("#fst_assignment_or_notice").val("INFO");
+                $("#fst_assignment_or_notice").val("NOTICE");
+                $("#select-serviceLevel").val(null).trigger("change.select2");
+                $("#select-serviceLevel").prop("disabled", true);
+            }else if ($("#select-ticketType").find(":selected").data("notice") == "ASSIGNMENT"){
+                $("#fst_assignment_or_notice").val("ASSIGNMENT");
+                $("#select-serviceLevel").prop("disabled", false);
+                if ($("#select-serviceLevel").val() == 0){
+                    alert("<?=lang('Pilih Service Level ...!')?>");
+                    return;
+                }
+            }
 
-            // TAMBAHAN 17/04/2020 19.34
+            // TAMBAHAN 17/04/2020 19.34 approved by harus diisi
             if ($("#select-ticketType").find(":selected").data("fbl") == "0"){
                 $("#select-status").html("<option value='APPROVED/OPEN'><?=lang("APPROVED/OPEN")?></option>");
                 $("#fbl_need_approval").val("0");
@@ -544,8 +555,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 $("#select-approvedby").prop("disabled", false);
                 if ($("#select-approvedby").val() == 0){
                     alert("<?=lang('Pilih Approved By ....!')?>");
-                    return true;
+                    return;
                 }
+            }
+
+            if ($("#select-toUser").val() == $active_user){
+                alert("<?=lang('Nama penerima sama dengan nama pengirim, silahkan input ulang nama penerima ...!')?>");
+                return;
             }
 
             mode = $("#frm-mode").val();
@@ -704,6 +720,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         $("#fst_assignment_or_notice").val("ASSIGNMENT");
                         $("#fdt_deadline_extended_datetime").val(null);                 //tambahan 31/03/2020 17.24
                         $("#fdt_deadline_extended_datetime").prop("disabled", true);    //tambahan 31/03/2020 17.24
+                        $("#select-serviceLevel").val(null).trigger("change.select2");
+                        $("#select-serviceLevel").prop("disabled", false);
                     }else if($(this).find(":selected").data("notice") == "INFO"){
                         $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
                         $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
