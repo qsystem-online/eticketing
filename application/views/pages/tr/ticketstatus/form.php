@@ -377,7 +377,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <thead>
                                         <th style="width:30%"><?=lang("Judul")?></th>
                                         <th><?=lang("Keterangan")?></th>
-                                        <th style="width:30%"><?=lang("Tanggal")?></th>
+                                        <th style="width:15%"><?=lang("Tanggal")?></th>
+                                        <th style="width:5%"><?=lang("Action")?></th>
                                     </thead>
                                     <tbody id="tblbodydocs">
                                     </tbody>
@@ -542,8 +543,24 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                             for (key in errors) {
                                 $("#" + key + "_err").html(errors[key]);
                             }
-                        }else if(resp.status == "SUCCESS") {
-                            $("#tblbodydocs").append("<tr id='doc_"+ resp.insertId +"'><td>"+data.get("fst_doc_title")+"</td><td>"+data.get("fst_memo")+"</td><td>"+ App.dateTimeFormat("<?= date("Y-m-d H:i:s")?>") +"</td></tr>");
+                        }else if(resp.status == "SUCCESS") {                            
+                            
+                            var tbody = '<tr id="doc_' + resp.data.insertId + '">';                            
+                            tbody += '<td>';
+                            tbody += '<a href="<?=site_url()?>assets/app/tickets/image/'+resp.data.insertId+'.jpg" target="_blank">';
+                            tbody += '<img src="<?=site_url()?>assets/app/tickets/image/'+resp.data.insertId+'.jpg" width="50" height="50" style="vertical-align: text-top;margin-right:10px;" />';
+                            tbody +=  data.get("fst_doc_title");
+                            tbody +=  '</a>';
+                            tbody +=  '</td>';
+                            tbody += '<td>'+data.get("fst_memo")+'</td>';
+                            tbody += '<td>'+App.dateTimeFormat("<?= date("Y-m-d H:i:s")?>")+'</td>';
+                            tbody += '<td class="text-center">';                            
+                            tbody += '<a class="btn btn-delete-doc" data-docid="'+resp.data.insertId+'" ><i class="fa fa-trash"></i></a>';
+                            tbody += '</td>';
+                            tbody += '</tr>';
+
+
+                            $("#tblbodydocs").prepend(tbody);
                         }
                     },
                     error: function (e) {
@@ -556,6 +573,30 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
         })
 
+
+
+        $("#tblbodydocs").on("click",".btn-delete-doc",function(event){
+            event.preventDefault();
+            var docId = $(this).data("docid");
+            var confirmDelete = confirm("Delete Lampiran");
+            if (confirmDelete){
+                row = $(this).parents('tr');
+                App.blockUIOnAjaxRequest("Delete attachment .....");
+                $.ajax({
+                    url:"<?=site_url()?>tr/ticketstatus/ajx_delete_doc/" + docId,
+                    method:"GET",
+                }).done(function(resp){
+                    if (resp.message !=""){
+                        alert(resp.message);
+                    }
+
+                    if (resp.status =="SUCCESS"){
+                        row.remove();
+                    }
+                });
+            }
+
+        });
     })
 
     function init_form(fin_ticket_id){
@@ -821,12 +862,22 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 //Ticket Docs 03/03/2020 enny
                 $.each(resp.ms_ticketdocs, function(name, val) {
-                    console.log(val);
-                        var tbody = '<tr>';
-                            tbody += '<td style="width:30%"><a href="<?=site_url()?>assets/app/tickets/image/'+val.fin_rec_id+'.jpg" target="_blank">'+val.fst_doc_title+'</td>';
-                            tbody += '<td style="width:50%">'+val.fst_memo+'</td>';
-                            tbody += '<td style="width:30%">'+val.fdt_insert_datetime+'</td>';
-                        tbody += '</tr>';
+                    console.log(val);                    
+                    var tbody = '<tr id="doc_' + val.fin_rec_id + '">';                            
+                        tbody += '<td>';
+                        tbody += '<a href="<?=site_url()?>assets/app/tickets/image/'+val.fin_rec_id+'.jpg" target="_blank">';
+                        tbody += '<img src="<?=site_url()?>assets/app/tickets/image/'+val.fin_rec_id+'.jpg" width="50" height="50" style="vertical-align: text-top;margin-right:10px;" />';
+                        tbody +=  val.fst_doc_title;
+                        tbody +=  '</a>';
+                        tbody +=  '</td>';
+                        tbody += '<td>'+val.fst_memo+'</td>';
+                        tbody += '<td>'+val.fdt_insert_datetime+'</td>';
+                        tbody += '<td class="text-center">';
+                        if ( <?= $this->aauth->get_user_id() ?> == val.fin_insert_id){
+                            tbody += '<a class="btn btn-delete-doc" data-docid="'+val.fin_rec_id+'" ><i class="fa fa-trash"></i></a>';
+                        }                        
+                        tbody += '</td>';
+                    tbody += '</tr>';
                     $("#tblbodydocs").append(tbody);
                 })
 

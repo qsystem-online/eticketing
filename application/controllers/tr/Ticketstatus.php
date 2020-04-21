@@ -939,9 +939,11 @@ class Ticketstatus extends MY_Controller
 
             $this->ajxResp["status"] = "SUCCESS";
             $this->ajxResp["message"] = "";
+            /*
             $this->ajxResp["data"] = [
-                "data_lampiran" => $this->upload->data()
+                "data_lampiran" => $this->upload->data()                
             ];
+            */
             $this->json_output();
 
         }catch(CustomException $e){
@@ -954,6 +956,35 @@ class Ticketstatus extends MY_Controller
         
 	
     }
+
+    public function ajx_delete_doc($finDocId){
+        $this->load->model("ticketdocs_model");
+        $result = $this->ticketdocs_model->getDataById($finDocId);
+        $rwDoc = $result["ticket_Docs"];
+        if ($rwDoc == null){
+            $this->json_output([
+                "status"=>"FAILED",
+                "message"=>"Invalid Doc Id"                
+            ]);
+        }else{
+            if ($this->aauth->get_user_id() == $rwDoc->fin_insert_id){
+                //Delete Document file
+                unlink("./assets/app/tickets/image/". $rwDoc->fin_rec_id .".jpg");
+                $this->db->where("fin_rec_id",$rwDoc->fin_rec_id);
+                $this->db->delete("trticket_docs");
+                $this->json_output([
+                    "status"=>"SUCCESS",
+                    "message"=>""                
+                ]);
+            }else{
+                $this->json_output([
+                    "status"=>"FAILED",
+                    "message"=>"Invalid Doc Id"                
+                ]); 
+            }
+        }
+    }
+
 	public function monitoringpengumuman(){
         $arrDepartment = $this->input->get('fin_dept_id');
         //var_dump($arrDepartment);
