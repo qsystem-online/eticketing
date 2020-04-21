@@ -528,7 +528,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             data = $("#frmTicket").serializeArray();
 
             // TAMBAHAN 21/04/2020 11.40 service level harus diisi
-            if ($("#select-ticketType").find(":selected").data("notice") == "NOTICE" || "INFO"){
+            if ($("#select-ticketType").find(":selected").data("notice") == "NOTICE" && "INFO"){
                 $("#fst_assignment_or_notice").val("INFO");
                 $("#fst_assignment_or_notice").val("NOTICE");
                 $("#select-serviceLevel").val(null).trigger("change.select2");
