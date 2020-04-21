@@ -528,7 +528,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             data = $("#frmTicket").serializeArray();
 
             // TAMBAHAN 21/04/2020 11.40 service level harus diisi
-            if ($("#select-ticketType").find(":selected").data("notice") == "NOTICE" && "INFO"){
+            if ($("#select-ticketType").find(":selected").data("notice") == "NOTICE" || "INFO"){
                 $("#fst_assignment_or_notice").val("INFO");
                 $("#fst_assignment_or_notice").val("NOTICE");
                 $("#select-serviceLevel").val(null).trigger("change.select2");
@@ -546,7 +546,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             if ($("#select-ticketType").find(":selected").data("notice") == "INFO"){
                 $("#select-toUser").val(null).trigger("change.select2");
                 $("#select-toUser").prop("disabled", true);
-            }else if ($("#select-ticketType").find(":selected").data("notice") == "NOTICE" && "ASSIGNMENT"){
+            }else if ($("#select-ticketType").find(":selected").data("notice") == "NOTICE" || "ASSIGNMENT"){
                 $("#select-toUser").prop("disabled", false);
                 if($("#select-toUser").val() == 0){
                     alert("<?=lang('Pilih nama penerima ticket ...!')?>");
