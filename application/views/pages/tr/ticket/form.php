@@ -542,6 +542,24 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 }
             }
 
+            // TAMBAHAN 21/04/2020 16.56 Issued To harus diisi. selain INFO
+            if ($("#select-ticketType").find(":selected").data("notice") == "INFO"){
+                $("#select-toUser").val(null).trigger("change.select2");
+                $("#select-toUser").prop("disabled", true);
+            }else if ($("#select-ticketType").find(":selected").data("notice") == "NOTICE" && "ASSIGNMENT"){
+                $("#select-toUser").prop("disabled", false);
+                if($("#select-toUser").val() == 0){
+                    alert("<?=lang('Pilih nama penerima ticket ...!')?>");
+                    return;
+                }
+            }
+
+            // TAMBAHAN 21/04/2020 15.00 filter issued to
+            if ($("#select-toUser").val() == $active_user){
+                alert("<?=lang('Nama penerima sama dengan nama pengirim, silahkan input ulang nama penerima ...!')?>");
+                return;
+            }
+
             // TAMBAHAN 17/04/2020 19.34 approved by harus diisi
             if ($("#select-ticketType").find(":selected").data("fbl") == "0"){
                 $("#select-status").html("<option value='APPROVED/OPEN'><?=lang("APPROVED/OPEN")?></option>");
@@ -555,12 +573,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     alert("<?=lang('Pilih Approved By ....!')?>");
                     return;
                 }
-            }
-
-            // TAMBAHAN 21/04/2020 15.00 filter issued to
-            if ($("#select-toUser").val() == $active_user){
-                alert("<?=lang('Nama penerima sama dengan nama pengirim, silahkan input ulang nama penerima ...!')?>");
-                return;
             }
 
             mode = $("#frm-mode").val();
