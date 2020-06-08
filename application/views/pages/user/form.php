@@ -139,7 +139,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<label for="select-departmentname" class="col-xs-6 col-md-2 control-label"><?=lang("Department ID")?></label>
 						<div class="col-xs-6 col-md-4">
 							<select id="select-departmentname" class="form-control" name="fin_department_id"></select>
-							<div id="fst_department_name_err" class="text-danger"></div>
+							<div id="fin_department_id_err" class="text-danger"></div>
 						</div>
                     
                         <label for="fin_group_id" class="col-xs-6 col-md-2 control-label"><?=lang("Group")?></label>

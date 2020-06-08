@@ -91,14 +91,14 @@ class Users_model extends MY_Model
 			)
 		];
 
-		/*$rules[] = [
-			'field' => 'fbl_admin',
-			'label' => 'Admin',
+		$rules[] = [
+			'field' => 'fin_department_id',
+			'label' => 'Deparment',
 			'rules' => 'required',
 			'errors' =>array(
 				'required' => '%s tidak boleh kosong'
 			)
-		];*/
+		];
 
 		return $rules;
 	}
