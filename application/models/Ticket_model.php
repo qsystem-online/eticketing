@@ -74,6 +74,15 @@ class Ticket_model extends MY_MODEL {
         ];
 
         $rules[] = [
+            'field' => 'fin_ticket_type_id',
+            'label' => 'Ticket Type',
+            'rules' => 'required',
+            'errors' => array(
+                'required' => '%s tidak boleh kosong'
+            )
+        ];
+
+        $rules[] = [
             'field' => 'fst_memo',
             'label' => 'Memo',
             'rules' => 'required',
@@ -135,6 +144,12 @@ class Ticket_model extends MY_MODEL {
             return null;
         }
 
+    }
+
+    public function void($fin_ticket_id){
+        //update status void and active = D
+        $ssql = "UPDATE trticket SET fst_status='VOID',fst_active='D' WHERE fin_ticket_id = ?";
+        $this->db->query($ssql,$fin_ticket_id);
     }
 
 }

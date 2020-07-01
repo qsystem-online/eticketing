@@ -274,6 +274,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="fst_memo" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
                                     <div class="col-xs-6 col-md-10">
                                         <textarea rows="4" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo"></textarea>
+                                        <div id="fst_memo_err" class="text-danger"></div>
                                     </div>
                                 </div>
 
@@ -555,8 +556,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             }
 
             // TAMBAHAN 21/04/2020 15.00 filter issued to
-            if ($("#select-toUser").val() == $active_user){
-                alert("<?=lang('Nama penerima sama dengan nama pengirim, silahkan input ulang nama penerima ...!')?>");
+            if ($("#select-toUser").val() == $("#select-users").val()){
+                alert("<?=lang('IssuedBy tidak boleh sama dengan IssuedTo!!!')?>");
                 return;
             }
 
@@ -871,7 +872,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         
                         cardlog +=  '</div>';
                         cardlog +=  '</div>';
-                    $("#ticketlog_card").append(cardlog);
+                        $("#ticketlog_card").append(cardlog);
                     }else{
                         var cardlog = '<div class="column col-md-12">';
                             cardlog += '<div class="card-received">';
@@ -889,7 +890,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                         cardlog +=  '</div>';
                         cardlog +=  '</div>';
-                    $("#ticketlog_card").append(cardlog);
+                        $("#ticketlog_card").append(cardlog);
                     }
                 })
 
@@ -928,7 +929,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             e.preventDefault();
             blockUIOnAjaxRequest("<h5>Void ....</h5>");
             $.ajax({
-                url:"<?= site_url() ?>tr/ticket/delete/" + $("#fin_ticket_id").val(),
+                url:"<?= site_url() ?>tr/ticket/void/" + $("#fin_ticket_id").val(),
             }).done(function(resp){
                 //consoleLog(resp):
                 $.unblockUI();

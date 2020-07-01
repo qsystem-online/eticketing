@@ -69,7 +69,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <?php
                 } ?>
             </select>
-            <div id="fin_dept_id_err" class="text-danger"></div>
+            <!--<div id="fin_dept_id_err" class="text-danger"></div>-->
         </div>
     </div>
 </section>
@@ -195,15 +195,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
         $("#btnMonitoring").click(function(e){
             e.preventDefault();
             var monitoringDepart = $("#fin_dept_id").val();
-            if (monitoringDepart == null || monitoringDepart == "") {
-                $("#fin_dept_id_err").html("Please select Department");
-                $("#fin_dept_id_err").show();
-                return;
-            } else {
-                $("#fin_dept_id_err").hide();
+            //if (monitoringDepart == null || monitoringDepart == "") {
+            //    $("#fin_dept_id_err").html("Please select Department");
+            //    $("#fin_dept_id_err").show();
+            //    return;
+            //} else {
+            //    $("#fin_dept_id_err").hide();
                 var monitoring = window.open("<?= site_url() ?>tr/ticketstatus/monitoring");
                 monitoring.department = $("#fin_dept_id").val();
-            }
+            //}
 		});
 
 		$("#btnPrint").click(function(e){

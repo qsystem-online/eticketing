@@ -382,6 +382,17 @@ class ticket extends MY_Controller
 		$this->ajxResp["message"] = lang("Data void !");
 		//$this->ajxResp["data"]["insert_id"] = $insertId;
 		$this->json_output();
+    }
+    
+    public function void($id){
+		$this->db->trans_start();
+        $this->ticket_model->void($id);
+        $this->db->trans_complete();
+
+        $this->ajxResp["status"] = "SUCCESS";
+		$this->ajxResp["message"] = lang("Data void !");
+		//$this->ajxResp["data"]["insert_id"] = $insertId;
+		$this->json_output();
 	}
 
     public function getAllList() {

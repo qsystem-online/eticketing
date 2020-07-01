@@ -857,6 +857,7 @@ class Ticketstatus extends MY_Controller
         
         $user = $this->aauth->user();
         $arrDepartment[]= $user->fin_department_id;
+        //$arrDepartment = $this->input->get('fin_dept_id');
         //var_dump($arrDepartment);
         //die();
 		$this->load->model("monitoringticket_model");
