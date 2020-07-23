@@ -28,10 +28,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </style>
 
 <section class="content-header">
-    <h1><?= lang("Ticket Monitoring And Report") ?><small><?= lang("") ?></small></h1>
+    <h1><?= lang("Ticket Monitoring") ?><small><?= lang("") ?></small></h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> <?= lang("Home") ?></a></li>
-        <li><a href="#"><?= lang("ticketmonitoring and report") ?></a></li>
+        <li><a href="#"><?= lang("ticket monitoring") ?></a></li>
         <li class="active title"><?= $title ?></li>
     </ol>
 </section>
@@ -40,12 +40,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <div class="row">
         <div class="col-md-12">
             <div class="box box-info">
-                <div class="box-header with-border">
+                <!--<div class="box-header with-border">
                     <h3 class="box-title title"><?= $title ?></h3>
                     <div class="btn-group btn-group-sm pull-right">
 						<a id="btnPrinted" class="btn btn-primary" href="#" title="<?=lang("Cetak")?>"><i class="fa fa-print" aria-hidden="true"></i></a>											
 					</div>
-                </div>
+                </div>-->
                 <div class="box-header with-border">
                     <h3 class="box-title title"><?= lang("Ticket Monitoring") ?></h3>
                     <div class="btn-group btn-group-sm pull-right">
@@ -189,9 +189,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <script type="text/javascript">
     $(function() {
 
-        $("#btnPrinted").click(function(e){
+        /*$("#btnPrinted").click(function(e){
 			$("#modal_Printed").modal("toggle");
-		});
+		});*/
         $("#btnMonitoring").click(function(e){
             e.preventDefault();
             var monitoringDepart = $("#fin_dept_id").val();
@@ -206,15 +206,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
             //}
 		});
 
-		$("#btnPrint").click(function(e){
+		/*$("#btnPrint").click(function(e){
             layoutColumn = [];
             var statusReport = $("#fst_status_report").val();
             if (statusReport == "APPROVED/OPEN"){
                 statusReport = "OPEN";
             }
 			url = "<?= site_url() ?>tr/ticketstatus/get_print_ticketReport/" + $("#fdt_ticket_date_start").val() + '/' + $("#fdt_ticket_date_End").val() + '/' + $("#select-user_issuedBy").val() + '/' + $("#select-user_issuedTo").val() + '/' + statusReport;
+            //url = "<?= site_url() ?>tr/ticketstatus/get_ticket_perUser/" + $("#select-user_issuedBy").val() ;
+            //url = "<?= site_url() ?>tr/ticketstatus/get_print_ticketSLDays/" + $("#select-user_issuedBy").val() ;
             MdlPrint.showPrint(layoutColumn,url);
-        });
+        });*/
 
         $('#fin_dept_id, #fin_dept_id').select2({
             placeholder: 'Pilih divisi monitoring',

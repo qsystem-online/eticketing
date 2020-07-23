@@ -262,6 +262,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <option value="COMPLETED"><?=lang("COMPLETED")?></option>
                                             <option value="COMPLETION_REVISED"><?=lang("COMPLETION REVISED")?></option>
                                             <option value="CLOSED"><?=lang("CLOSED")?></option>
+                                            <option value="APPROVAL_EXPIRED"><?=lang("APPROVAL EXPIRED")?></option>
                                             <option value="ACCEPTANCE_EXPIRED"><?=lang("ACCEPTANCE EXPIRED")?></option>
                                             <option value="TICKET_EXPIRED"><?=lang("TICKET EXPIRED")?></option>
                                             <option value="REJECTED"><?=lang("REJECTED")?></option>
@@ -463,6 +464,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                                         <option value="COMPLETED"><?=lang("COMPLETED")?></option>
                                                         <option value="COMPLETION_REVISED"><?=lang("COMPLETION REVISED")?></option>
                                                         <option value="CLOSED"><?=lang("CLOSED")?></option>
+                                                        <option value="APPROVAL_EXPIRED"><?=lang("APPROVAL EXPIRED")?></option>
                                                         <option value="ACCEPTANCE_EXPIRED"><?=lang("ACCEPTANCE EXPIRED")?></option>
                                                         <option value="TICKET_EXPIRED"><?=lang("TICKET EXPIRED")?></option>
                                                         <option value="REJECTED"><?=lang("REJECTED")?></option>
@@ -796,6 +798,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
     function init_form(fin_ticket_id){
 
         //alert("Init Form);
+        var $userActive ="<?= $this->aauth->get_user_id()?>";
         var url = "<?=site_url()?>tr/ticket/fetch_data/" + fin_ticket_id;
         $.ajax({
             type: "GET",
@@ -908,6 +911,10 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 //Image Load
                 $('#imgLampiran').attr("src",resp.ms_ticket.lampiranURL);
 
+                if(issuedBy != $userActive){
+                    $("#btnVoid").hide();
+                }
+
             },
             error: function (e) {
                 $("#result").text(e.responseText);
@@ -934,6 +941,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 //consoleLog(resp):
                 $.unblockUI();
                 if (resp.message != "") {
+                    consoleLog(resp);
                     $.alert({
                         title: 'Message',
                         content: resp.message,

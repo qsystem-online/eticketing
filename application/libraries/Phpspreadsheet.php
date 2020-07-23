@@ -121,6 +121,87 @@ class Phpspreadsheet extends Spreadsheet {
 			return $letter;
 		}
 	}
+
+	public function saveHTMLvia($spreadsheet){
+		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Html($spreadsheet);		
+		//$writer->save("05featuredemo.htm");
+		$writer->save('php://output');
+	}
+
+	public function cleanColumns(&$sheet,$ttlCol,$selectedCol){
+		$sheet->insertNewRowBefore(1, 1);		
+		
+		//$sheet->getCell("A1")->setValue("HAPUS");
+		//$sheet->getCell("B1")->setValue("JANGAN");
+		//$sheet->getCell("C1")->setValue("JANGAN");
+		//$sheet->getCell("D1")->setValue("JANGAN");
+		//$sheet->getCell("E1")->setValue("JANGAN");
+
+		
+		for($i=0;$i<$ttlCol;$i++){
+			$colName = $this->getNameFromNumber($i);
+			if (!in_array($i, $selectedCol)){								
+				$sheet->getCell("$colName"."1")->setValue("HAPUS");
+			}else{
+				$sheet->getCell("$colName"."1")->setValue("VIEW");
+			}			
+		}
+				
+
+		//$doDelete = true;
+		$colIndex = 0;
+		for($i=0;$i<$ttlCol;$i++){
+			$colName = $this->getNameFromNumber($colIndex);
+			//$colName = $this->getNameFromNumber($i);
+			$colFlag =$colName ."1";
+			$val=null;
+			$val = $sheet->getCell($colFlag)->getvalue();
+			$val2 = $sheet->getCell("$colName"."4")->getvalue();
+			if ($val == "HAPUS"){
+				$sheet->removeColumn($colName);
+				//$sheet->removeColumnByIndex($colIndex+1);
+				//$i=-1;
+			}else{
+				$colIndex++;
+			}			
+			//$colIndex++;
+		}		
+		$sheet->removeRow(1);							
+	}
+
+	public function getSumColPosition($layoutColumn,$layoutNo,$selectedCol){
+		$colIndex = 0;
+		foreach($layoutColumn as $lay){			
+			if($lay["layout"] == $layoutNo){
+				if (in_array($lay["value"], $selectedCol)){								
+					if ($lay["sum_total"] == true){
+						break;
+					}else{
+						$colIndex++;
+					}
+				}
+			}			
+		}
+		
+		return $colIndex;
+	}
+
+	public function mergedData(&$sheet,$arrMerged,$ttlCol,$sumCol){				
+		$ttlCol = $this->getNameFromNumber($ttlCol-1);
+		$sumCol = $this->getNameFromNumber($sumCol-1);
+		foreach($arrMerged as $merged){
+			if ($merged[1] == "FULL"){
+				$sheet->mergeCells("A$merged[0]:$ttlCol".$merged[0]);   
+			}else{
+				$sheet->mergeCells("A$merged[0]:$sumCol".$merged[0]);   
+			}
+		}
+	
+	}
+	
+	public function writeCell(&$sheet, $row, $col, $cellValue) {
+        $sheet->setCellValue($col.$row,$cellValue);
+    }
 	
 	public function testing(){
 

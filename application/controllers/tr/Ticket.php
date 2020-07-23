@@ -25,6 +25,7 @@ class ticket extends MY_Controller
         $this->list['page_name'] = "Ticket";
         $this->list['list_name'] = "Ticket List";
         $this->list['addnew_ajax_url'] = site_url() . 'tr/ticket/add';
+        //$this->list['report_url'] = site_url() . 'report/tickets';
         $this->list['pKey'] = "id";
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticket/fetch_list_data';
         $this->list['delete_ajax_url'] = site_url() . 'tr/ticket/delete/';
@@ -45,33 +46,7 @@ class ticket extends MY_Controller
             ['title' => 'Ticket No.', 'width' => '15%', 'data' => 'fst_ticket_no'],
             ['title' => 'Ticket Datetime', 'width' => '15%', 'data' => 'fdt_ticket_datetime'],
             ['title' => 'Memo', 'width' => '30%', 'data' => 'fst_memo'],
-            ['title' => 'Status', 'width' => '20%', 'data' => 'fst_status',
-                'render' =>"function(data,type,row){
-                    if(data == 'NEED_APPROVAL'){
-                        return 'NEED APPROVAL';
-                    }else if(data == 'APPROVED/OPEN'){
-                        return 'APPROVED/OPEN';
-                    }else if(data == 'ACCEPTED'){
-                        return 'ACCEPTED';
-                    }else if(data == 'NEED_REVISION'){
-                        return 'NEED REVISION';
-                    }else if(data == 'COMPLETED'){
-                        return 'COMPLETED';
-                    }else if(data == 'COMPLETION_REVISED'){
-                        return 'COMPLETION REVISED';
-                    }else if(data == 'CLOSED'){
-                        return 'CLOSED';
-                    }else if(data == 'ACCEPTANCE_EXPIRED'){
-                        return 'ACCEPTANCE EXPIRED';
-                    }else if(data == 'TICKET_EXPIRED'){
-                        return 'TICKET EXPIRED';
-                    }else if(data == 'REJECTED'){
-                        return 'REJECTED';
-                    }else if(data == 'VOID'){
-                        return 'VOID';
-                    }
-                }"
-            ],
+            ['title' => 'Status', 'width' => '20%', 'data' => 'fst_status'],
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center',
                 'render'=>"function(data,type,row){
                     action = \"<div style='font-size:16px'>\";
@@ -386,13 +361,13 @@ class ticket extends MY_Controller
     
     public function void($id){
 		$this->db->trans_start();
-        $this->ticket_model->void($id);
+        $result=$this->ticket_model->void($id);
         $this->db->trans_complete();
 
-        $this->ajxResp["status"] = "SUCCESS";
-		$this->ajxResp["message"] = lang("Data void !");
+        //$this->ajxResp["status"] = "SUCCESS";
+		//$this->ajxResp["message"] = lang("Data void !");
 		//$this->ajxResp["data"]["insert_id"] = $insertId;
-		$this->json_output();
+		$this->json_output($result);
 	}
 
     public function getAllList() {

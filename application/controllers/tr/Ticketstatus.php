@@ -853,6 +853,643 @@ class Ticketstatus extends MY_Controller
         //FILE NAME WITH DATE
         $this->phpspreadsheet->save("ticket_report_" . date("Ymd") . ".xls" ,$spreadsheet);
     }
+
+    public function get_ticket_perUser($user_id){
+        $layout = $this->input->post("layoutColumn");
+        $arrLayout = json_decode($layout);
+        //echo ($status);
+        //die();
+        //$issuedBy = urldecode($issuedBy);
+        //$issuedTo = urldecode($issuedTo);
+        
+        /*var_dump($arrLayout);
+        echo "PRINT......";
+        
+        foreach($arrLayout as $layout){
+            if($layout->column == "fin_cust_pricing_group_id"){
+                if($layout->hidden == true){
+                    echo $hidden;
+                }else{
+                    echo $show;
+                }
+            }
+        }
+        //die();*/
+        
+        $this->load->model("ticketstatus_model");
+        $this->load->library("phpspreadsheet");
+        
+        $spreadsheet = $this->phpspreadsheet->load(FCPATH . "assets/templates/ticket_summary_PerUser.xlsx");
+        $sheet = $spreadsheet->getActiveSheet();
+        
+		$sheet->getPageSetup()->setFitToWidth(1);
+		$sheet->getPageSetup()->setFitToHeight(0);
+		$sheet->getPageMargins()->setTop(1);
+		$sheet->getPageMargins()->setRight(0.5);
+		$sheet->getPageMargins()->setLeft(0.5);
+        $sheet->getPageMargins()->setBottom(1);
+
+        //AUTO SIZE COLUMN
+        $sheet->getColumnDimension("A")->setAutoSize(true);
+        $sheet->getColumnDimension("B")->setAutoSize(true);
+        $sheet->getColumnDimension("C")->setAutoSize(true);
+        $sheet->getColumnDimension("D")->setAutoSize(true);
+        $sheet->getColumnDimension("E")->setAutoSize(true);
+        $sheet->getColumnDimension("F")->setAutoSize(true);
+        $sheet->getColumnDimension("G")->setAutoSize(true);
+        $sheet->getColumnDimension("H")->setAutoSize(true);
+        $sheet->getColumnDimension("I")->setAutoSize(true);
+        $sheet->getColumnDimension("J")->setAutoSize(true);
+        $sheet->getColumnDimension("K")->setAutoSize(true);
+        $sheet->getColumnDimension("L")->setAutoSize(true);
+        $sheet->getColumnDimension("M")->setAutoSize(true);
+        $sheet->getColumnDimension("N")->setAutoSize(true);
+        $sheet->getColumnDimension("O")->setAutoSize(true);
+        $sheet->getColumnDimension("P")->setAutoSize(true);
+        $sheet->getColumnDimension("Q")->setAutoSize(true);
+        $sheet->getColumnDimension("R")->setAutoSize(true);
+        $sheet->getColumnDimension("S")->setAutoSize(true);
+
+        // SUBTITLE
+        $sheet->mergeCells('B4:D4');
+        $sheet->mergeCells('B5:D5');
+        $sheet->mergeCells('B3:D3');
+
+        //HEADER COLUMN
+        $sheet->setCellValue("A7", "No.");
+        $sheet->setCellValue("B7", "Department");
+        $sheet->setCellValue("C7", "User Group");
+        $sheet->setCellValue("D7", "User");
+        $sheet->setCellValue("E7", "Ticket Type");
+        $sheet->setCellValue("F7", "Issued");
+        $sheet->setCellValue("G7", "Accepted");
+        $sheet->setCellValue("H7", "Closed");
+        $sheet->setCellValue("I7", "Acceptance Expired");
+        $sheet->setCellValue("J7", "Ticket Expired");
+        $sheet->setCellValue("K7", "Rejected");
+        $sheet->setCellValue("L7", "Void");
+        $sheet->setCellValue("M7", "Issued");
+        $sheet->setCellValue("N7", "Accepted");
+        $sheet->setCellValue("O7", "Closed");
+        $sheet->setCellValue("P7", "Acceptance Expired");
+        $sheet->setCellValue("Q7", "Ticket Expired");
+        $sheet->setCellValue("R7", "Rejected");
+        $sheet->setCellValue("S7", "Void");
+
+        $i =18;
+		$col = $this->phpspreadsheet->getNameFromNumber($i);
+
+        //TITLE
+        $sheet->mergeCells('A1:'.$col.'1');
+        $sheet->setCellValue("A1", "PER-USER TICKET SUMMARY");
+
+        //FORMAT NUMBER
+        //$spreadsheet->getActiveSheet()->getStyle('D8:'.$col.'500')->getNumberFormat()->setFormatCode('#,##0.00');
+        
+        //COLOR HEADER COLUMN
+        $spreadsheet->getActiveSheet()->getStyle('A7:'.$col.'7')
+            ->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+            ->getStartColor()->setRGB('99FFFF');
+
+        //FONT HEADER CENTER
+        $spreadsheet->getActiveSheet()->getStyle('A7:'.$col.'7')
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+        //FONT ITALIC
+        $italycArray = [
+            'font' => [
+                'italic' => true,
+            ],
+        ];
+
+        //FONT BOLD
+        $styleArray = [
+            'font' => [
+                'bold' => true,
+            ],
+        ];
+        $sheet->getStyle('A7:'.$col.'7')->applyFromArray($styleArray);
+        $sheet->getStyle('B3:N3')->applyFromArray($styleArray);
+        $sheet->getStyle('B4:N4')->applyFromArray($styleArray);
+        $sheet->getStyle('B5:N5')->applyFromArray($styleArray);
+
+        //FONT SIZE
+        $spreadsheet->getActiveSheet()->getStyle("A1")->getFont()->setSize(18);
+        $spreadsheet->getActiveSheet()->getStyle("A3:".$col."3")->getFont()->setSize(12);
+        $spreadsheet->getActiveSheet()->getStyle("A7:".$col."7")->getFont()->setSize(12);
+
+        $iRow0 = 3;
+        $iRow1 = 4;
+        $iRow2 = 5;
+        $iRow = 8;
+        $no = 1;
+
+        //DATE & TIME
+        $sheet->setCellValue('H3', '=NOW()');
+        $sheet->mergeCells('H3:'.$col.'3');
+        $sheet->setCellValue('I4', '=NOW()');
+        $sheet->mergeCells('I4:'.$col.'4');
+        $printTicket = $this->ticketstatus_model->get_PrintTicketUser($user_id);
+        $userTicket ="";
+        $ticketType ="";
+        $ticketTypeID = "";
+        foreach ($printTicket as $rw) {
+
+            /**if ($ticketTypeID != $rw->fin_ticket_type_id){
+                $iRow++;
+                $ticketTypeID = $rw->fin_ticket_type_id;
+            }**/
+
+            //$sheet->setCellValue("A$iRow", $no++);
+            $sheet->setCellValue("B$iRow0", $user_id." s/d ".$user_id);
+            $sheet->setCellValue("B$iRow1", $user_id);
+            $sheet->setCellValue("B$iRow2", $user_id);
+            //$sheet->setCellValue("A$iRow", $no++);
+            if ($userTicket != $rw->userTicket){
+
+                $userTicket = $rw->userTicket;
+                //$IssuedByID = $rw->fin_issued_by_user_id;
+                //$IssuedToID = $rw->fin_issued_to_user_id;
+                $sheet->setCellValue("A$iRow", $no++);
+                $sheet->setCellValue("B$iRow", $rw->fst_department_name);
+                $sheet->setCellValue("C$iRow", $rw->fst_group_name);
+                $sheet->setCellValue("D$iRow", $rw->fst_username);
+
+                $ssql = "select * from mstickettype";
+                $qr = $this->db->query($ssql, []);
+                $rsType = $qr->result();
+    
+                foreach ($rsType as $roType){
+                    //$spreadsheet->getActiveSheet()->getStyle("E$iRow")->getFont()->getColor()->setRGB('0000FF');
+                    /**$sheet->setCellValue("E$iRow", $roType->fst_ticket_type_name);
+                    $sheet->setCellValue("F$iRow", 0);
+                    $sheet->setCellValue("G$iRow", 0);
+                    $sheet->setCellValue("H$iRow", 0);
+                    $sheet->setCellValue("I$iRow", 0);
+                    $sheet->setCellValue("J$iRow", 0);
+                    $sheet->setCellValue("K$iRow", 0);
+                    $sheet->setCellValue("L$iRow", 0);**/
+
+                    $ticketTypeID = $roType->fin_ticket_type_id;
+                    $ttl_issuedStatus = 0;
+                    $ttl_receivedStatus = 0;
+                    $ttl_allStatus = 0;
+                    $ssql = "SELECT fin_issued_by_user_id,fin_ticket_type_id,fst_status,COUNT(*) AS ttl FROM trticket WHERE fin_issued_by_user_id=? AND  fin_ticket_type_id=? GROUP BY fst_status";
+                    $qr = $this->db->query($ssql, [$userTicket,$ticketTypeID]);
+                    //echo $this->db->last_query();
+                    //die();
+                    $rsIssued = $qr->result();
+                    $issuedOpen = 0;
+                    $issuedAccepted = 0;
+                    $issuedClosed = 0;
+                    $issuedAExpired = 0;
+                    $issuedTExpired = 0;
+                    $issuedRejected = 0;
+                    $issuedVoid = 0;
+                    foreach ($rsIssued as $roIssued){
+                        if ($roIssued->fst_status == "APPROVED/OPEN" OR $roIssued->fst_status == "NEED_APPROVAL"){
+                            $issuedOpen = $roIssued->ttl;
+                            //$sheet->setCellValue("F$iRow", $roIssued->ttl);
+                            //$spreadsheet->getActiveSheet()->getStyle("F$iRow")->getFont()->getColor()->setRGB('0000FF');
+                        }
+                        if ($roIssued->fst_status == "ACCEPTED"){
+                            $issuedAccepted = $roIssued->ttl;
+                            //$sheet->setCellValue("G$iRow", $roIssued->ttl);
+                            //$spreadsheet->getActiveSheet()->getStyle("G$iRow")->getFont()->getColor()->setRGB('0000FF');
+                        }
+                        if ($roIssued->fst_status == "CLOSED"){
+                            $issuedClosed = $roIssued->ttl;
+                            //$sheet->setCellValue("H$iRow", $roIssued->ttl);
+                            //$spreadsheet->getActiveSheet()->getStyle("H$iRow")->getFont()->getColor()->setRGB('0000FF');
+                        }
+                        if ($roIssued->fst_status == "ACCEPTANCE_EXPIRED"){
+                            $issuedAExpired = $roIssued->ttl;
+                            //$sheet->setCellValue("I$iRow", $roIssued->ttl);
+                            //$spreadsheet->getActiveSheet()->getStyle("I$iRow")->getFont()->getColor()->setRGB('0000FF');
+                        }
+                        if ($roIssued->fst_status == "TICKET_EXPIRED"){
+                            $issuedTExpired = $roIssued->ttl;
+                            //$sheet->setCellValue("J$iRow", $roIssued->ttl);
+                            //$spreadsheet->getActiveSheet()->getStyle("J$iRow")->getFont()->getColor()->setRGB('0000FF');
+                        }
+                        if ($roIssued->fst_status == "REJECTED"){
+                            $issuedRejected = $roIssued->ttl;
+                            //$sheet->setCellValue("K$iRow", $roIssued->ttl);
+                            //$spreadsheet->getActiveSheet()->getStyle("K$iRow")->getFont()->getColor()->setRGB('0000FF');
+                        }
+                        if ($roIssued->fst_status == "VOID"){
+                            $issuedVoid = $roIssued->ttl;
+                            //$sheet->setCellValue("L$iRow", $roIssued->ttl);
+                            //$spreadsheet->getActiveSheet()->getStyle("L$iRow")->getFont()->getColor()->setRGB('0000FF');
+                        }
+                    }
+                    $ssql = "SELECT fin_issued_to_user_id,fin_ticket_type_id,fst_status,COUNT(*) AS ttl FROM trticket WHERE fin_issued_to_user_id=? AND  fin_ticket_type_id=? GROUP BY fst_status";
+                    $qr = $this->db->query($ssql, [$userTicket,$ticketTypeID]);
+                    //echo $this->db->last_query();
+                    //die();
+                    $rsReceived= $qr->result();
+                    $receivedOpen = 0;
+                    $receivedAccepted = 0;
+                    $receivedClosed = 0;
+                    $receivedAExpired = 0;
+                    $receivedTExpired = 0;
+                    $receivedRejected = 0;
+                    $receivedVoid = 0;
+                    foreach ($rsReceived as $roReceived){
+                        if ($roReceived->fst_status == "APPROVED/OPEN" OR $roReceived->fst_status == "NEED_APPROVAL"){
+                            $receivedOpen = $roReceived->ttl;
+                            //$sheet->setCellValue("M$iRow", $roReceived->ttl);
+                        }
+                        if ($roReceived->fst_status == "ACCEPTED"){
+                            $receivedAccepted = $roReceived->ttl;
+                            //$sheet->setCellValue("N$iRow", $roReceived->ttl);
+                        }
+                        if ($roReceived->fst_status == "CLOSED"){
+                            $receivedClosed = $roReceived->ttl;
+                            //$sheet->setCellValue("O$iRow", $roReceived->ttl);
+                        }
+                        if ($roReceived->fst_status == "ACCEPTANCE_EXPIRED"){
+                            $receivedAExpired = $roReceived->ttl;
+                            //$sheet->setCellValue("P$iRow", $roReceived->ttl);
+                        }
+                        if ($roReceived->fst_status == "TICKET_EXPIRED"){
+                            $receivedTExpired = $roReceived->ttl;
+                            //$sheet->setCellValue("Q$iRow", $roReceived->ttl);
+                        }
+                        if ($roReceived->fst_status == "REJECTED"){
+                            $receivedRejected = $roReceived->ttl;
+                            //$sheet->setCellValue("R$iRow", $roReceived->ttl);
+                        }
+                        if ($roReceived->fst_status == "VOID"){
+                            $receivedVoid = $roReceived->ttl;
+                            //$sheet->setCellValue("S$iRow", $roReceived->ttl);
+                        }
+                    }
+                    $ttl_issuedStatus += $issuedOpen + $issuedAccepted + $issuedClosed + $issuedAExpired + $issuedTExpired + $issuedRejected + $issuedVoid;
+                    $ttl_receivedStatus += $receivedOpen + $receivedAccepted + $receivedClosed + $receivedAExpired + $receivedTExpired + $receivedRejected + $receivedVoid;;
+                    $ttl_allStatus += $ttl_issuedStatus + $ttl_receivedStatus;
+                    //echo ($ttl_issuedStatus);
+                    //die();
+                    if($ttl_allStatus != 0){
+                        $sheet->setCellValue("E$iRow", $roType->fst_ticket_type_name);
+                        $sheet->setCellValue("F$iRow", $issuedOpen);
+                        $sheet->setCellValue("G$iRow", $issuedAccepted);
+                        $sheet->setCellValue("H$iRow", $issuedClosed);
+                        $sheet->setCellValue("I$iRow", $issuedAExpired);
+                        $sheet->setCellValue("J$iRow", $issuedTExpired);
+                        $sheet->setCellValue("K$iRow", $issuedRejected);
+                        $sheet->setCellValue("L$iRow", $issuedVoid);
+                        $sheet->setCellValue("M$iRow", $receivedOpen);
+                        $sheet->setCellValue("N$iRow", $receivedAccepted);
+                        $sheet->setCellValue("O$iRow", $receivedClosed);
+                        $sheet->setCellValue("P$iRow", $receivedAExpired);
+                        $sheet->setCellValue("Q$iRow", $receivedTExpired);
+                        $sheet->setCellValue("R$iRow", $receivedRejected);
+                        $sheet->setCellValue("S$iRow", $receivedVoid);
+                        $iRow++;
+                    }
+                    //$iRow++;
+                }
+            }
+            /**if($ticketType != $rw->fst_ticket_type_name){
+                $ticketType = $rw->fst_ticket_type_name;
+                $sheet->setCellValue("E$iRow", $rw->fst_ticket_type_name);
+            }**/
+
+            /*$status = "";
+            $open = 0;
+            $accepted = 0;
+            $closed = 0;
+            $tExpired = 0;
+            $void = 0;
+            $aExpired = 0;
+            $rejected = 0;
+            $completed = 0;
+            
+            if($rw->fst_status =="APPROVED/OPEN" OR $rw->fst_status == "NEED_APPROVAL"){
+                $open = $rw->TOTAL;
+                $sheet->setCellValue("F$iRow", $open);
+            }
+            if($rw->fst_status =="ACCEPTED"){
+                $accepted = $rw->TOTAL;
+                $sheet->setCellValue("G$iRow", $accepted);
+            }
+            if($rw->fst_status =="CLOSED"){
+                $closed = $rw->TOTAL;
+                $sheet->setCellValue("H$iRow", $closed);
+            }
+            if($rw->fst_status =="ACCEPTANCE_EXPIRED"){
+                $aExpired = $rw->TOTAL;
+                $sheet->setCellValue("I$iRow", $aExpired);
+            }
+            if($rw->fst_status =="TICKET_EXPIRED"){
+                $tExpired = $rw->TOTAL;
+                $sheet->setCellValue("J$iRow", $tExpired);
+            }
+            if($rw->fst_status =="REJECTED"){
+                $rejected = $rw->TOTAL;
+                $sheet->setCellValue("K$iRow", $rejected);
+            }
+            if($rw->fst_status =="COMPLETED"){
+                $completed = $rw->TOTAL;
+            }
+            if($rw->fst_status =="VOID"){
+                $void = $rw->TOTAL;
+                $sheet->setCellValue("L$iRow", $void);
+            }*/
+
+           
+
+            /**$ssql = "SELECT fin_issued_by_user_id,fst_status,COUNT(*) AS TOTAL FROM trticket WHERE fin_issued_by_user_id = ? AND fin_ticket_type_id=? GROUP BY fin_ticket_type_id,fst_status";
+            $qr = $this->db->query($ssql,[$IssuedByID,$ticketTypeID]);
+            //echo $this->db->last_query();
+            //die();
+            $rs = $qr->result();
+            $status = "";
+            $open = 0;
+            $accepted = 0;
+            $closed = 0;
+            $tExpired = 0;
+            $void = 0;
+            $aExpired = 0;
+            $rejected = 0;
+            $completed = 0;
+            foreach ($rs as $ro){
+                $status = $ro->fst_status;
+                if($ro->fst_status =="APPROVED/OPEN" OR $ro->fst_status == "NEED_APPROVAL"){
+                    $open = $ro->TOTAL;
+                    $sheet->setCellValue("F$iRow", $open);
+                }
+                if($ro->fst_status =="ACCEPTED"){
+                    $accepted = $ro->TOTAL;
+                    $sheet->setCellValue("G$iRow", $accepted);
+                }
+                if($ro->fst_status =="CLOSED"){
+                    $closed = $ro->TOTAL;
+                    $sheet->setCellValue("H$iRow", $closed);
+                }
+                if($ro->fst_status =="ACCEPTANCE_EXPIRED"){
+                    $aExpired = $ro->TOTAL;
+                    $sheet->setCellValue("I$iRow", $aExpired);
+                }
+                if($ro->fst_status =="TICKET_EXPIRED"){
+                    $tExpired = $ro->TOTAL;
+                    $sheet->setCellValue("J$iRow", $tExpired);
+                }
+                if($ro->fst_status =="REJECTED"){
+                    $rejected = $ro->TOTAL;
+                    $sheet->setCellValue("K$iRow", $rejected);
+                }
+                if($ro->fst_status =="COMPLETED"){
+                    $completed = $ro->TOTAL;
+                }
+                if($ro->fst_status =="VOID"){
+                    $void = $ro->TOTAL;
+                    $sheet->setCellValue("L$iRow", $void);
+                }
+            }**/
+            /**$ssql = "SELECT fin_issued_to_user_id,fst_status,COUNT(*) AS TOTAL FROM trticket WHERE fin_issued_to_user_id = ? AND fin_ticket_type_id=? GROUP BY fin_ticket_type_id,fst_status";
+            $qr = $this->db->query($ssql,[$rw->fin_issued_to_user_id,$ticketTypeID]);
+            //echo $this->db->last_query();
+            //die();
+            $rsr = $qr->result();
+            $openR = 0;
+            $acceptedR = 0;
+            $closedR = 0;
+            $tExpiredR = 0;
+            $voidR = 0;
+            $aExpiredR = 0;
+            $rejectedR = 0;
+            $completedR = 0;
+            foreach ($rsr as $ror){
+                if($ror->fst_status =="APPROVED/OPEN" OR $ror->fst_status == "NEED_APPROVAL"){
+                    $openR = $ror->TOTAL;
+                    $sheet->setCellValue("M$iRow", $openR);
+                }
+                if($ror->fst_status =="ACCEPTED"){
+                    $acceptedR = $ror->TOTAL;
+                    $sheet->setCellValue("N$iRow", $acceptedR);
+                }
+                if($ror->fst_status =="CLOSED"){
+                    $closedR = $ror->TOTAL;
+                    $sheet->setCellValue("O$iRow", $closedR);
+                }
+                if($ror->fst_status =="ACCEPTANCE_EXPIRED"){
+                    $aExpiredR = $ror->TOTAL;
+                    $sheet->setCellValue("P$iRow", $aExpiredR);
+                }
+                if($ror->fst_status =="TICKET_EXPIRED"){
+                    $tExpiredR = $ror->TOTAL;
+                    $sheet->setCellValue("Q$iRow", $tExpiredR);
+                }
+                if($ror->fst_status =="REJECTED"){
+                    $rejectedR = $ror->TOTAL;
+                    $sheet->setCellValue("R$iRow", $rejectedR);
+                }
+                if($ror->fst_status =="COMPLETED"){
+                    $completedR = $ror->TOTAL;
+                }
+                if($ror->fst_status =="VOID"){
+                    $void = $ror->TOTAL;
+                    $sheet->setCellValue("S$iRow", $voidR);
+                }
+            }**/
+            /*$sheet->setCellValue("F$iRow", $open);
+            $sheet->setCellValue("G$iRow", $accepted);
+            $sheet->setCellValue("H$iRow", $closed);
+            $sheet->setCellValue("I$iRow", $aExpired);
+            $sheet->setCellValue("J$iRow", $tExpired);
+            $sheet->setCellValue("K$iRow", $rejected);
+            $sheet->setCellValue("L$iRow", $void);
+            $iRow++;*/
+            
+        }
+
+        //BORDER
+        $styleArray = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DASHED
+                ],
+            ],
+        ];
+        $iRow = $iRow - 0;
+        $sheet->getStyle('A8:'.$col.$iRow)->applyFromArray($styleArray);
+        
+        //FILE NAME WITH DATE
+        $this->phpspreadsheet->save("ticket_summary_PerUser" . date("Ymd") . ".xls" ,$spreadsheet);
+    }
+    public function get_print_ticketSLDays($user_id) {
+        $layout = $this->input->post("layoutColumn");
+        $arrLayout = json_decode($layout);
+        
+        $this->load->model("ticketstatus_model");
+        $this->load->library("phpspreadsheet");
+        
+        $spreadsheet = $this->phpspreadsheet->load(FCPATH . "assets/templates/template_ticket_report.xlsx");
+        $sheet = $spreadsheet->getActiveSheet();
+        
+		$sheet->getPageSetup()->setFitToWidth(1);
+		$sheet->getPageSetup()->setFitToHeight(0);
+		$sheet->getPageMargins()->setTop(1);
+		$sheet->getPageMargins()->setRight(0.5);
+		$sheet->getPageMargins()->setLeft(0.5);
+        $sheet->getPageMargins()->setBottom(1);
+
+        //AUTO SIZE COLUMN
+        $sheet->getColumnDimension("A")->setAutoSize(true);
+        $sheet->getColumnDimension("B")->setAutoSize(true);
+        $sheet->getColumnDimension("C")->setAutoSize(true);
+        $sheet->getColumnDimension("D")->setAutoSize(true);
+        $sheet->getColumnDimension("E")->setAutoSize(true);
+        $sheet->getColumnDimension("F")->setAutoSize(true);
+        $sheet->getColumnDimension("G")->setAutoSize(true);
+        $sheet->getColumnDimension("H")->setAutoSize(true);
+        $sheet->getColumnDimension("I")->setAutoSize(true);
+        $sheet->getColumnDimension("J")->setAutoSize(true);
+        $sheet->getColumnDimension("K")->setAutoSize(true);
+        $sheet->getColumnDimension("L")->setAutoSize(true);
+        $sheet->getColumnDimension("M")->setAutoSize(true);
+        $sheet->getColumnDimension("N")->setAutoSize(true);
+
+        // SUBTITLE
+        $sheet->mergeCells('B4:D4');
+        $sheet->mergeCells('B5:D5');
+        $sheet->mergeCells('B3:D3');
+
+        //HEADER COLUMN
+        $sheet->setCellValue("A7", "No.");
+        $sheet->setCellValue("B7", "Ticket No");
+        $sheet->setCellValue("C7", "Ticket Type");
+        $sheet->setCellValue("D7", "Service Level(SL)");
+        $sheet->setCellValue("E7", "SL Days");
+        $sheet->setCellValue("F7", "Issued Date");
+        $sheet->setCellValue("G7", "Issued By");
+        $sheet->setCellValue("H7", "Issued To");
+        $sheet->setCellValue("I7", "Approved By");
+        $sheet->setCellValue("J7", "Approved");
+        $sheet->setCellValue("K7", "Accepted");
+        $sheet->setCellValue("L7", "Completed");
+        $sheet->setCellValue("M7", "Closed");
+        $sheet->setCellValue("N7", "Completion Revised");
+
+        $i =13;
+		$col = $this->phpspreadsheet->getNameFromNumber($i);
+
+        //TITLE
+        $sheet->mergeCells('A1:'.$col.'1');
+        $sheet->setCellValue("A1", "DAFTAR TICKET");
+
+        //FORMAT NUMBER
+        //$spreadsheet->getActiveSheet()->getStyle('D8:'.$col.'500')->getNumberFormat()->setFormatCode('#,##0.00');
+        
+        //COLOR HEADER COLUMN
+        $spreadsheet->getActiveSheet()->getStyle('A7:'.$col.'7')
+            ->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+            ->getStartColor()->setRGB('99FFFF');
+
+        //FONT HEADER CENTER
+        $spreadsheet->getActiveSheet()->getStyle('A7:'.$col.'7')
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+        //FONT ITALIC
+        $italycArray = [
+            'font' => [
+                'italic' => true,
+            ],
+        ];
+
+        //FONT BOLD
+        $styleArray = [
+            'font' => [
+                'bold' => true,
+            ],
+        ];
+        $sheet->getStyle('A7:'.$col.'7')->applyFromArray($styleArray);
+        $sheet->getStyle('B3:N3')->applyFromArray($styleArray);
+        $sheet->getStyle('B4:N4')->applyFromArray($styleArray);
+        $sheet->getStyle('B5:N5')->applyFromArray($styleArray);
+
+        //FONT SIZE
+        $spreadsheet->getActiveSheet()->getStyle("A1")->getFont()->setSize(18);
+        $spreadsheet->getActiveSheet()->getStyle("A3:".$col."3")->getFont()->setSize(12);
+        $spreadsheet->getActiveSheet()->getStyle("A7:".$col."7")->getFont()->setSize(12);
+
+        $iRow0 = 3;
+        $iRow1 = 4;
+        $iRow2 = 5;
+        $iRow = 8;
+        $no = 1;
+
+        //DATE & TIME
+        $sheet->setCellValue('H3', '=NOW()');
+        $sheet->mergeCells('H3:'.$col.'3');
+        $sheet->setCellValue('I4', '=NOW()');
+        $sheet->mergeCells('I4:'.$col.'4');
+        $printTicket = $this->ticketstatus_model->get_printTicket_SLDays($user_id);
+        foreach ($printTicket as $rw) {
+
+            //$sheet->setCellValue("A$iRow", $no++);
+            $sheet->setCellValue("B$iRow0", $user_id." s/d ".$user_id);
+            $sheet->setCellValue("B$iRow1", $user_id);
+            $sheet->setCellValue("B$iRow2", $user_id);
+            $sheet->setCellValue("A$iRow", $no++);
+            $sheet->setCellValue("B$iRow", $rw->fst_ticket_no);
+            $sheet->setCellValue("C$iRow", $rw->fst_ticket_type_name);
+            $sheet->setCellValue("D$iRow", $rw->fst_service_level_name);
+            $sheet->setCellValue("E$iRow", $rw->fin_service_level_days);
+            $sheet->setCellValue("F$iRow", $rw->fdt_ticket_datetime);
+            $sheet->setCellValue("G$iRow", $rw->userIssued);
+            $sheet->setCellValue("H$iRow", $rw->userReceived);
+            $sheet->setCellValue("I$iRow", $rw->userApproved);
+            $ssql = "SELECT a.fin_ticket_id,a.fdt_ticket_datetime,b.fdt_status_datetime,b.fst_status,DATEDIFF(b.fdt_status_datetime,a.fdt_ticket_datetime) + 1 AS Days FROM trticket a 
+            LEFT JOIN trticket_log b ON a.fin_ticket_id=b.fin_ticket_id WHERE a.fin_ticket_id=?";
+            $qr = $this->db->query($ssql, [$rw->fin_ticket_id]);
+            //echo $this->db->last_query();
+            //die();
+            $rsDays= $qr->result();
+            $approvedDay = 0;
+            $acceptedDay = 0;
+            $completedDay = 0;
+            $closedDay = 0;
+            $completionRevised = 0;
+            foreach($rsDays as $roDay){
+                if ($roDay->fst_status == "APPROVED/OPEN"){
+                    $approvedDay = $roDay->Days;
+                }
+                if ($roDay->fst_status == "ACCEPTED"){
+                    $acceptedDay = $roDay->Days;
+                }
+                if ($roDay->fst_status == "COMPLETED"){
+                    $completedDay = $roDay->Days;
+                }
+                if ($roDay->fst_status == "CLOSED"){
+                    $closedDay = $roDay->Days;
+                }
+            }
+            $sheet->setCellValue("J$iRow", $approvedDay);
+            $sheet->setCellValue("K$iRow", $acceptedDay);
+            $sheet->setCellValue("L$iRow", $completedDay);
+            $sheet->setCellValue("M$iRow", $closedDay);
+            $sheet->setCellValue("N$iRow", $completionRevised);
+            $iRow++;
+            
+        }
+
+        //BORDER
+        $styleArray = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DASHED
+                ],
+            ],
+        ];
+        $iRow = $iRow - 1;
+        $sheet->getStyle('A7:'.$col.$iRow)->applyFromArray($styleArray);
+        
+        //FILE NAME WITH DATE
+        $this->phpspreadsheet->save("ticket_report_" . date("Ymd") . ".xls" ,$spreadsheet);
+    }
     public function monitoring(){
         
         $user = $this->aauth->user();

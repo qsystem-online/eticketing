@@ -298,6 +298,90 @@ class Ticketstatus_model extends MY_MODEL {
         return $rs;
     }
 
+    public function get_PrintTicketUser($user_id){
+        /*if ($branch_id == 'null'){
+            $branch_id ="";
+        }
+        if ($department_id == 'null'){
+            $department_id ="";
+        }
+        if ($userGroup_id == 'null'){
+            $userGroup_id ="";
+        }*/
+        if ($user_id == 'null'){
+            $user_id ="";
+        }
+        $ssql = "SELECT a.fin_user_id,a.fst_username,b.userTicket,c.fst_branch_name,d.fst_department_name,e.fst_group_name 
+                FROM users a RIGHT JOIN
+                (SELECT fin_issued_by_user_id AS userTicket FROM trticket WHERE fin_issued_by_user_id IS NOT NULL
+                UNION
+                SELECT fin_issued_to_user_id AS userTicket FROM trticket WHERE fin_issued_to_user_id IS NOT NULL)
+                b ON a.fin_user_id = b.userTicket
+                LEFT JOIN msbranches c ON a.fin_branch_id = c.fin_branch_id
+                LEFT JOIN departments d ON a.fin_department_id = d.fin_department_id
+                LEFT JOIN usersgroup e ON a.fin_group_id = e.fin_group_id
+                WHERE a.fin_branch_id =?
+                ORDER BY a.fin_department_id ";
+                /*if ($department_id != 'ALL'){
+                    $ssql .= " AND a.fin_issued_by_user_id ='$department_id'";
+                }
+                if ($userGroup_id != 'ALL'){
+                    $ssql .= " AND a.fin_issued_to_user_id ='$userGroup_id'";
+                }
+                if ($user_id == 'ALL'){
+                    $ssql .= "ORDER BY a.fst_status";
+                }else{
+                    $ssql .= " AND a.fst_status ='$user_id' ORDER BY a.fst_status";
+                }*/
+
+        $query = $this->db->query($ssql,[$user_id]);
+        //echo $this->db->last_query();
+        //die();
+        $rs = $query->result();
+        return $rs;
+    }
+
+    public function get_printTicket_SLDays($user_id){
+        /*if ($branch_id == 'null'){
+            $branch_id ="";
+        }
+        if ($department_id == 'null'){
+            $department_id ="";
+        }
+        if ($userGroup_id == 'null'){
+            $userGroup_id ="";
+        }*/
+        if ($user_id == 'null'){
+            $user_id ="";
+        }
+        $ssql = "SELECT a.*,b.fst_ticket_type_name,b.fst_assignment_or_notice,c.fst_service_level_name,c.fin_service_level_days,d.fst_username AS userIssued,e.fst_username AS userReceived,f.fst_department_name,g.fst_username AS userApproved FROM trticket a
+                LEFT JOIN mstickettype b ON a.fin_ticket_type_id = b.fin_ticket_type_id
+                LEFT JOIN msservicelevel c ON a.fin_service_level_id = c.fin_service_level_id
+                LEFT JOIN users d ON a.fin_issued_by_user_id = d.fin_user_id
+                LEFT JOIN users e ON a.fin_issued_to_user_id = e.fin_user_id
+                LEFT JOIN departments f ON a.fin_to_department_id = f.fin_department_id
+                LEFT JOIN users g ON a.fin_approved_by_user_id = g.fin_user_id
+                WHERE d.fin_branch_id = ? ";
+                /*if ($department_id != 'ALL'){
+                    $ssql .= " AND a.fin_issued_by_user_id ='$department_id'";
+                }
+                if ($userGroup_id != 'ALL'){
+                    $ssql .= " AND a.fin_issued_to_user_id ='$userGroup_id'";
+                }
+                if ($user_id == 'ALL'){
+                    $ssql .= "ORDER BY a.fst_status";
+                }else{
+                    $ssql .= " AND a.fst_status ='$user_id' ORDER BY a.fst_status";
+                }*/
+
+        $query = $this->db->query($ssql,[$user_id]);
+        //echo $this->db->last_query();
+        //die();
+        $rs = $query->result();
+        return $rs;
+    }
+
+
     public function update_rejectedview($fin_ticket_id){
         $ssql = "SELECT * FROM trticket WHERE fin_ticket_id = ? AND fst_status ='REJECTED'";
         $qr = $this->db->query($ssql,$fin_ticket_id);
@@ -353,7 +437,7 @@ class Ticketstatus_model extends MY_MODEL {
                 $this->db->where('rec_id', $log_id);
                 $this->db->update('trticketexpiry_log', $data);
             }
-            $ssql = "SELECT * FROM trticket WHERE fdt_acceptance_expiry_datetime < ? AND fst_status ='APPROVED/OPEN' AND fdt_deadline_extended_datetime IS NULL";
+            $ssql = "SELECT * FROM trticket WHERE fdt_acceptance_expiry_datetime < ? AND (fst_status ='APPROVED/OPEN' OR fst_status ='NEED_APPROVAL' OR fst_status ='NEED_REVISION') AND fdt_deadline_extended_datetime IS NULL AND fst_active !='D'";
             $qr = $this->db->query($ssql,[$expirydeadline]);
             //echo $this->db->last_query();
             //die();
@@ -361,24 +445,40 @@ class Ticketstatus_model extends MY_MODEL {
             if ($qr->row() != null){
                 foreach($rwTicketAcceptanceExpiry as $dataA){
                     //---Update Expiry Acceptance Ticket---
-                    $ssql = "UPDATE trticket SET fst_status = 'ACCEPTANCE_EXPIRED' WHERE fin_ticket_id = ?";
-                    $this->db->query($ssql,[$dataA->fin_ticket_id]);
+                    if ($dataA->fst_status =='NEED_APPROVAL'){
+                        $ssql = "UPDATE trticket SET fst_status = 'APPROVAL_EXPIRED' WHERE fin_ticket_id = ?";
+                        $this->db->query($ssql,[$dataA->fin_ticket_id]);
+                        //echo $this->db->last_query();
+                        //die();
+                    }else{
+                        $ssql = "UPDATE trticket SET fst_status = 'ACCEPTANCE_EXPIRED' WHERE fin_ticket_id = ?";
+                        $this->db->query($ssql,[$dataA->fin_ticket_id]);
+                    }
     
                     //--Ticket LOG--
                     $this->load->model("ticketlog_model");
                     $data = [
                         "fin_ticket_id" => $dataA->fin_ticket_id,
                         "fdt_status_datetime" => date("Y-m-d H:i:s"),
-                        "fst_status" => 'ACCEPTANCE_EXPIRED',
-                        "fst_status_memo" => 'ACCEPTANCE_EXPIRED BY SYSTEM',
+                        //"fst_status" => 'ACCEPTANCE_EXPIRED',
+                        //"fst_status_memo" => 'ACCEPTANCE_EXPIRED BY SYSTEM',
                         "fin_status_by_user_id" => $user_status
                     ];
+                    if ($dataA->fst_status =='NEED_APPROVAL'){
+                        $data ["fst_status"] = 'APPROVAL_EXPIRED';
+                        $data ["fst_status_memo"] = 'APPROVAL_EXPIRED BY SYSTEM';
+                    }else{
+                        $data ["fst_status"] = 'ACCEPTANCE_EXPIRED';
+                        $data ["fst_status_memo"] = 'ACCEPTANCE_EXPIRED BY SYSTEM';
+                    }
                     $insertId = $this->ticketlog_model->insert($data);
                 }
             }
     
             $ssql = "SELECT * FROM trticket WHERE fdt_deadline_extended_datetime < ? AND (fst_status ='ACCEPTED' OR fst_status ='NEED_REVISION' OR fst_status ='COMPLETED' OR fst_status ='COMPLETION_REVISED' OR (fst_status ='APPROVED/OPEN'  AND fdt_deadline_extended_datetime IS NOT NULL)) ";
             $qr = $this->db->query($ssql,[$expirydeadline]);
+            //echo $this->db->last_query();
+            //die();
             $rwTicketDeadlineExpiry = $qr->result();
             if ($qr->row() != null){
                 foreach($rwTicketDeadlineExpiry as $dataD){

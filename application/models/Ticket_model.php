@@ -147,9 +147,17 @@ class Ticket_model extends MY_MODEL {
     }
 
     public function void($fin_ticket_id){
+        $ssql = "SELECT * FROM trticket WHERE fin_ticket_id = ?";
+        $qr = $this->db->query($ssql,$fin_ticket_id);
+        $rw = $qr->row();
         //update status void and active = D
-        $ssql = "UPDATE trticket SET fst_status='VOID',fst_active='D' WHERE fin_ticket_id = ?";
-        $this->db->query($ssql,$fin_ticket_id);
+        if($rw->fst_status =='CLOSED' OR $rw->fst_status =='REJECTED' OR $rw->fst_status =='APPROVAL_EXPIRED' OR $rw->fst_status =='ACCEPTANCE_EXPIRED' OR $rw->fst_status =='TICKET_EXPIRED'){
+            return ["status"=>"FAILED","message"=>"CLOSED/REJECTED TICKET CAN'T VOID"];
+        }else{
+            $ssql = "UPDATE trticket SET fst_status='VOID',fst_active='D' WHERE fin_ticket_id = ?";
+            $this->db->query($ssql,$fin_ticket_id);
+            return ["status"=>"SUCCESS","message"=>"Data void !"];
+        }
     }
 
 }
