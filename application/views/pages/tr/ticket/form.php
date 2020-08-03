@@ -239,15 +239,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div class="form-group">
                                     <label for="fin_approved_by_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Approved By")?></label>
                                     <div class="col-xs-6 col-md-4">
-                                        <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id">
-                                            <option value="" selected>-- <?=lang("select")?> --</option>
-                                            <?php
-                                                $approvedbyList = $this->users_model->getApprovedBy();
-                                                foreach ($approvedbyList as $approvedBy){
-                                                    echo "<option value='$approvedBy->fin_user_id'>$approvedBy->fst_username</option>";
-                                                }
-                                            ?>
-                                        </select>
+                                        <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id"></select>
                                         <div id="fin_approved_by_user_id_err" class="text-danger"></div>
                                     </div>
 
@@ -515,6 +507,42 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             </div>
         </div>
 </section>
+
+<script type="text/javascript" info="init">
+$(function(){
+    $("#select-approvedby").select2({
+        ajax:{
+            minimumInputLength: 1,
+            dataType: 'json',
+            delay: 250,
+            url:function(params){
+                return "<?=site_url()?>tr/ticket/ajxGetApproval/" + $("#select-users").val();
+            },
+            processResults: function (resp) {
+                if(resp.status == "SUCCESS"){
+                    var data = resp.data;
+
+                    result = $.map(data,function(v,i){
+                        return {
+                            id:v.fin_user_id,
+                            text:v.fst_username
+                        };
+                    });
+
+                    return {
+                        results:result
+                    }
+                }else{
+                    return;
+                }
+            }
+
+        }
+    });
+});
+
+
+</script>
 
 <script type="text/javascript">
     var $active_user = "<?= $this->aauth->get_user_id()?>";

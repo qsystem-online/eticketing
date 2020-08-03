@@ -225,14 +225,30 @@ class Users_model extends MY_Model
 		return $rs;
 	}
 
-	public function getApprovedBy(){
-		$user = $this->aauth->user();
+	public function getApprovedBy($userId = null){
+		if ($userId == null){
+			$user = $this->aauth->user();
+		}else{
+			$ssql = "SELECT a.*,b.fin_level FROM users a inner join usersgroup b on a.fin_group_id = b.fin_group_id where a.fin_user_id = ?";
+			$qr=$this->db->query($ssql,[$userId]);			
+			$user = $qr->row();
+			if($user == null){
+				return [];
+			}
+		}
+		
         $deptActive = $user->fin_department_id;
         $levelActive = intval($user->fin_level);
         $levelActive = strval($levelActive);
 
-        $ssql = "SELECT a.*,b.fst_group_name,b.fin_level FROM users a LEFT JOIN usersgroup b ON a.fin_group_id = b.fin_group_id 
-		WHERE a.fin_department_id = ".$deptActive." AND b.fin_level < ".$levelActive." AND a.fst_active ='A' ORDER BY a.fst_username";
+		//yg berhak melakukan approval semua user yg sama departmentnya di atas user request  atau user dengan level top management(direksi)
+        $ssql = "SELECT a.*,b.fst_group_name,b.fin_level 
+			FROM users a LEFT JOIN usersgroup b ON a.fin_group_id = b.fin_group_id 
+			WHERE (a.fin_department_id = $deptActive AND b.fin_level < $levelActive) 
+			OR (b.fin_level <= 1)
+			AND a.fst_active ='A' 
+			ORDER BY a.fst_username";
+
         $qr = $this->db->query($ssql,[$levelActive]);
 		$rs = $qr->result();
 		return $rs;

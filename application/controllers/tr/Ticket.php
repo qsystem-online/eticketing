@@ -403,5 +403,25 @@ class ticket extends MY_Controller
         $this->Cell(30, 10, 'Percobaan Header Dan Footer With Page Number', 0, 0, 'C');
         $this->Cell(0, 10, 'Halaman ' . $this->PageNo() . ' dari {nb}', 0, 0, 'R');
     }
+
+
+    public function ajxGetApproval($finUserId){
+        $this->load->model("users_model");
+        $userList = $this->users_model->getApprovedBy($finUserId);
+        $arrResult = [];
+        foreach($userList as $user){
+            $arrResult[] = [
+                "fin_user_id"=>$user->fin_user_id,
+                "fst_username"=>$user->fst_username
+            ];
+        }
+
+        $this->json_output([
+            "status"=>"SUCCESS",
+            "messages"=>"",
+            "data"=>$arrResult
+        ]);
+
+    }
     
 }
