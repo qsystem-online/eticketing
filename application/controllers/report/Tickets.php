@@ -3,7 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Tickets extends MY_Controller
 {
-
 	public $layout_columns =[]; 
 
 	public function __construct()
