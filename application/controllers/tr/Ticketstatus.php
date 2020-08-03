@@ -574,7 +574,7 @@ class Ticketstatus extends MY_Controller
             //die();
             $data["fdt_deadline_datetime"]= $ticketdeadline_datetime;
             $data["fdt_deadline_extended_datetime"]= $ticketdeadline_datetime;
-        }else if ($last_status =='APPROVED/OPEN' && $deadline_date == NULL && $user_received == $user_active && $newStatus == 'ACCEPTED' && $type_ticket == "NOTICE"){
+        }else if ($last_status =='APPROVED/OPEN' && $deadline_date == NULL && $user_received == $user_active && $newStatus == 'COMPLETED' && $type_ticket == "NOTICE"){
             //echo("NULL & NOTICE");
             //die();
             $data["fdt_deadline_datetime"]= date("Y-m-d H:i:s");
