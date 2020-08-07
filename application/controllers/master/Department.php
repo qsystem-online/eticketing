@@ -6,7 +6,10 @@ class Department extends MY_Controller
 
 	public function __construct()
 	{
-		parent::__construct();
+		parent::__construct();		
+		if ($this->aauth->is_permit("department")){
+            show_404();
+		}
 		$this->load->library('form_validation');
 		$this->load->model('msdepartments_model');
 	}

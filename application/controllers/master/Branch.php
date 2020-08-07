@@ -7,6 +7,12 @@ class Branch extends MY_Controller
     public function __construct()
     {
         parent::__construct();
+        
+
+        if ($this->aauth->is_permit("branch")){
+            show_404();
+        }
+
         $this->load->library('form_validation');
         $this->load->model('msbranches_model');
     }
