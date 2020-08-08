@@ -1498,7 +1498,7 @@ class Ticketstatus extends MY_Controller
         //var_dump($arrDepartment);
         //die();
 		$this->load->model("monitoringticket_model");
-		$tickets = $this->monitoringticket_model->get_monitoringticket($arrDepartment);
+		$tickets = $this->monitoringticket_model->get_monitoringticket();
         $data = [
 			"tickets" => $tickets['tickets']
         ];

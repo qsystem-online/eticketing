@@ -42,10 +42,13 @@ class ticket extends MY_Controller
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
         $this->list['columns'] = [
-            ['title' => 'Ticket ID.', 'width' => '10%', 'data' => 'fin_ticket_id'],
-            ['title' => 'Ticket No.', 'width' => '15%', 'data' => 'fst_ticket_no'],
+            ['title' => 'ID', 'width' => '0%', 'data' => 'fin_ticket_id'],
+            ['title' => 'Ticket No', 'width' => '10%', 'data' => 'fst_ticket_no'],
+            ['title' => 'Ticket Type', 'width' => '10%', 'data' => 'fst_ticket_type_name'],
             ['title' => 'Ticket Datetime', 'width' => '15%', 'data' => 'fdt_ticket_datetime'],
-            ['title' => 'Memo', 'width' => '30%', 'data' => 'fst_memo'],
+            ['title' => 'Issued By', 'width' => '20%', 'data' => 'issuedBy'],
+            ['title' => 'Issued To', 'width' => '20%', 'data' => 'issuedTo'],
+            ['title' => 'Approved By', 'width' => '20%', 'data' => 'approvedBy'],
             ['title' => 'Status', 'width' => '20%', 'data' => 'fst_status'],
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center',
                 'render'=>"function(data,type,row){
@@ -315,15 +318,22 @@ class ticket extends MY_Controller
 
     public function fetch_list_data(){
         $this->load->library("datatables");
-        $this->datatables->setTableName("trticket");
+        $user = $this->aauth->user();
+        $userActive = $user->fin_user_id;
+        $this->datatables->setTableName("(SELECT a.*,b.fst_ticket_type_name,c.fst_username AS issuedBy,d.fst_username AS issuedTo,e.fst_username AS approvedBy FROM trticket a 
+        LEFT JOIN mstickettype b ON a.fin_ticket_type_id = b.fin_ticket_type_id
+        LEFT JOIN users c ON a.fin_issued_by_user_id = c.fin_user_id
+        LEFT JOIN users d ON a.fin_issued_to_user_id = d.fin_user_id
+        LEFT JOIN users e ON a.fin_approved_by_user_id = e.fin_user_id
+        WHERE a.fin_issued_by_user_id = $userActive OR a.fin_issued_to_user_id = $userActive OR a.fin_approved_by_user_id = $userActive) a");
 
-        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fst_memo,fst_status,'action' as action";
+        $selectFields = "fin_ticket_id,fst_ticket_no,fdt_ticket_datetime,fst_ticket_type_name,issuedBy,issuedTo,approvedBy,fst_status,'action' as action";
         $this->datatables->setSelectFields($selectFields);
 
         $Fields = $this->input->get('optionSearch');
         $searchFields = [$Fields];
         $this->datatables->setSearchFields($searchFields);
-        $this->datatables->activeCondition = "fst_active !='D'";
+        $this->datatables->activeCondition = "a.fst_active !='D'";
         
         // Format Data
         $datasources = $this->datatables->getData();
