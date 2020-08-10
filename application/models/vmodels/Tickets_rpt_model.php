@@ -11,12 +11,14 @@ class Tickets_rpt_model extends CI_Model {
         $department_id = "";
         $userGroup_id = "";
         $user_id = "";
+        $ticket_type = "";
         $start_date = "";
         $end_date = "";
         if (isset($data['fin_branch_id'])) { $branch_id = $data['fin_branch_id'];}
         if (isset($data['fin_department_id'])) { $department_id = $data['fin_department_id'];}
         if (isset($data['fin_group_id'])) { $userGroup_id = $data['fin_group_id'];}
         if (isset($data['fin_user_id'])) { $user_id = $data['fin_user_id'];}
+        if (isset($data['fin_ticket_type_id'])) { $ticket_type = $data['fin_ticket_type_id'];}
         if (isset($data['fdt_ticket_datetime'])) { $start_date = $data['fdt_ticket_datetime'];}
         if (isset($data['fdt_ticket_datetime2'])) { $end_date = $data['fdt_ticket_datetime2'];}
 
@@ -35,11 +37,14 @@ class Tickets_rpt_model extends CI_Model {
             if ($user_id > "0" ) {
                 $swhere .= " and b.fin_user_id = " . $this->db->escape($user_id);
             }
+            if ($ticket_type > "0" ) {
+                $swhere .= " and a.fin_ticket_type_id = " . $this->db->escape($ticket_type);
+            }
             if (isset($start_date)) {
                 $swhere .= " and a.fdt_ticket_datetime >= '" . date('Y-m-d', strtotime($start_date)) . "'";            
             }
             if (isset($end_date)) {
-                $swhere .= " and a.fdt_ticket_datetime <= '". date('Y-m-d', strtotime($end_date)). "'";
+                $swhere .= " and a.fdt_ticket_datetime <= '". date('Y-m-d 23:59:59', strtotime($end_date)). "'";
             }
         }
         if ($rptLayout == "2"){
@@ -75,11 +80,14 @@ class Tickets_rpt_model extends CI_Model {
             if ($user_id > "0" ) {
                 $swhere .= " and d.fin_user_id = " . $this->db->escape($user_id);
             }
+            if ($ticket_type > "0" ) {
+                $swhere .= " and a.fin_ticket_type_id = " . $this->db->escape($ticket_type);
+            }
             if (isset($start_date)) {
                 $swhere .= " and a.fdt_ticket_datetime >= '" . date('Y-m-d', strtotime($start_date)) . "'";            
             }
             if (isset($end_date)) {
-                $swhere .= " and a.fdt_ticket_datetime <= '". date('Y-m-d', strtotime($end_date)). "'";
+                $swhere .= " and a.fdt_ticket_datetime <= '". date('Y-m-d 23:59:59', strtotime($end_date)). "'";
             }
         }
         if ($swhere != "") {
@@ -105,7 +113,7 @@ class Tickets_rpt_model extends CI_Model {
                     $swhere2 .= " and fdt_ticket_datetime >= '" . date('Y-m-d', strtotime($start_date)) . "'";            
                 }
                 if (isset($end_date)) {
-                    $swhere2 .= " and fdt_ticket_datetime <= '". date('Y-m-d', strtotime($end_date)). "'";
+                    $swhere2 .= " and fdt_ticket_datetime <= '". date('Y-m-d 23:59:59', strtotime($end_date)). "'";
                 }
                 $ssql = "SELECT a.fin_user_id,a.fst_username,b.userTicket,c.fst_branch_name,d.fst_department_name,e.fst_group_name 
                 FROM users a RIGHT JOIN
@@ -140,14 +148,14 @@ class Tickets_rpt_model extends CI_Model {
     {
         $rules = [];
 
-        $rules[] = [
+        /*$rules[] = [
             'field' => 'fin_branch_id',
             'label' => 'Branch',
             'rules' => 'required',
             'errors' => array(
                 'required' => '%s tidak boleh kosong'
             )
-        ];
+        ];*/
 
         $rules[] = [
             'field' => 'fdt_ticket_datetime',

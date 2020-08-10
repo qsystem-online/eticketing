@@ -9,7 +9,7 @@ class Branch extends MY_Controller
         parent::__construct();
         
 
-        if ($this->aauth->is_permit("branch")){
+        if (!$this->aauth->is_permit("branch")){
             show_404();
         }
 

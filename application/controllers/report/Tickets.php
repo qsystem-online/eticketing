@@ -13,7 +13,8 @@ class Tickets extends MY_Controller
         $this->load->model('users_model');
 		$this->load->model('msdepartments_model');
 		$this->load->model('msbranches_model');
-        $this->load->model('usersgroup_model');
+		$this->load->model('usersgroup_model');
+		$this->load->model('tickettype_model');
 
 		$this->layout_columns = [
             ['layout' => 1, 'label'=>'No.', 'value'=>'0', 'selected'=>false,'sum_total'=>false],
@@ -76,6 +77,9 @@ class Tickets extends MY_Controller
 	public function loadForm()
 	{
 		$this->load->library('menus');
+		$this->load->model('tickettype_model');
+		$this->load->model('usersgroup_model');
+		$this->load->model('msbranches_model');
 						
 		$main_header = $this->parser->parse('inc/main_header', [], true);
 		$fin_branch_id = 0;
@@ -185,6 +189,7 @@ class Tickets extends MY_Controller
 			"fin_department_id" => $this->input->post("fin_department_id"),
 			"fin_group_id" => $this->input->post("fin_group_id"),
 			"fin_user_id" => $this->input->post("fin_user_id"),
+			"fin_ticket_type_id" => $this->input->post("fin_ticket_type_id"),
 			"fdt_ticket_datetime" => $this->input->post("fdt_ticket_datetime"),
 			"fdt_ticket_datetime2" => $this->input->post("fdt_ticket_datetime2"),
 			"rpt_layout" => $this->input->post("rpt_layout"),
@@ -446,6 +451,10 @@ class Tickets extends MY_Controller
 					$userTicket ="";
 					$ticketType ="";
 					$ticketTypeID = "";
+					$start_date = "";
+					$end_date = "";
+					if (isset($data['fdt_ticket_datetime'])) { $start_date = $data['fdt_ticket_datetime'];}
+					if (isset($data['fdt_ticket_datetime2'])) { $end_date = $data['fdt_ticket_datetime2'];}
 					
 					foreach ($dataReport as $rw) {
 
@@ -453,139 +462,142 @@ class Tickets extends MY_Controller
 						//$sheet->setCellValue("B$cellRow1", $user_id);
 						//$sheet->setCellValue("B$cellRow2", $user_id);
 						//$sheet->setCellValue("A$cellRow", $no++);
-						if ($userTicket != $rw->userTicket){
-			
-							$userTicket = $rw->userTicket;
-							$sheet->setCellValue("A$cellRow", $no++);
-							$sheet->setCellValue("B$cellRow", $rw->fst_department_name);
-							$sheet->setCellValue("C$cellRow", $rw->fst_group_name);
-							$sheet->setCellValue("D$cellRow", $rw->fst_username);
-			
-							$ssql = "select * from mstickettype";
-							$qr = $this->db->query($ssql, []);
-							$rsType = $qr->result();
+						if ($rw->fst_username != ""){
+							if ($userTicket != $rw->userTicket){
 				
-							foreach ($rsType as $roType){
-			
-								$ticketTypeID = $roType->fin_ticket_type_id;
-								$ttl_issuedStatus = 0;
-								$ttl_receivedStatus = 0;
-								$ttl_allStatus = 0;
-								$ssql = "SELECT fin_issued_by_user_id,fin_ticket_type_id,fst_status,COUNT(*) AS ttl FROM trticket WHERE fin_issued_by_user_id=? AND  fin_ticket_type_id=? GROUP BY fst_status";
-								$qr = $this->db->query($ssql, [$userTicket,$ticketTypeID]);
-								//echo $this->db->last_query();
-								//die();
-								$rsIssued = $qr->result();
-								$issuedOpen = 0;
-								$issuedAccepted = 0;
-								$issuedClosed = 0;
-								$issuedAExpired = 0;
-								$issuedTExpired = 0;
-								$issuedAppExpired = 0;
-								$issuedRejected = 0;
-								$issuedVoid = 0;
-								foreach ($rsIssued as $roIssued){
-									if ($roIssued->fst_status == "APPROVED/OPEN" OR $roIssued->fst_status == "NEED_APPROVAL"){
-										$issuedOpen = $roIssued->ttl;
+								$userTicket = $rw->userTicket;
+								$sheet->setCellValue("A$cellRow", $no++);
+								$sheet->setCellValue("B$cellRow", $rw->fst_department_name);
+								$sheet->setCellValue("C$cellRow", $rw->fst_group_name);
+								$sheet->setCellValue("D$cellRow", $rw->fst_username);
+				
+								$ssql = "select * from mstickettype";
+								$qr = $this->db->query($ssql, []);
+								$rsType = $qr->result();
+					
+								foreach ($rsType as $roType){
+				
+									$ticketTypeID = $roType->fin_ticket_type_id;
+									$start_date =date('Y-m-d', strtotime($start_date));
+									$end_date =date('Y-m-d 23:59:59', strtotime($end_date));
+									$ttl_issuedStatus = 0;
+									$ttl_receivedStatus = 0;
+									$ttl_allStatus = 0;
+									$ssql = "SELECT fin_issued_by_user_id,fin_ticket_type_id,fst_status,COUNT(*) AS ttl FROM trticket WHERE fin_issued_by_user_id=? AND  fin_ticket_type_id=? AND fdt_ticket_datetime >=? AND fdt_ticket_datetime <=? GROUP BY fst_status";
+									$qr = $this->db->query($ssql, [$userTicket,$ticketTypeID,$start_date,$end_date]);
+									//echo $this->db->last_query();
+									//die();
+									$rsIssued = $qr->result();
+									$issuedOpen = 0;
+									$issuedAccepted = 0;
+									$issuedClosed = 0;
+									$issuedAExpired = 0;
+									$issuedTExpired = 0;
+									$issuedAppExpired = 0;
+									$issuedRejected = 0;
+									$issuedVoid = 0;
+									foreach ($rsIssued as $roIssued){
+										if ($roIssued->fst_status == "APPROVED/OPEN" OR $roIssued->fst_status == "NEED_APPROVAL"){
+											$issuedOpen = $roIssued->ttl;
+										}
+										if ($roIssued->fst_status == "ACCEPTED"){
+											$issuedAccepted = $roIssued->ttl;
+										}
+										if ($roIssued->fst_status == "CLOSED"){
+											$issuedClosed = $roIssued->ttl;
+										}
+										if ($roIssued->fst_status == "ACCEPTANCE_EXPIRED"){
+											$issuedAExpired = $roIssued->ttl;
+										}
+										if ($roIssued->fst_status == "TICKET_EXPIRED"){
+											$issuedTExpired = $roIssued->ttl;
+										}
+										if ($roIssued->fst_status == "APPROVAL_EXPIRED"){
+											$issuedAppExpired = $roIssued->ttl;
+										}
+										if ($roIssued->fst_status == "REJECTED"){
+											$issuedRejected = $roIssued->ttl;
+										}
+										if ($roIssued->fst_status == "VOID"){
+											$issuedVoid = $roIssued->ttl;
+										}
 									}
-									if ($roIssued->fst_status == "ACCEPTED"){
-										$issuedAccepted = $roIssued->ttl;
+									$ssql = "SELECT fin_issued_to_user_id,fin_ticket_type_id,fst_status,COUNT(*) AS ttl FROM trticket WHERE fin_issued_to_user_id=? AND  fin_ticket_type_id=? AND fdt_ticket_datetime >=? AND fdt_ticket_datetime <=? GROUP BY fst_status";
+									$qr = $this->db->query($ssql, [$userTicket,$ticketTypeID,$start_date,$end_date]);
+									//echo $this->db->last_query();
+									//die();
+									$rsReceived= $qr->result();
+									$receivedOpen = 0;
+									$receivedAccepted = 0;
+									$receivedClosed = 0;
+									$receivedAExpired = 0;
+									$receivedTExpired = 0;
+									$receivedAppExpired = 0;
+									$receivedRejected = 0;
+									$receivedVoid = 0;
+									foreach ($rsReceived as $roReceived){
+										if ($roReceived->fst_status == "APPROVED/OPEN" OR $roReceived->fst_status == "NEED_APPROVAL"){
+											$receivedOpen = $roReceived->ttl;
+											//$sheet->setCellValue("M$cellRow", $roReceived->ttl);
+										}
+										if ($roReceived->fst_status == "ACCEPTED"){
+											$receivedAccepted = $roReceived->ttl;
+											//$sheet->setCellValue("N$cellRow", $roReceived->ttl);
+										}
+										if ($roReceived->fst_status == "CLOSED"){
+											$receivedClosed = $roReceived->ttl;
+											//$sheet->setCellValue("O$cellRow", $roReceived->ttl);
+										}
+										if ($roReceived->fst_status == "ACCEPTANCE_EXPIRED"){
+											$receivedAExpired = $roReceived->ttl;
+											//$sheet->setCellValue("P$cellRow", $roReceived->ttl);
+										}
+										if ($roReceived->fst_status == "TICKET_EXPIRED"){
+											$receivedTExpired = $roReceived->ttl;
+											//$sheet->setCellValue("Q$cellRow", $roReceived->ttl);
+										}
+										if ($roReceived->fst_status == "APPROVAL_EXPIRED"){
+											$receivedAppExpired = $roReceived->ttl;
+											//$sheet->setCellValue("Q$cellRow", $roReceived->ttl);
+										}
+										if ($roReceived->fst_status == "REJECTED"){
+											$receivedRejected = $roReceived->ttl;
+											//$sheet->setCellValue("R$cellRow", $roReceived->ttl);
+										}
+										if ($roReceived->fst_status == "VOID"){
+											$receivedVoid = $roReceived->ttl;
+											//$sheet->setCellValue("S$cellRow", $roReceived->ttl);
+										}
 									}
-									if ($roIssued->fst_status == "CLOSED"){
-										$issuedClosed = $roIssued->ttl;
+									$ttl_issuedStatus += $issuedOpen + $issuedAccepted + $issuedClosed + $issuedAExpired + $issuedTExpired + $issuedRejected + $issuedVoid + $issuedAppExpired;
+									$ttl_receivedStatus += $receivedOpen + $receivedAccepted + $receivedClosed + $receivedAExpired + $receivedTExpired + $receivedRejected + $receivedVoid + $receivedAppExpired;
+									$ttl_allStatus += $ttl_issuedStatus + $ttl_receivedStatus;
+									//echo ($ttl_issuedStatus);
+									//die();
+									if($ttl_allStatus != 0 ){
+										$sheet->setCellValue("E$cellRow", $roType->fst_ticket_type_name);
+										$sheet->setCellValue("F$cellRow", $issuedOpen);
+										$sheet->setCellValue("G$cellRow", $issuedAccepted);
+										$sheet->setCellValue("H$cellRow", $issuedClosed);
+										$sheet->setCellValue("I$cellRow", $issuedAExpired);
+										$sheet->setCellValue("J$cellRow", $issuedTExpired);
+										$sheet->setCellValue("K$cellRow", $issuedAppExpired);
+										$sheet->setCellValue("L$cellRow", $issuedRejected);
+										$sheet->setCellValue("M$cellRow", $issuedVoid);
+										$sheet->setCellValue("N$cellRow", $receivedOpen);
+										$sheet->setCellValue("O$cellRow", $receivedAccepted);
+										$sheet->setCellValue("P$cellRow", $receivedClosed);
+										$sheet->setCellValue("Q$cellRow", $receivedAExpired);
+										$sheet->setCellValue("R$cellRow", $receivedTExpired);
+										$sheet->setCellValue("S$cellRow", $receivedAppExpired);
+										$sheet->setCellValue("T$cellRow", $receivedRejected);
+										$sheet->setCellValue("U$cellRow", $receivedVoid);
+										$cellRow++;
 									}
-									if ($roIssued->fst_status == "ACCEPTANCE_EXPIRED"){
-										$issuedAExpired = $roIssued->ttl;
-									}
-									if ($roIssued->fst_status == "TICKET_EXPIRED"){
-										$issuedTExpired = $roIssued->ttl;
-									}
-									if ($roIssued->fst_status == "APPROVAL_EXPIRED"){
-										$issuedAppExpired = $roIssued->ttl;
-									}
-									if ($roIssued->fst_status == "REJECTED"){
-										$issuedRejected = $roIssued->ttl;
-									}
-									if ($roIssued->fst_status == "VOID"){
-										$issuedVoid = $roIssued->ttl;
-									}
+									//$cellRow++;
 								}
-								$ssql = "SELECT fin_issued_to_user_id,fin_ticket_type_id,fst_status,COUNT(*) AS ttl FROM trticket WHERE fin_issued_to_user_id=? AND  fin_ticket_type_id=? GROUP BY fst_status";
-								$qr = $this->db->query($ssql, [$userTicket,$ticketTypeID]);
-								//echo $this->db->last_query();
-								//die();
-								$rsReceived= $qr->result();
-								$receivedOpen = 0;
-								$receivedAccepted = 0;
-								$receivedClosed = 0;
-								$receivedAExpired = 0;
-								$receivedTExpired = 0;
-								$receivedAppExpired = 0;
-								$receivedRejected = 0;
-								$receivedVoid = 0;
-								foreach ($rsReceived as $roReceived){
-									if ($roReceived->fst_status == "APPROVED/OPEN" OR $roReceived->fst_status == "NEED_APPROVAL"){
-										$receivedOpen = $roReceived->ttl;
-										//$sheet->setCellValue("M$cellRow", $roReceived->ttl);
-									}
-									if ($roReceived->fst_status == "ACCEPTED"){
-										$receivedAccepted = $roReceived->ttl;
-										//$sheet->setCellValue("N$cellRow", $roReceived->ttl);
-									}
-									if ($roReceived->fst_status == "CLOSED"){
-										$receivedClosed = $roReceived->ttl;
-										//$sheet->setCellValue("O$cellRow", $roReceived->ttl);
-									}
-									if ($roReceived->fst_status == "ACCEPTANCE_EXPIRED"){
-										$receivedAExpired = $roReceived->ttl;
-										//$sheet->setCellValue("P$cellRow", $roReceived->ttl);
-									}
-									if ($roReceived->fst_status == "TICKET_EXPIRED"){
-										$receivedTExpired = $roReceived->ttl;
-										//$sheet->setCellValue("Q$cellRow", $roReceived->ttl);
-									}
-									if ($roReceived->fst_status == "APPROVAL_EXPIRED"){
-										$receivedAppExpired = $roReceived->ttl;
-										//$sheet->setCellValue("Q$cellRow", $roReceived->ttl);
-									}
-									if ($roReceived->fst_status == "REJECTED"){
-										$receivedRejected = $roReceived->ttl;
-										//$sheet->setCellValue("R$cellRow", $roReceived->ttl);
-									}
-									if ($roReceived->fst_status == "VOID"){
-										$receivedVoid = $roReceived->ttl;
-										//$sheet->setCellValue("S$cellRow", $roReceived->ttl);
-									}
-								}
-								$ttl_issuedStatus += $issuedOpen + $issuedAccepted + $issuedClosed + $issuedAExpired + $issuedTExpired + $issuedRejected + $issuedVoid + $issuedAppExpired;
-								$ttl_receivedStatus += $receivedOpen + $receivedAccepted + $receivedClosed + $receivedAExpired + $receivedTExpired + $receivedRejected + $receivedVoid + $receivedAppExpired;
-								$ttl_allStatus += $ttl_issuedStatus + $ttl_receivedStatus;
-								//echo ($ttl_issuedStatus);
-								//die();
-								if($ttl_allStatus != 0){
-									$sheet->setCellValue("E$cellRow", $roType->fst_ticket_type_name);
-									$sheet->setCellValue("F$cellRow", $issuedOpen);
-									$sheet->setCellValue("G$cellRow", $issuedAccepted);
-									$sheet->setCellValue("H$cellRow", $issuedClosed);
-									$sheet->setCellValue("I$cellRow", $issuedAExpired);
-									$sheet->setCellValue("J$cellRow", $issuedTExpired);
-									$sheet->setCellValue("K$cellRow", $issuedAppExpired);
-									$sheet->setCellValue("L$cellRow", $issuedRejected);
-									$sheet->setCellValue("M$cellRow", $issuedVoid);
-									$sheet->setCellValue("N$cellRow", $receivedOpen);
-									$sheet->setCellValue("O$cellRow", $receivedAccepted);
-									$sheet->setCellValue("P$cellRow", $receivedClosed);
-									$sheet->setCellValue("Q$cellRow", $receivedAExpired);
-									$sheet->setCellValue("R$cellRow", $receivedTExpired);
-									$sheet->setCellValue("S$cellRow", $receivedAppExpired);
-									$sheet->setCellValue("T$cellRow", $receivedRejected);
-									$sheet->setCellValue("U$cellRow", $receivedVoid);
-									$cellRow++;
-								}
-								//$cellRow++;
 							}
-						}
-						
+						}	
 					}
 					
 
@@ -710,7 +722,7 @@ class Tickets extends MY_Controller
 						$sheet->setCellValue("G$cellRow", $rw->userIssued);
 						$sheet->setCellValue("H$cellRow", $rw->userReceived);
 						$sheet->setCellValue("I$cellRow", $rw->userApproved);
-						$ssql = "SELECT a.fin_ticket_id,a.fdt_ticket_datetime,b.fdt_status_datetime,b.fst_status,DATEDIFF(b.fdt_status_datetime,a.fdt_ticket_datetime) + 1 AS Days FROM trticket a 
+						$ssql = "SELECT a.fin_ticket_id,a.fdt_ticket_datetime,b.fdt_status_datetime,b.fst_status,DATEDIFF(b.fdt_status_datetime,a.fdt_ticket_datetime) + 0 AS Days FROM trticket a 
 						LEFT JOIN trticket_log b ON a.fin_ticket_id=b.fin_ticket_id WHERE a.fin_ticket_id=?";
 						$qr = $this->db->query($ssql, [$rw->fin_ticket_id]);
 						//echo $this->db->last_query();
@@ -721,6 +733,14 @@ class Tickets extends MY_Controller
 						$completedDay = 0;
 						$closedDay = 0;
 						$completionRevised = 0;
+						$ssql = "SELECT fin_ticket_id,fst_status,COUNT(*) AS ttl_completion_revised FROM trticket_log  WHERE fin_ticket_id=? AND fst_status ='NEED_REVISION' GROUP BY fin_ticket_id";
+						$qr = $this->db->query($ssql, [$rw->fin_ticket_id]);
+						$rw = $qr->row();
+						if ($rw != null){
+							$completionRevised = $rw->ttl_completion_revised;
+						}else{
+							$completionRevised = 0;
+						}
 						foreach($rsDays as $roDay){
 							if ($roDay->fst_status == "APPROVED/OPEN"){
 								$approvedDay = $roDay->Days;

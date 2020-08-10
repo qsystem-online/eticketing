@@ -427,7 +427,7 @@ class Ticketstatus extends MY_Controller
         $mdlPrint = $this->parser->parse('template/mdlPrint.php', [], true);
         $data["mdlPrint"] = $mdlPrint;
 
-		$data["title"] = "Ticket Report";
+		$data["title"] = "Ticket Monitoring";
 		//$data["fin_user_id"] = $fin_user_id;
 
 		$page_content = $this->parser->parse('report/ticket_report', $data, true);

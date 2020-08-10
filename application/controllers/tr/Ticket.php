@@ -42,14 +42,14 @@ class ticket extends MY_Controller
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
         $this->list['columns'] = [
-            ['title' => 'ID', 'width' => '0%', 'data' => 'fin_ticket_id'],
+            ['title' => 'ID', 'width' => '0%', 'data' => 'fin_ticket_id','visible' => 'false'],
             ['title' => 'Ticket No', 'width' => '10%', 'data' => 'fst_ticket_no'],
-            ['title' => 'Ticket Type', 'width' => '10%', 'data' => 'fst_ticket_type_name'],
+            ['title' => 'Ticket Type', 'width' => '15%', 'data' => 'fst_ticket_type_name'],
             ['title' => 'Ticket Datetime', 'width' => '15%', 'data' => 'fdt_ticket_datetime'],
-            ['title' => 'Issued By', 'width' => '20%', 'data' => 'issuedBy'],
-            ['title' => 'Issued To', 'width' => '20%', 'data' => 'issuedTo'],
-            ['title' => 'Approved By', 'width' => '20%', 'data' => 'approvedBy'],
-            ['title' => 'Status', 'width' => '20%', 'data' => 'fst_status'],
+            ['title' => 'Issued By', 'width' => '10%', 'data' => 'issuedBy'],
+            ['title' => 'Issued To', 'width' => '10%', 'data' => 'issuedTo'],
+            ['title' => 'Approved By', 'width' => '15%', 'data' => 'approvedBy'],
+            ['title' => 'Status', 'width' => '15%', 'data' => 'fst_status'],
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center',
                 'render'=>"function(data,type,row){
                     action = \"<div style='font-size:16px'>\";

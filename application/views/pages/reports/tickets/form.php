@@ -3,14 +3,20 @@
     <div class="box-body">
         <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group row">                    
-            <label for="fin_branch_id" class="col-md-2 control-label"><?=lang("Branch Name")?></label>
+            <label for="fin_branch_id" class="col-md-2 control-label"><?=lang("Branch")?></label>
                 <div class="col-md-4">
                     <select id="select-branch" class="form-control" name="fin_branch_id">
-                        <option value="0">-- <?=lang("select")?> --</option>
+						<option value="" selected>-- <?=lang("All")?> --</option>
+						<?php
+							$branchList = $this->msbranches_model->getAllList();
+							foreach ($branchList as $branch) {
+								echo "<option value='$branch->fin_branch_id'>$branch->fst_branch_name</option>";
+							}
+						?>
                     </select>
                     <div id="fin_branch_id_err" class="text-danger"></div>
                 </div>
-            <label for="fin_department_id" class="col-md-2 control-label"><?=lang("Department Name")?></label>
+            <label for="fin_department_id" class="col-md-2 control-label"><?=lang("Department")?></label>
                 <div class="col-md-4">
                     <select id="select-department" class="form-control" name="fin_department_id">
                         <option value="0">-- <?=lang("select")?> --</option>
@@ -20,7 +26,7 @@
             </div>
             
             <div class="form-group row">
-            <label for="select-groupId" class="col-md-2 control-label"><?=lang("User Group Name")?></label>
+            <label for="select-groupId" class="col-md-2 control-label"><?=lang("User Group")?></label>
                 <div class="col-md-4">
                     <select id="select-groupId" class="form-control" name="fin_group_id">
                         <option value="0">-- <?=lang("select")?> --</option>
@@ -35,6 +41,23 @@
                     <div id="fin_user_id_id_err" class="text-danger"></div>
                 </div>
             </div>
+
+			<div class="form-group row">
+				<label for="select-ticketType" class="col-md-2 control-label"><?=lang("Ticket Type")?></label>
+				<div class="col-md-4">
+					<select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id">
+						<option value="" selected>-- <?=lang("All")?> --</option>
+						<?php
+							$tickettypeList = $this->tickettype_model->getTicketType();
+							foreach ($tickettypeList as $ticketType) {
+								echo "<option value='$ticketType->fin_ticket_type_id' data-notice='$ticketType->fst_assignment_or_notice' data-fbl='$ticketType->fbl_need_approval'>$ticketType->fst_ticket_type_name</option>";
+							}
+						?>
+					</select>
+					<div id="fin_ticket_type_id_err" class="text-danger"></div>
+				</div>
+			</div>
+                                
 
             <div class="form-group row">
                 <label for="fdt_ticket_datetime" class="col-sm-2 control-label"><?=lang("Ticket Date")?></label>
@@ -119,6 +142,15 @@
 
         console.log(newArray);
         $('#multiple-columns').multiselect('dataprovider', newArray);
+		$('#multiple-columns').multiselect('selectAll',false);
+		$('#multiple-columns').multiselect('updateButtonText');
+		
+		if ($('input[name=rpt_layout]:checked').val() == "2"){
+			$("#select-ticketType").val(null).trigger("change.select2");
+        	$("#select-ticketType").prop("disabled", true);
+		}else{
+        	$("#select-ticketType").prop("disabled", false);
+		}
         // for(var i=0; i<newArray.length; i++){
         //     alert(newArray[i].label);
         //     console.log(newArray[i].label);
@@ -128,7 +160,7 @@
     }         
     $(function() {
 
-		$("#select-branch").select2({
+		/*$("#select-branch").select2({
 			width: '100%',
 			ajax: {
 				url: '<?=site_url()?>report/tickets/get_branch',
@@ -150,7 +182,7 @@
 				},
 				cache: true,
 			}
-		});
+		});*/
 
 		$("#select-department").select2({
 			width: '100%',

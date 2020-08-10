@@ -697,7 +697,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                         $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
                     }
                 }else if(resp.ms_ticketstatus.fst_status == "APPROVED/OPEN" && resp.ms_ticketstatus.fst_assignment_or_notice =='NOTICE'){
-                    array_of_options = ['SELECT...','COMPLETED']
+                    array_of_options = ['SELECT...','CLOSED']
                     $.each(array_of_options, function(i, item) {
                         if(i==0) { 
                             sel_op = 'selected'; 

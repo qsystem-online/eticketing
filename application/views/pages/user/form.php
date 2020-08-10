@@ -513,10 +513,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					type = $el.attr('type');
 					switch(type){
 						case 'checkbox':
-							$el.attr('checked', 'checked');
+							$el.filter('[value="' + val + '"]').attr('checked', 'checked');
 							break;
 						case 'radio':
-							$el.filter('[value="'+val+'"]').attr('checked', 'checked');
+							$el.filter('[value="' + val + '"]').attr('checked', 'checked');
 							break;
 						default:
 							$el.val(val);

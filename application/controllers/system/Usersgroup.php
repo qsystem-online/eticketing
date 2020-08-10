@@ -5,7 +5,7 @@ class Usersgroup extends MY_Controller {
 
     public function __construct(){
 		parent:: __construct();
-		if ($this->aauth->is_permit("user_group")){
+		if (!$this->aauth->is_permit("user_group")){
             show_404();
 		}
         $this->load->library('form_validation');

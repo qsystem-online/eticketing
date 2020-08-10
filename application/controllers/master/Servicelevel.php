@@ -7,6 +7,9 @@ class Servicelevel extends MY_Controller
     public function __construct()
     {
         parent::__construct();
+        if (!$this->aauth->is_permit("servicelevel")){
+            show_404();
+		}
         $this->load->library('form_validation');
         $this->load->model('servicelevel_model');
     }

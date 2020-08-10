@@ -7,7 +7,7 @@ class User extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		if ($this->aauth->is_permit("user")){
+		if (!$this->aauth->is_permit("user")){
             show_404();
 		}
 		
@@ -138,6 +138,12 @@ class User extends MY_Controller
 			"fbl_admin" => $this->input->post("fbl_admin") == null? 0:1
 		];
 
+		if ($this->input->post("fbl_admin") == null || $this->input->post("fbl_admin") == 0){
+            $data["fst_privilege_group"] = 'USER';
+        }else{
+            $data["fst_privilege_group"] = 'ADMIN';
+        }
+
 		$this->db->trans_start();
 		$insertId = $this->users_model->insert($data);
 		$dbError  = $this->db->error();
@@ -226,7 +232,11 @@ class User extends MY_Controller
 			"fin_group_id" => $this->input->post("fin_group_id"),
 			"fbl_admin" =>  $this->input->post("fbl_admin") == null? 0:1
 		];
-
+        if ($this->input->post("fbl_admin") == 0){
+            $data["fst_privilege_group"] = 'USER';
+        }else{
+            $data["fst_privilege_group"] = 'ADMIN';
+        }
 		$this->db->trans_start();
 
 		$this->users_model->update($data);

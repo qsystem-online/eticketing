@@ -7,6 +7,9 @@ class Tickettype extends MY_Controller
     public function __construct()
     {
         parent::__construct();
+        if (!$this->aauth->is_permit("ticket_type")){
+            show_404();
+		}
         $this->load->library('form_validation');
         $this->load->model('tickettype_model');
     }
