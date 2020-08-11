@@ -6,16 +6,16 @@ class User extends MY_Controller
 
 	public function __construct()
 	{
-		parent::__construct();
-		if (!$this->aauth->is_permit("user")){
-            show_404();
-		}
+		parent::__construct();		
 		
 		$this->load->library('form_validation');
 	}
 
 	public function index()
 	{
+		if (!$this->aauth->is_permit("user")){
+            show_404();
+		}
 		$this->lizt();
 	}
 
@@ -64,6 +64,10 @@ class User extends MY_Controller
 
 	public function openForm($mode = "ADD", $fin_user_id = 0)
 	{
+		if (!$this->aauth->is_permit("user")){
+            show_404();
+		}
+
 		$this->load->library("menus");
 		$this->load->model("usersgroup_model");
 		$this->load->model("users_model");
@@ -108,6 +112,14 @@ class User extends MY_Controller
 
 	public function ajx_add_save()
 	{
+		if (!$this->aauth->is_permit("user")){
+            $this->ajxResp["status"] = "FAILED";
+			$this->ajxResp["message"] = "No Permission";
+			$this->ajxResp["data"] = [];
+			$this->json_output();
+			return;
+		}
+
 		$this->load->model('users_model');
 		$this->form_validation->set_rules($this->users_model->getRules("ADD", 0));
 		$this->form_validation->set_error_delimiters('<div class="text-danger">* ', '</div>');
@@ -192,6 +204,14 @@ class User extends MY_Controller
 
 	public function ajx_edit_save()
 	{
+		if (!$this->aauth->is_permit("user")){
+            $this->ajxResp["status"] = "FAILED";
+			$this->ajxResp["message"] = "No Permission";
+			$this->ajxResp["data"] = [];
+			$this->json_output();
+			return;
+		}
+
 		$this->load->model('users_model');
 		$fin_user_id = $this->input->post('fin_user_id');
 		$data = $this->users_model->getDataById($fin_user_id);
@@ -378,6 +398,14 @@ class User extends MY_Controller
 	}
 
 	public function delete($id){
+		if (!$this->aauth->is_permit("user")){
+            $this->ajxResp["status"] = "FAILED";
+			$this->ajxResp["message"] = "No Permission";
+			$this->ajxResp["data"] = [];
+			$this->json_output();
+			return;
+		}
+		
 		$this->load->model('users_model');
 		$this->db->trans_start();
         $this->users_model->delete($id);
