@@ -129,6 +129,42 @@ class Ticketstatus extends MY_Controller
         $this->parser->parse('template/main', $this->data);
     }
 
+    public function our_tickets()
+    {
+        $this->load->library('menus');
+        $this->list['page_name'] = "Our Tickets";
+        $this->list['list_name'] = "Ticket Status List";
+        $this->list['pKey'] = "id";
+        $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticketstatus/fetch_list_data';
+        $this->list['edit_ajax_url'] = site_url() . 'tr/ticketstatus/Update/';
+        $this->list['arrSearch'] = [
+            'fin_ticket_id' => 'Ticket ID',
+            'fst_ticket_no' => 'Ticket Number',
+            'fst_memo' => 'Ticket Memo'
+        ];
+
+        $this->list['breadcrumbs'] = [
+            ['title' => 'Home', 'link' => '#', 'icon' => "<i class='fa fa-dashboard'></i>"],
+            ['title' => 'Transaksi', 'link' => '#', 'icon' => ''],
+            ['title' => 'Ticket Status', 'link' => '#', 'icon' => ''],
+            ['title' => 'List', 'link' => NULL, 'icon' => ''],
+        ];
+        $this->list["cards"] = $this->ticketstatus_model->get_our_tickets();
+        $main_header = $this->parser->parse('inc/main_header', [], true);
+        $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
+        $page_content = $this->parser->parse('template/standardCardList', $this->list, true);
+        $main_footer = $this->parser->parse('inc/main_footer', [], true);
+        $control_sidebar = "";
+        $control_sidebar = null;
+        $this->data['CONTROL_SIDEBAR']= null;
+        $this->data['ACCESS_RIGHT'] = "A-C-R-U-D-P";
+        $this->data['MAIN_HEADER'] = $main_header;
+        $this->data['MAIN_SIDEBAR'] = $main_sidebar;
+        $this->data['PAGE_CONTENT'] = $page_content;
+        $this->data['MAIN_FOOTER'] = $main_footer;
+        $this->parser->parse('template/main', $this->data);
+    }
+
     public function I01()
     {
         $this->load->library('menus');
@@ -476,7 +512,13 @@ class Ticketstatus extends MY_Controller
 
     public function Update($fin_ticket_id)
     {
-        $this->openForm("EDIT", $fin_ticket_id);
+        $is_permit_ticket = $this->ticket_model->is_permit_ticket($fin_ticket_id);
+        if ($is_permit_ticket != null){
+            $this->openForm("EDIT", $fin_ticket_id);
+        }else{
+            show_404();
+        }
+        //$this->openForm("EDIT", $fin_ticket_id);
     }
 
     public function ajx_add_save()

@@ -585,7 +585,7 @@ $(function(){
             }else if ($("#select-ticketType").find(":selected").data("notice") == "NOTICE" || "ASSIGNMENT"){
                 $("#select-toUser").prop("disabled", false);
                 if($("#select-toUser").val() == 0){
-                    alert("<?=lang('Pilih nama penerima ticket ...!')?>");
+                    alert("<?=lang('Pilih Issued To ...!')?>");
                     return;
                 }
             }
@@ -605,7 +605,7 @@ $(function(){
                 $("#select-status").html("<option value='NEED_APPROVAL'><?=lang("NEED APPROVAL")?></option>");
                 $("#fbl_need_approval").val("1");
                 $("#select-approvedby").prop("disabled", false);
-                if ($("#select-approvedby").val() == 0){
+                if ($("#select-approvedby").val() == null){
                     alert("<?=lang('Pilih Approved By ....!')?>");
                     return;
                 }

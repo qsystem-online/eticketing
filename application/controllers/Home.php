@@ -18,6 +18,7 @@ class Home extends MY_Controller {
 		$this->data["title"] = "Dashboard";
 		$this->data["ttlNeedApproval"] = formatNumber($this->dashboard_model->getTtlNeedApproval());
 		$this->data["ttlIssuedRejected"] = formatNumber($this->dashboard_model->getTtlIssuedRejected());
+		$this->data["ttlOurTickets"] = formatNumber($this->dashboard_model->getTtlOurTickets());
 		$this->data["ttlIssuedApproved"] = formatNumber($this->dashboard_model->getTtlIssuedApproved());
 		$this->data["ttlIssuedNeedRevision"] = formatNumber($this->dashboard_model->getTtlIssuedNeedRevision());
 		$this->data["ttlIssuedAccepted"] = formatNumber($this->dashboard_model->getTtlIssuedAccepted());

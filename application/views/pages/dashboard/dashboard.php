@@ -44,6 +44,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <a href="<?= site_url() ?>tr/ticketstatus/rejected" class="small-box-footer">More info <i class="fa fa-ban"></i></a>
             </div>
         </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-olive">
+                <div class="inner">
+                    <h3>{ttlOurTickets}</h3>
+                    <p><?=lang("Ticket On Proses")?></p>
+                </div>
+                <div class="icon">			  
+                    <i class="fa fa-ticket"></i>
+                </div>
+                <a href="<?= site_url() ?>tr/ticketstatus/our_tickets" class="small-box-footer">More info <i class="fa fa-ticket"></i></a>
+            </div>
+        </div>
     </div>
     <li><a href="#"><i class="fa fa-ticket"></i> <?= lang("My Ticket Issued") ?></a></li>
     <div class="row">   

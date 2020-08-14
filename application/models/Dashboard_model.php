@@ -31,6 +31,29 @@ class Dashboard_model extends CI_Model {
 
     }
 
+    public function getTtlOurTickets(){
+        $user = $this->aauth->user();
+        $userActive = $user->fin_user_id;
+        $deptActive = $user->fin_department_id;
+        $levActive = intval($user->fin_level);
+        $levActive = strval($levActive);
+
+        $ssql = "SELECT count(*) as ttl_ourTickets FROM (SELECT a.*,b.fst_ticket_type_name,c.fst_username AS issuedBy,d.fst_username AS issuedTo,e.fst_username AS approvedBy FROM trticket a 
+        LEFT JOIN mstickettype b ON a.fin_ticket_type_id = b.fin_ticket_type_id
+        LEFT JOIN (SELECT a.fin_user_id,a.fst_username,a.fin_department_id,b.fin_level FROM users a INNER JOIN usersgroup b ON a.fin_group_id = b.fin_group_id) c ON a.fin_issued_by_user_id = c.fin_user_id
+        LEFT JOIN (SELECT a.fin_user_id,a.fst_username,a.fin_department_id,b.fin_level FROM users a INNER JOIN usersgroup b ON a.fin_group_id = b.fin_group_id) d ON a.fin_issued_to_user_id = d.fin_user_id
+        LEFT JOIN (SELECT a.fin_user_id,a.fst_username,a.fin_department_id,b.fin_level FROM users a INNER JOIN usersgroup b ON a.fin_group_id = b.fin_group_id) e ON a.fin_approved_by_user_id = e.fin_user_id
+        WHERE ((fin_issued_by_user_id = $userActive OR fin_issued_to_user_id = $userActive OR fin_approved_by_user_id =$userActive)
+        OR (c.fin_department_id = $deptActive AND c.fin_level > $levActive)
+        OR (d.fin_department_id = $deptActive AND d.fin_level > $levActive)
+        OR (e.fin_department_id = $deptActive AND e.fin_level > $levActive))
+        AND a.fst_status !='CLOSED' AND a.fst_status !='VOID' AND a.fst_status !='ACCEPTANCE_EXPIRED' AND a.fst_status !='APPROVAL_EXPIRED' AND a.fst_status !='TICKET_EXPIRED') a ";
+        $qr = $this->db->query($ssql,[]);
+        $rw = $qr->row();
+        return $rw->ttl_ourTickets;
+
+    }
+
     public function getTtlIssuedApproved(){
         $user = $this->aauth->user();
         //$now = date("Y-m-d H:i:s",strtotime(' 23:59:59'));
