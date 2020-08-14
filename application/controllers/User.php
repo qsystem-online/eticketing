@@ -41,12 +41,41 @@ class User extends MY_Controller
 		];
 
 		$this->list['columns'] = [
-			['title' => 'User ID', 'width' => '10%', 'data' => 'fin_user_id'],
-			['title' => 'Full Name', 'width' => '25%', 'data' => 'fst_fullname'],
-			['title' => 'Gender', 'width' => '10%', 'data' => 'fst_gender'],
-			['title' => 'Birthdate', 'width' => '15%', 'data' => 'fdt_birthdate'],
-			['title' => 'Birthplace', 'width' => '15%', 'data' => 'fst_birthplace'],
-			['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center']
+			['title' => 'ID', 'width' => '5%', 'data' => 'fin_user_id'],
+			['title' => 'Full Name', 'width' => '17%', 'data' => 'fst_fullname'],
+			['title' => 'Department', 'width' => '10%', 'data' => 'fst_department_name'],
+			['title' => 'Group', 'width' => '13%', 'data' => 'fst_group_name'],
+			['title' => 'Level', 'width' => '13%', 'data' => 'fin_level',
+				'render' =>"function(data,type,row){
+					if(data == 1){
+						return 'TOP MANAGEMENT';
+					}else if(data == 2){
+						return 'UPPER MANAGEMENT';
+					}else if(data == 3){
+						return 'MIDDLE MANAGEMENT';
+					}else if(data == 4){
+						return 'SUPERVISOR';
+					}else if(data == 5){
+						return 'LINE WORKERS';
+					}else if(data == 6){
+						return 'PUBLIC';
+					}else{
+						return '-';
+					}
+				}"
+			],
+			['title' => 'Branch', 'width' => '10%', 'data' => 'fst_branch_name'],
+			['title' => 'Email', 'width' => '10%', 'data' => 'fst_email'],
+			['title' => 'Admin', 'width' => '3%', 'data' => 'fbl_admin',
+			'render' =>"function(data,type,row){
+				if(data == 1){
+					return 'ADMIN';
+				}else{
+					return '-';
+				}
+			}"
+		],
+			['title' => 'Action', 'width' => '7%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center']
 		];
 
 		$main_header = $this->parser->parse('inc/main_header', [], true);
@@ -71,6 +100,7 @@ class User extends MY_Controller
 		$this->load->library("menus");
 		$this->load->model("usersgroup_model");
 		$this->load->model("users_model");
+		$this->load->model("msdepartments_model");
 
 		if ($this->input->post("submit") != "") {
 			$this->add_save();
@@ -87,6 +117,7 @@ class User extends MY_Controller
 		$data["arrUser_R"] = $this->users_model->getUserList_R();
 		$data["arrBranch"] = $this->msbranches_model->getAllList();
 		$data["arrGroup"] = $this->usersgroup_model->getAllList();
+		$data["arrDept"] = $this->msdepartments_model->getDepartment();
 
 		$page_content = $this->parser->parse('pages/user/form', $data, true);
 		$main_footer = $this->parser->parse('inc/main_footer', [], true);
@@ -351,9 +382,12 @@ class User extends MY_Controller
 	public function fetch_list_data()
 	{
 		$this->load->library("datatables");
-		$this->datatables->setTableName("users");
+		$this->datatables->setTableName("(SELECT a.*,b.fst_department_name,c.fst_group_name,c.fin_level,d.fst_branch_name FROM users a 
+        LEFT JOIN departments b ON a.fin_department_id = b.fin_department_id
+        LEFT JOIN usersgroup c ON a.fin_group_id = c.fin_group_id
+        LEFT JOIN msbranches d ON a.fin_branch_id = d.fin_branch_id) a");
 
-		$selectFields = "fin_user_id,fst_fullname,fst_gender,fdt_birthdate,fst_birthplace,'action' as action";
+		$selectFields = "fin_user_id,fst_fullname,fst_department_name,fst_group_name,fin_level,fst_branch_name,fst_email,fbl_admin,'action' as action";
 		$this->datatables->setSelectFields($selectFields);
 
 		$searchFields = ["fin_user_id", "fst_username"];
@@ -364,8 +398,27 @@ class User extends MY_Controller
 		$arrData = $datasources["data"];
 		$arrDataFormated = [];
 		foreach ($arrData as $data) {
-			$birthdate = strtotime($data["fdt_birthdate"]);
-			$data["fdt_insert_datetime"] = dBDateFormat("fdt_birthdate");
+			/*switch($data["fin_level"]){ //CARA INI ERORR SAAT SORT DATA LIST
+				case 1:
+					$level_name = "TOP MANAGEMENT";
+					break;
+				case 2:
+					$level_name = "UPPER MANAGEMENT";
+					break;
+				case 3:
+					$level_name = "MIDDLE MANAGEMENT";
+					break;
+				case 4:
+					$level_name = "SUPERVISORS";
+					break;
+				case 5:
+					$level_name = "LINE WORKERS";
+					break;
+				case 6:
+					$level_name = "PUBLIC";
+					break;
+			}
+			$data["fst_level_name"] = $level_name;*/
 
 			//action
 			$data["action"]	= "<div style='font-size:16px'>

@@ -74,6 +74,15 @@ class Users_model extends MY_Model
 		];
 
 		$rules[] = [
+			'field' => 'fst_email',
+			'label' => 'Email',
+			'rules' => 'required',
+			'errors' => array(
+				'required' => '%s tidak boleh kosong'
+			)
+		];
+
+		$rules[] = [
 			'field' => 'fdt_birthdate',
 			'label' => 'Birth Date',
 			'rules' => 'required',

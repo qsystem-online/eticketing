@@ -41,9 +41,9 @@ class Tickettype extends MY_Controller
             ['title' => 'List', 'link' => NULL, 'icon' => ''],
         ];
         $this->list['columns'] = [
-            ['title' => 'Ticket Type ID', 'width' => '25%', 'data' => 'fin_ticket_type_id'],
+            ['title' => 'ID', 'width' => '5%', 'data' => 'fin_ticket_type_id'],
             ['title' => 'Ticket Type Name', 'width' => '40%', 'data' => 'fst_ticket_type_name'],
-            ['title' => 'Assignment or Notice', 'width' => '25%', 'data' => 'fst_assignment_or_notice',
+            ['title' => 'Assignment or Notice', 'width' => '20%', 'data' => 'fst_assignment_or_notice',
                 'render' =>"function(data,type,row){
                     if(data == 'ASSIGNMENT'){
                         return 'ASSIGNMENT';
@@ -51,6 +51,15 @@ class Tickettype extends MY_Controller
                         return 'NOTICE';
                     }else if(data == 'INFO'){
                         return 'INFO';
+                    }
+                }"
+            ],
+            ['title' => 'Approval', 'width' => '15%', 'data' => 'fbl_need_approval',
+                'render' =>"function(data,type,row){
+                    if(data == 1){
+                        return 'Need Approval';
+                    }else{
+                        return '-';
                     }
                 }"
             ],
@@ -207,7 +216,7 @@ class Tickettype extends MY_Controller
         $this->load->library("datatables");
         $this->datatables->setTableName("mstickettype");
 
-        $selectFields = "fin_ticket_type_id,fst_ticket_type_name,fst_assignment_or_notice,'action' as action";
+        $selectFields = "fin_ticket_type_id,fst_ticket_type_name,fst_assignment_or_notice,fbl_need_approval,'action' as action";
         $this->datatables->setSelectFields($selectFields);
 
         $Fields = $this->input->get('optionSearch');

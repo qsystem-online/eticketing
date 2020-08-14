@@ -227,7 +227,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 		$("#select-country").change(function(event){
 			event.preventDefault();
-			$('#select-provinces').val(null).trigger('change');
+			$("#select-provinces").val(null).trigger('change');
 			$("#select-provinces").select2({
 				width: '100%',
 				ajax: {

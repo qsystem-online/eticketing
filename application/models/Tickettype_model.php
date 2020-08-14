@@ -38,7 +38,7 @@ class Tickettype_model extends MY_MODEL {
     }
 
     public function getAllList() {
-        $ssql = "select fin_ticket_type_id,fst_ticket_type_name from ". $this->tableName ." where fst_active = 'A' order by fst_ticket_type_name";
+        $ssql = "select fin_ticket_type_id,fst_ticket_type_name,fst_assignment_or_notice,fbl_need_approval from ". $this->tableName ." where fst_active = 'A' order by fst_ticket_type_name";
         $qr = $this->db->query($ssql, []);
         $rs = $qr->result();
         return $rs;

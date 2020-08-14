@@ -45,7 +45,7 @@ class Usersgroup_model extends MY_Model
 
     public function getAllList()
     {
-        $ssql = "select fin_group_id,fst_group_name from " . $this->tableName . " where fst_active = 'A'";
+        $ssql = "select fin_group_id,fst_group_name,fin_level from " . $this->tableName . " where fst_active = 'A'";
         $qr = $this->db->query($ssql, []);
         $rs = $qr->result();
         return $rs;

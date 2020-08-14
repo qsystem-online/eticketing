@@ -266,8 +266,8 @@ class Branch extends MY_Controller
     
     public function get_provinces($fin_country_id){
 		$term = $this->input->get("term");
-		$ssql = "SELECT * FROM msarea WHERE LENGTH(fst_kode) - LENGTH(REPLACE(fst_kode, '.', '')) = 0 ";
-		$qr = $this->db->query($ssql,['%'.$term.'%',$fin_country_id]);
+        $ssql = "SELECT * FROM msarea WHERE LENGTH(fst_kode) - LENGTH(REPLACE(fst_kode, '.', '')) = 0 and fst_nama like ? ";
+		$qr = $this->db->query($ssql,['%'.$term.'%']);
 		$rs = $qr->result();
 		
 		$this->ajxResp["status"] = "SUCCESS";
@@ -287,8 +287,9 @@ class Branch extends MY_Controller
     }
     
     public function get_district($fst_kode){
-		$ssql = "SELECT * FROM msarea WHERE LENGTH(fst_kode) - LENGTH(REPLACE(fst_kode, '.', '')) = 1 and fst_kode like ? ";
-		$qr = $this->db->query($ssql,[$fst_kode .'%']);
+        $term = $this->input->get("term");
+		$ssql = "SELECT * FROM msarea WHERE LENGTH(fst_kode) - LENGTH(REPLACE(fst_kode, '.', '')) = 1 and fst_kode like ? and fst_nama like ? ";
+		$qr = $this->db->query($ssql,[$fst_kode .'%','%'.$term.'%']);
 		$rs = $qr->result();
 		
 		$this->ajxResp["status"] = "SUCCESS";
@@ -297,8 +298,9 @@ class Branch extends MY_Controller
     }
     
     public function get_subdistrict($fst_kode){
-		$ssql = "SELECT * FROM msarea WHERE LENGTH(fst_kode) - LENGTH(REPLACE(fst_kode, '.', '')) = 2 and fst_kode like ? ";
-		$qr = $this->db->query($ssql,[$fst_kode .'%']);
+        $term = $this->input->get("term");
+		$ssql = "SELECT * FROM msarea WHERE LENGTH(fst_kode) - LENGTH(REPLACE(fst_kode, '.', '')) = 2 and fst_kode like ? and fst_nama like ? ";
+		$qr = $this->db->query($ssql,[$fst_kode .'%','%'.$term.'%']);
 		$rs = $qr->result();
 		
 		$this->ajxResp["status"] = "SUCCESS";

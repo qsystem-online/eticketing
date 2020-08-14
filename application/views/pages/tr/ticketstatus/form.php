@@ -206,6 +206,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="select_serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
                                     <div class="col-xs-6 col-md-4 personal-info">
                                         <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id" style="width: 100%" disabled>
+                                            <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
                                                 foreach ($servicelevelList as $serviceLevel) {
