@@ -346,7 +346,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <div class="form-group">
                                         <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"><?=lang("Lampiran Gambar")?></label>
                                         <div class="col-xs-6 col-md-4">
-                                            <input type="file" class="form-control" id="fst_lampiran"  name="fst_lampiran">
+                                            <input type="file" class="form-control" id="fst_lampiran"  name="fst_lampiran" accept=".jpg">
                                         </div>
 
                                         <div class="col-xs-12 col-md-6">
