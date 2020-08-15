@@ -933,11 +933,27 @@ $(function(){
                 //Ticket Docs
                 $.each(resp.ms_ticketdocs, function(name, val) {
                     console.log(val);
-                        var tbody = '<tr>';
-                            tbody += '<td style="width:30%"><a href="<?=site_url()?>assets/app/tickets/image/'+val.fin_rec_id+'.jpg" target="_blank">'+val.fst_doc_title+'</a></td>';
-                            tbody += '<td style="width:50%">'+val.fst_memo+'</td>';
-                            tbody += '<td style="width:30%">'+val.fdt_insert_datetime+'</td>';
-                        tbody += '</tr>';
+                    //    var tbody = '<tr>';
+                    //        tbody += '<td style="width:30%"><a href="<?=site_url()?>assets/app/tickets/image/'+val.fin_rec_id+'.jpg" target="_blank">'+val.fst_doc_title+'</a></td>';
+                    //        tbody += '<td style="width:50%">'+val.fst_memo+'</td>';
+                    //        tbody += '<td style="width:30%">'+val.fdt_insert_datetime+'</td>';
+                    //    tbody += '</tr>';
+                    //$("#tblbodydocs").append(tbody);
+                    var tbody = '<tr id="doc_' + val.fin_rec_id + '">';                            
+                        tbody += '<td>';
+                        tbody += '<a href="<?=site_url()?>assets/app/tickets/image/'+val.fin_rec_id+'.jpg" target="_blank">';
+                        tbody += '<img src="<?=site_url()?>assets/app/tickets/image/'+val.fin_rec_id+'.jpg" width="50" height="50" style="vertical-align: text-top;margin-right:10px;" />';
+                        tbody +=  val.fst_doc_title;
+                        tbody +=  '</a>';
+                        tbody +=  '</td>';
+                        tbody += '<td>'+val.fst_memo+'</td>';
+                        tbody += '<td>'+val.fdt_insert_datetime+'</td>';
+                        tbody += '<td class="text-center">';
+                        if ( <?= $this->aauth->get_user_id() ?> == val.fin_insert_id){
+                            tbody += '<a class="btn btn-delete-doc" data-docid="'+val.fin_rec_id+'" ><i class="fa fa-trash"></i></a>';
+                        }                        
+                        tbody += '</td>';
+                    tbody += '</tr>';
                     $("#tblbodydocs").append(tbody);
                 })
 

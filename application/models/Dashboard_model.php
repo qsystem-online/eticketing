@@ -47,7 +47,7 @@ class Dashboard_model extends CI_Model {
         OR (c.fin_department_id = $deptActive AND c.fin_level > $levActive)
         OR (d.fin_department_id = $deptActive AND d.fin_level > $levActive)
         OR (e.fin_department_id = $deptActive AND e.fin_level > $levActive))
-        AND a.fst_status !='CLOSED' AND a.fst_status !='VOID' AND a.fst_status !='ACCEPTANCE_EXPIRED' AND a.fst_status !='APPROVAL_EXPIRED' AND a.fst_status !='TICKET_EXPIRED') a ";
+        AND a.fst_status !='REJECTED' AND a.fst_status !='CLOSED' AND a.fst_status !='VOID' AND a.fst_status !='ACCEPTANCE_EXPIRED' AND a.fst_status !='APPROVAL_EXPIRED' AND a.fst_status !='TICKET_EXPIRED') a ";
         $qr = $this->db->query($ssql,[]);
         $rw = $qr->row();
         return $rw->ttl_ourTickets;

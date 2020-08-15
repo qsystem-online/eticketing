@@ -146,7 +146,7 @@ class Ticketstatus_model extends MY_MODEL {
         OR (c.fin_department_id = $deptActive AND c.fin_level > $levActive)
         OR (d.fin_department_id = $deptActive AND d.fin_level > $levActive)
         OR (e.fin_department_id = $deptActive AND e.fin_level > $levActive))
-        AND a.fst_status !='CLOSED' AND a.fst_status !='VOID' AND a.fst_status !='ACCEPTANCE_EXPIRED' AND a.fst_status !='APPROVAL_EXPIRED' AND a.fst_status !='TICKET_EXPIRED' ORDER BY a.fin_ticket_id DESC ";
+        AND a.fst_status !='REJECTED' AND a.fst_status !='CLOSED' AND a.fst_status !='VOID' AND a.fst_status !='ACCEPTANCE_EXPIRED' AND a.fst_status !='APPROVAL_EXPIRED' AND a.fst_status !='TICKET_EXPIRED' ORDER BY a.fin_ticket_id DESC ";
         $qr = $this->db->query($ssql,[]);
         //echo $this->db->last_query();
         //die();

@@ -8,19 +8,25 @@ defined('BASEPATH') or exit ('No direct script access allowed');
     .border-0{
         border: 0px;
     }
-    td{
+    .td{
         padding: 2px; !important
     }
     .form-group{
 		margin-bottom:10px;
 	}
+    #frmTicketStatus{
+        display:none;
+    }
+    #frmTicketlampiran{
+        display:none;
+    }
 </style>
 <style>
     {
         box-sizing: border-box;
     }
 
-    body {
+    .body {
         font-family: Arial, Helvetica, sans-serif;
     }
 
@@ -273,6 +279,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                     <label for="select-toUser" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
                                     <div class="col-xs-6 col-md-4">
                                         <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id" style="width: 100%" disabled>
+                                        <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $touserList = $this->users_model->getAllList();
                                                 foreach ($touserList as $toUser){
@@ -348,6 +355,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                         <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"><?=lang("Lampiran Gambar")?></label>
                                         <div class="col-xs-6 col-md-4">
                                             <input type="file" class="form-control" id="fst_lampiran"  name="fst_lampiran" accept=".jpg">
+                                            <div id="fst_lampiran_err" class="text-danger"></div>
                                         </div>
 
                                         <div class="col-xs-12 col-md-6">
@@ -503,9 +511,15 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         $("#btn-add-doc").click(function(event){
             event.preventDefault();
             var docTitle = $("#fst_doc_title").val();
-            if (docTitle == null || docTitle == "") {
+            var docFile = $("#fst_lampiran").val();
+            if (docTitle == null || docTitle == "" ) {
                 $("#fst_doc_title_err").html("Judul harus diisi !!!");
                 $("#fst_doc_title_err").show();
+                return;
+            }
+            if (docFile == ""){
+                $("#fst_lampiran_err").html("Pilih File !!!");
+                $("#fst_lampiran_err").show();
                 return;
             }else{
                 $("#fst_doc_title_err").hide();
@@ -659,6 +673,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 if (resp.ms_ticketstatus.fst_status == "NEED_APPROVAL"){
                     //$('#fst_update_status').val("NEED_APPROVAL",true).prop(disabled="disabled");
+                    $("#frmTicketStatus").show();
+                    $("#frmTicketlampiran").show();
                     array_of_options = ['APPROVED/OPEN', 'REJECTED']
                     $.each(array_of_options, function(i, item) {
                         sel_op = ''; 
@@ -667,6 +683,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     })
                     if(resp.ms_ticketstatus.fin_approved_by_user_id != $userActive){
                         $("#frmTicketStatus").hide();
+                        $("#frmTicketlampiran").hide();
                     }else{
                         $("#select_update_serviceLevel").prop("disabled",true);
                         $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
@@ -675,11 +692,14 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 if (resp.ms_ticketstatus.fst_status == "REJECTED" && resp.ms_ticketstatus.fin_issued_to_user_id != $userActive){
                     $("#frmTicketStatus").hide();
+                    $("#frmTicketlampiran").hide();
                 }
 
                 // UPDATE DEADLINE EXTENDED DISINI BERDASARKAN SLA
                 if (resp.ms_ticketstatus.fst_status == "APPROVED/OPEN" && resp.ms_ticketstatus.fst_assignment_or_notice !='NOTICE'){
                     //$('#fst_update_status').val("NEED_APPROVAL",true).prop(disabled="disabled");
+                    $("#frmTicketStatus").show();
+                    $("#frmTicketlampiran").show();
                     array_of_options = ['SELECT...','ACCEPTED', 'NEED_REVISION']
                     $.each(array_of_options, function(i, item) {
                         if(i==0) { 
@@ -693,11 +713,14 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     })
                     if(resp.ms_ticketstatus.fin_issued_to_user_id != $userActive){
                         $("#frmTicketStatus").hide();
+                        $("#frmTicketlampiran").hide();
                     }else{
                         $("#select_update_serviceLevel").prop("disabled",true);
                         $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
                     }
                 }else if(resp.ms_ticketstatus.fst_status == "APPROVED/OPEN" && resp.ms_ticketstatus.fst_assignment_or_notice =='NOTICE'){
+                    $("#frmTicketStatus").show();
+                    $("#frmTicketlampiran").show();
                     array_of_options = ['SELECT...','CLOSED']
                     $.each(array_of_options, function(i, item) {
                         if(i==0) { 
@@ -711,6 +734,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     })
                     if(resp.ms_ticketstatus.fin_issued_to_user_id != $userActive){
                         $("#frmTicketStatus").hide();
+                        $("#frmTicketlampiran").hide();
                     }else{
                         $("#select_update_serviceLevel").prop("disabled",true);
                         $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
@@ -719,6 +743,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 // CEK NEED_REVISION BEFORE OR AFTER ACCEPT (BEFORE ENABLE SLA ,AFTER ENABLE DEADLINE EXTENDED)
                 if (resp.ms_ticketstatus.fst_status == "NEED_REVISION"){
+                    $("#frmTicketStatus").show();
+                    $("#frmTicketlampiran").show();
                     array_of_options = ['APPROVED/OPEN']
                     $.each(array_of_options, function(i, item) {
                         sel_op = ''; 
@@ -727,6 +753,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     })
                     if(resp.ms_ticketstatus.fin_issued_by_user_id != $userActive){
                         $("#frmTicketStatus").hide();
+                        $("#frmTicketlampiran").hide();
                     }else if(resp.ms_ticketstatus.fdt_deadline_datetime ==null){
                         //alert ("NULL");
                         $("#select_update_serviceLevel").prop("disabled",false);
@@ -739,6 +766,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 }
 
                 if (resp.ms_ticketstatus.fst_status == "COMPLETION_REVISED"){
+                    $("#frmTicketStatus").show();
+                    $("#frmTicketlampiran").show();
                     array_of_options = ['COMPLETED']
                     $.each(array_of_options, function(i, item) {
                         sel_op = ''; 
@@ -747,6 +776,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     })
                     if(resp.ms_ticketstatus.fin_issued_to_user_id != $userActive){
                         $("#frmTicketStatus").hide();
+                        $("#frmTicketlampiran").hide();
                     }else{
                         $("#select_update_serviceLevel").prop("disabled",true);
                         $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
@@ -754,6 +784,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 }
 
                 if (resp.ms_ticketstatus.fst_status == "ACCEPTED" && resp.ms_ticketstatus.fst_assignment_or_notice !='NOTICE'){
+                    $("#frmTicketStatus").show();
+                    $("#frmTicketlampiran").show();
                     array_of_options = ['NEED_REVISION','COMPLETED']
                     $.each(array_of_options, function(i, item) {
                         sel_op = ''; 
@@ -762,6 +794,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     })
                     if(resp.ms_ticketstatus.fin_issued_to_user_id != $userActive){
                         $("#frmTicketStatus").hide();
+                        $("#frmTicketlampiran").hide();
                     }else{
                         $("#select_update_serviceLevel").prop("disabled",true);
                         $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
@@ -771,6 +804,8 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 }
 
                 if (resp.ms_ticketstatus.fst_status == "COMPLETED"){
+                    $("#frmTicketStatus").show();
+                    $("#frmTicketlampiran").show();
                     array_of_options = ['CLOSED','COMPLETION_REVISED']
                     $.each(array_of_options, function(i, item) {
                         sel_op = ''; 
@@ -779,6 +814,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     })
                     if(resp.ms_ticketstatus.fin_issued_by_user_id != $userActive){
                         $("#frmTicketStatus").hide();
+                        $("#frmTicketlampiran").hide();
                     }else{
                         $("#select_update_serviceLevel").prop("disabled",true);
                         $("#fdt_update_deadline_extended_datetime").prop("disabled",true);
