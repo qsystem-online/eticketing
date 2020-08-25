@@ -167,7 +167,8 @@ class User extends MY_Controller
 
 		$data = [
 			"fst_username" => $this->input->post("fst_username"),
-			"fst_password" => md5("password"),
+			//"fst_password" => md5("password"),
+			"fst_password" => md5($this->input->post("fst_password")),
 			"fst_fullname" => $this->input->post("fst_fullname"),
 			"fdt_birthdate" => dBDateFormat($this->input->post("fdt_birthdate")),
 			"fst_gender" => $this->input->post("fst_gender"),
@@ -267,10 +268,12 @@ class User extends MY_Controller
 			return;
 		}
 
+		
+
 		$data = [
 			"fin_user_id" => $fin_user_id,
 			"fst_username" => $this->input->post("fst_username"),
-			//"fst_password" => md5("defaultpassword"), //$this->input->post("fst_password"),
+			"fst_password" => md5($this->input->post("fst_password")), //$this->input->post("fst_password"),
 			"fst_fullname" => $this->input->post("fst_fullname"),
 			"fdt_birthdate" => dBDateFormat($this->input->post("fdt_birthdate")),
 			"fst_gender" => $this->input->post("fst_gender"),
@@ -284,6 +287,12 @@ class User extends MY_Controller
 			"fin_group_id" => $this->input->post("fin_group_id"),
 			"fbl_admin" =>  $this->input->post("fbl_admin") == null? 0:1
 		];
+
+		if ($this->input->post("fst_password") == $user->fst_password ){
+			unset($data["fst_password"]);
+		}
+
+
         if ($this->input->post("fbl_admin") == 0){
             $data["fst_privilege_group"] = 'USER';
         }else{
@@ -459,7 +468,7 @@ class User extends MY_Controller
 			$this->json_output();
 			return;
 		}
-		
+
 		$this->load->model('users_model');
 		$this->db->trans_start();
         $this->users_model->delete($id);

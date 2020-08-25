@@ -71,6 +71,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
 
 					<div class="form-group">
+						<label for="fst_username" class="col-xs-6 col-md-2 control-label"><?=lang("Password")?> *</label>
+						<div class="col-xs-6 col-md-10">
+							<input type="password" class="form-control" id="fst_password"  name="fst_password" value="password">
+							<div id="fst_password_err" class="text-danger"></div>
+						</div>
+					</div>
+
+					<div class="form-group">
 						<label for="fst_fullname" class="col-xs-6 col-md-2 control-label"><?=lang("Full Name")?> *</label>
 						<div class="col-xs-6 col-md-10">
 							<input type="text" class="form-control" id="fst_fullname" placeholder="<?=lang("Full Name")?>" name="fst_fullname">
