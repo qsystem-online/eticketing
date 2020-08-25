@@ -311,7 +311,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                         <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id" style="width: 100%" disabled>
                                             <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
-                                                $approvedbyList = $this->users_model->getApprovedBy();
+                                                $approvedbyList = $this->users_model->getAllList();
                                                 foreach ($approvedbyList as $approvedBy){
                                                     echo "<option value='$approvedBy->fin_user_id'>$approvedBy->fst_username</option>";
                                                 }

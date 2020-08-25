@@ -159,8 +159,23 @@ class Users_model extends MY_Model
 
 	public function getAllList()
 	{
+		$term = $this->input->get("term");
 		$ssql = "select fin_user_id,fst_username from " . $this->tableName . " where fst_active = 'A' order by fst_username";
 		$qr = $this->db->query($ssql, []);
+		$rs = $qr->result();
+		return $rs;
+	}
+
+	public function getUnderList()
+	{
+		$user = $this->aauth->user();
+        $userActive = $user->fin_user_id;
+        $deptActive = $user->fin_department_id;
+        $levActive = intval($user->fin_level);
+        $levActive = strval($levActive);
+		$term = $this->input->get("term");
+		$ssql = "SELECT a.*,b.fin_level FROM users a INNER JOIN usersgroup b ON a.fin_group_id = b.fin_group_id WHERE (a.fin_department_id = $deptActive AND b.fin_level > $levActive) OR a.fin_user_id = ? ORDER BY a.fst_username";
+		$qr = $this->db->query($ssql, [$userActive]);
 		$rs = $qr->result();
 		return $rs;
 	}

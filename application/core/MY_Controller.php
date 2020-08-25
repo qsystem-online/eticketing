@@ -15,6 +15,7 @@ class MY_Controller extends CI_Controller
 		//$this->output->enable_profiler(TRUE);
 
 		$this->load->model("msbranches_model");
+		$this->load->model("dashboard_model");
 
 		$this->lang->load("general", "english");
 

@@ -14,6 +14,7 @@ class Ticketstatus extends MY_Controller
         $this->load->model('tickettype_model');
         $this->load->model('users_model');
         $this->load->model('msdepartments_model');
+        $this->load->model("dashboard_model");
     }
 
     public function index()
@@ -712,6 +713,7 @@ class Ticketstatus extends MY_Controller
     {
         $this->load->model("ticketstatus_model");
         $this->ticketstatus_model->update_rejectedview($fin_ticket_id);
+        $this->ticketstatus_model->update_view_newTicket($fin_ticket_id);
         $data = $this->ticketstatus_model->getDataById($fin_ticket_id);
 
         //$this->load->library("datatables");		
@@ -1673,6 +1675,13 @@ class Ticketstatus extends MY_Controller
         $this->load->model("monitoringticket_model");
         $arrPengumuman = $this->monitoringticket_model->get_pengumuman();
         $this->json_output($arrPengumuman);
+    }
+
+    public function get_new_ticket(){
+        $new = $this->dashboard_model->get_ttl_newTickets();
+        $result['new'] = $new;
+        $result['msg'] = "Berhasil direfresh secara realtime";
+        echo json_encode($result);
     }
 
 }

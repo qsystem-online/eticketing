@@ -1,17 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Tickets extends MY_Controller
+class Tickets_v2 extends MY_Controller
 {
 	public $layout_columns =[]; 
 
 	public function __construct()
 	{
 		parent::__construct();
-		if (!$this->aauth->is_permit("report")){
-            show_404();
-        }
-
 		$this->load->library('form_validation');
 		$this->load->model('vmodels/tickets_rpt_model');
         $this->load->model('users_model');
@@ -75,9 +71,6 @@ class Tickets extends MY_Controller
 
 	public function index()
 	{
-		if (!$this->aauth->is_permit("report")){
-            show_404();
-		}
 		$this->loadForm();
 	}
 
@@ -102,7 +95,7 @@ class Tickets extends MY_Controller
         //return;
 		
 
-		$side_filter = $this->parser->parse('pages/reports/tickets/form',$this->data, true);
+		$side_filter = $this->parser->parse('pages/reports/tickets/formV2',$this->data, true);
 		$this->data['REPORT_FILTER'] = $side_filter;
 		$this->data['TITLE'] = "TICKET REPORT";
 		$mode = "Report";
@@ -189,7 +182,7 @@ class Tickets extends MY_Controller
 	public function generateExcel($isPreview = 1) {
 		$this->load->library("phpspreadsheet");
 		// print_r("Hallo");print_r($data);die();
-		//$dataReport = $this->tickets_rpt_model->queryCompleteAdmin($data,"a.fst_ticket_no");
+		//$dataReport = $this->tickets_rpt_model->queryComplete($data,"a.fst_ticket_no");
 		//print_r($dataReport);die();
 		$data = [
 			"fin_branch_id" => $this->input->post("fin_branch_id"),
@@ -206,7 +199,7 @@ class Tickets extends MY_Controller
 		//print_r($data['selected_columns'][0]);die;
 		
 
-		$dataReport = $this->tickets_rpt_model->queryCompleteAdmin($data,"a.fst_ticket_no",$data['rpt_layout']);
+		$dataReport = $this->tickets_rpt_model->queryComplete($data,"a.fst_ticket_no",$data['rpt_layout']);
 		//print_r($dataReport);die();
 
 		$arrMerged = [];  //row,ttlColType(full,sum)

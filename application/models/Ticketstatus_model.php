@@ -23,6 +23,7 @@ class Ticketstatus_model extends MY_MODEL {
         $qr = $this->db->query($ssql,[$fin_ticket_id]);
         $rwTicketstatus = $qr->row();
 
+
 		if ($rwTicketstatus) {
 			if (file_exists(FCPATH . 'assets/app/tickets/image/' . $rwTicketstatus->fin_ticket_id . '.jpg')) {
 				$lampiranURL = site_url() . 'assets/app/tickets/image/' . $rwTicketstatus->fin_ticket_id . '.jpg';
@@ -55,7 +56,6 @@ class Ticketstatus_model extends MY_MODEL {
         WHERE a.fin_ticket_id = ? ORDER BY a.fin_rec_id DESC";
         $qr = $this->db->query($ssql, [$fin_ticket_id]);
         $rsTicketlog = $qr->result();
-
         // Ticket Docs 27/02/2020 enny
         $ssql = "SELECT a.* FROM trticket_docs a WHERE a.fin_ticket_id = ? ORDER BY a.fin_rec_id DESC";
         $qr = $this->db->query($ssql, [$fin_ticket_id]);
@@ -412,6 +412,22 @@ class Ticketstatus_model extends MY_MODEL {
         if ($qr->row() != null){
             //--Ticket Rejected viewed--
             $ssql = "UPDATE trticket SET fbl_rejected_view = 1 WHERE fin_ticket_id = ?";
+            $this->db->query($ssql,[$fin_ticket_id]);
+        }
+    }
+    public function update_view_newTicket($fin_ticket_id){
+        $user = $this->aauth->user();
+        $userView = $user->fin_user_id;
+
+        $ssql = "SELECT * FROM trticket WHERE fin_ticket_id = ? AND NOT FIND_IN_SET (". $userView.",'fst_view_id')";
+        $qr = $this->db->query($ssql,$fin_ticket_id);
+        $rw = $qr->row();
+        $fst_view_id = $rw->fst_view_id;
+        $fst_view_idNew = $fst_view_id . ',' .$userView;
+
+        if ($qr->row() != null){
+            //--New Ticket viewed by user--
+            $ssql = "UPDATE trticket SET fst_view_id = '$fst_view_idNew' WHERE fin_ticket_id = ?";
             $this->db->query($ssql,[$fin_ticket_id]);
         }
     }

@@ -11,7 +11,7 @@ class Login extends CI_Controller
 		$username = $this->input->post("username");
 		$password = $this->input->post("password");
 		if ($username != "") {
-			$ssql = "select a.*,b.fin_branch_id AS ActiveBranch ,b.fst_branch_name, b.fbl_is_hq, c.fin_group_id,c.fst_group_name,c.fin_level from users a left join msbranches b on a.fin_branch_id = b.fin_branch_id left join usersgroup c on a.fin_group_id = c.fin_group_id where fst_username = ?";
+			$ssql = "select a.*,b.fin_branch_id AS ActiveBranch ,b.fst_branch_name, b.fbl_is_hq, c.fin_group_id AS ActiveGroup,c.fst_group_name,c.fin_level AS ActiveLevel from users a left join msbranches b on a.fin_branch_id = b.fin_branch_id left join usersgroup c on a.fin_group_id = c.fin_group_id where fst_username = ?";
 
 			$query = $this->db->query($ssql, [$username]);
 			$rw = $query->row();
@@ -21,6 +21,9 @@ class Login extends CI_Controller
 				if (md5($password) == $rw->fst_password) {
 					$this->session->set_userdata("active_user", $this->users_model->getDataById($rw->fin_user_id)["user"]);
 					$this->session->set_userdata("active_branch_id", $rw->ActiveBranch);
+					$this->session->set_userdata("active_group_id", $rw->ActiveGroup);
+					$this->session->set_userdata("active_level_id", $rw->ActiveLevel);
+					$this->session->set_userdata("active_dept_id", $rw->fin_department_id);
 					$this->session->set_userdata("last_login_session", time());
 					unset($this->aauth);
 					$this->load->library('aauth');

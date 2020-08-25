@@ -1,41 +1,40 @@
+<?php
+defined('BASEPATH') or exit ('No direct script access allowed');
+?>
+
+<style type="text/css">
+    #row1{
+        display:none;
+    }
+</style>
 <!-- form start -->
-<form id="rptTickets" action="<?= site_url() ?>report/tickets/process" method="POST" enctype="multipart/form-data">
+<form id="rptTicketsV2" action="<?= site_url() ?>report/tickets_v2/process" method="POST" enctype="multipart/form-data">
     <div class="box-body">
         <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
-            <div class="form-group row">                    
-            	<label for="fin_branch_id" class="col-md-2 control-label"><?=lang("Branch")?></label>
+            <div class="form-group row" id="row1">                    
+                <label for="fin_branch_id" class="col-md-2 control-label"><?=lang("Branch")?></label>
                 <div class="col-md-4">
-                    <select id="select-branch" class="form-control" name="fin_branch_id">
+					<?php
+                        $active_user = $this->session->userdata("active_user");	
+                        $branchList = $this->msbranches_model->getAllList();
+					?>
+                    <select id="select-branch" class="form-control" name="fin_branch_id" disabled>
 						<option value="0" selected>-- <?=lang("All")?> --</option>
 						<?php
-							$branchList = $this->msbranches_model->getAllList();
+							$activeBranchId = $this->session->userdata("active_branch_id");
 							foreach ($branchList as $branch) {
-								echo "<option value='$branch->fin_branch_id'>$branch->fst_branch_name</option>";
+								//echo "<option value='$branch->fin_branch_id'>$branch->fst_branch_name</option>";
+								$isActive = ($branch->fin_branch_id == $activeBranchId) ? "selected" : "";
+								echo "<option value=" . $branch->fin_branch_id . " $isActive >" . $branch->fst_branch_name . "</option>";
 							}
 						?>
                     </select>
                     <div id="fin_branch_id_err" class="text-danger"></div>
                 </div>
-            	<label for="fin_department_id" class="col-md-2 control-label"><?=lang("Department")?></label>
-                <div class="col-md-4">
-                    <select id="select-department" class="form-control select2" name="fin_department_id">
-                        <option value="0">-- <?=lang("All")?> --</option>
-						<?php
-							$departmentList = $this->msdepartments_model->getAllList();
-							foreach ($departmentList as $department) {
-								echo "<option value='$department->fin_department_id'>$department->fst_department_name</option>";
-							}
-						?>
-                    </select>
-                    <div id="fin_department_id_err" class="text-danger"></div>
-                </div>
-            </div>
-            
-            <div class="form-group row">
-            <label for="fin_group_id" class="col-md-2 control-label"><?=lang("User Group")?></label>
+                <label for="fin_group_id" class="col-md-2 control-label"><?=lang("User Group")?></label>
                 <div class="col-md-4">
                     <select id="fin_group_id" class="form-control select2" name="fin_group_id">
-						<option value="0" selected>-- <?=lang("All")?> --</option>
+						<option value="" selected>-- <?=lang("All")?> --</option>
 						<?php
                         $groupList = $this->usersgroup_model->getAllList();
 						foreach ($groupList as $group) {
@@ -45,12 +44,34 @@
                     </select>
                     <div id="fin_group_id_id_err" class="text-danger"></div>
                 </div>
-            <label for="select-userId" class="col-md-2 control-label"><?=lang("User Name")?></label>
+            </div>
+            
+            <div class="form-group row">
+                <label for="fin_department_id" class="col-md-2 control-label"><?=lang("Department")?></label>
+                <div class="col-md-4">
+                    <?php
+                        $active_user = $this->session->userdata("active_user");	
+                        $departmentList = $this->msdepartments_model->getAllList();
+					?>
+                    <select id="select-department" class="form-control select2" name="fin_department_id">
+                        <!--<option value="0">-- <?=lang("All")?> --</option>-->
+						<?php
+							$activeDeptId = $this->session->userdata("active_dept_id");
+							foreach ($departmentList as $department) {
+                                //echo "<option value='$department->fin_department_id'>$department->fst_department_name</option>";
+                                $isActive = ($department->fin_department_id == $activeDeptId) ? "selected" : "disabled";
+								echo "<option value=" . $department->fin_department_id . " $isActive >" . $department->fst_department_name . "</option>";
+							}
+						?>
+                    </select>
+                    <div id="fin_department_id_err" class="text-danger"></div>
+                </div>
+                <label for="select-userId" class="col-md-2 control-label"><?=lang("User Name")?></label>
                 <div class="col-md-4">
                     <select id="select-userId" class="form-control select2" name="fin_user_id">
-                        <option value="0">-- <?=lang("All")?> --</option>
+                    <option value="0">-- <?=lang("All")?> --</option>
 						<?php
-							$userList = $this->users_model->getAllList();
+							$userList = $this->users_model->getUnderList();
 							foreach ($userList as $user) {
 								echo "<option value='$user->fin_user_id'>$user->fst_username</option>";
 							}
@@ -281,8 +302,8 @@
             event.preventDefault();
             App.blockUIOnAjaxRequest("Please wait while processing data.....");
             //data = new FormData($("#frmBranch")[0]);
-            data = $("#rptTickets").serializeArray();
-            url = "<?= site_url() ?>report/tickets/process";
+            data = $("#rptTicketsV2").serializeArray();
+            url = "<?= site_url() ?>report/tickets_v2/process";
             
             // $("iframe").attr("src",url);
             $.ajax({
@@ -324,12 +345,12 @@
                         // 
                         //Clear all previous error
                         $(".text-danger").html("");
-                        url = "<?= site_url() ?>report/tickets/generateexcel";
+                        url = "<?= site_url() ?>report/tickets_v2/generateexcel";
                         //alert(url);
                         //$("iframe").attr("src",url);
-                        $("#rptTickets").attr('action', url);
-                        $("#rptTickets").attr('target', 'rpt_iframe');
-                        $("#rptTickets").submit();
+                        $("#rptTicketsV2").attr('action', url);
+                        $("#rptTicketsV2").attr('target', 'rpt_iframe');
+                        $("#rptTicketsV2").submit();
                         $("a#toggle-window").click();
                         // Change to Edit mode
                         // $("#frm-mode").val("EDIT"); //ADD|EDIT
@@ -351,8 +372,8 @@
             event.preventDefault();
             App.blockUIOnAjaxRequest("Please wait while downloading excel file.....");
             //data = new FormData($("#frmBranch")[0]);
-            resp = $("#rptTickets").serializeArray();
-            url = "<?= site_url() ?>report/tickets/process";
+            resp = $("#rptTicketsV2").serializeArray();
+            url = "<?= site_url() ?>report/tickets_v2/process";
             
 
             data = JSON.stringify(resp);
@@ -360,12 +381,12 @@
             
             //Clear all previous error
             $(".text-danger").html("");
-            url = "<?= site_url() ?>report/tickets/generateexcel/0";
+            url = "<?= site_url() ?>report/tickets_v2/generateexcel/0";
             //alert(url);
             //$("iframe").attr("src",url);
-            $("#rptTickets").attr('action', url);
-            $("#rptTickets").attr('target', 'rpt_iframe');
-            $("#rptTickets").submit();
+            $("#rptTicketsV2").attr('action', url);
+            $("#rptTicketsV2").attr('target', 'rpt_iframe');
+            $("#rptTicketsV2").submit();
             $("a#toggle-window").click();
 
         });        

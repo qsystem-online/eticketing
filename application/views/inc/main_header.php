@@ -19,6 +19,40 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 		<div class="navbar-custom-menu">
 			<ul class="nav navbar-nav">
+				<!-- Notifications: style can be found in dropdown.less -->
+				<li class="dropdown notifications-menu">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					<i class="fa fa-bell-o"></i>
+					<span class="label label-warning" id="ticket-new">
+					<?php
+						//$this->load->model("dashboard_model");
+						$newTickets = $this->dashboard_model->get_ttl_newTickets();
+						echo $newTickets;
+					?>
+					</span>
+					</a>
+					<ul class="dropdown-menu">
+					<li>
+						<!-- inner menu: contains the actual data -->
+						<ul class="menu">
+						<li>
+							<a href="<?= site_url() ?>tr/ticketstatus/our_tickets">
+							<i class="label label-success" id="ticket-newDetail">
+							<?php
+								//$this->load->model("dashboard_model");
+								$newTickets = $this->dashboard_model->get_ttl_newTickets();
+								echo $newTickets;
+							?>
+							</i>
+							   new ticket on your department
+							</a>
+						</li>
+						</ul>
+					</li>
+					<!--<li class="footer"><a href="#">cek
+					</a></li>-->
+					</ul>
+				</li>
 				<!-- User Account: style can be found in dropdown.less -->
 				<li class="dropdown user user-menu">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -26,7 +60,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<span class="hidden-xs">
 							<?php
 								$active_user = $this->session->userdata("active_user");
-								echo $active_user->fst_fullname;
+								echo ($active_user->fst_fullname);
 							?>
 						</span>
 					</a>
@@ -34,7 +68,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<!-- User image -->
 						<li class="user-header">
 							<img src="<?=COMPONENT_URL?>dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-							<p><?= $active_user->fst_fullname?> - Web Developer	<small>Member since Nov. 2012</small></p>
+							<p><?= $active_user->fst_fullname?><small><?= $active_user->fst_group_name?></small></p>
 						</li>						
 						<!-- Menu Body -->
 						<li class="user-body">							
@@ -72,4 +106,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			
 		});
 	});
+</script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    setInterval(function(){
+          $.ajax({
+                url:"<?=site_url()?>tr/ticketstatus/get_new_ticket",
+                type:"GET",
+                dataType:"json",//datatype lainnya: html, text
+                data:{},
+                success:function(data){
+                    $("#ticket-new").html(data.new);
+					$("#ticket-newDetail").html(data.new);
+                }
+            });
+          },60000);
+  })
 </script> 

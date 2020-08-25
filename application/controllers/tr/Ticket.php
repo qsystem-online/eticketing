@@ -184,6 +184,7 @@ class ticket extends MY_Controller
             "fin_approved_by_user_id" => $this->input->post("fin_approved_by_user_id"),
             "fin_to_department_id" => $this->input->post("fin_to_department_id"),
             //"fst_status" => $this->input->post("fst_status"),
+            "fst_view_id" => $this->input->post("fin_issued_by_user_id"),
             "fst_memo" => $this->input->post("fst_memo"),
             //"fbl_rejected_view" => ($this->input->post("fbl_rejected_view") == null) ? 0 : 1,
             "fst_active" => 'A'
