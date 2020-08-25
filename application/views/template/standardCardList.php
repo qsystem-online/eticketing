@@ -111,10 +111,10 @@ body {
 		<div class="col-xs-12 col-md-12">
 			<div class="box box-info">
 				<div class="box-header with-border">
-        <div align="right">
-            <span>Search on:</span>
+        <div align="right" >
+            <span style="display:none">Search on:</span>
             <span>
-              <select id="selectSearch" name="selectSearch" style="width: 148px;background-color:#e6e6ff;padding:8px;margin-right:15px;margin-bottom:6px">                            
+              <select id="selectSearch" name="selectSearch" style="width: 148px;background-color:#e6e6ff;padding:8px;margin-right:15px;margin-bottom:6px;display:none">
                   <?php
                       foreach($arrSearch as $key => $value){ ?>
                           <option value=<?=$key?>><?=$value?></option>
@@ -209,9 +209,21 @@ body {
 $(document).ready(function() {
     $("#searchbox").on("keyup", function() {
         var value = $(this).val().toLowerCase();
-        $("#recipe-card div").filter(function() {
-            $(this).toggle($(this).find('h5').text().toLowerCase().indexOf(value) > -1)
-            $(this).toggle($(this).find('ul').text().toLowerCase().indexOf(value) > -1)
+        $("#recipe-card>div").filter(function() {
+            $(this).hide();
+            if ($(this).find('h5').text().toLowerCase().indexOf(value) > -1){
+              $(this).show();
+            }
+
+            if ($(this).find('ul').text().toLowerCase().indexOf(value) > -1){
+              $(this).show();
+            }
+
+
+            console.log($(this).find('h5').text().toLowerCase().indexOf(value)) ;
+            //$(this).toggle();
+            //$(this).toggle($(this).find('h5').text().toLowerCase().indexOf(value) > -1)
+            //$(this).toggle($(this).find('ul').text().toLowerCase().indexOf(value) > -1)
         });
     });
 
