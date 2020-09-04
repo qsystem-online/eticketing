@@ -419,15 +419,17 @@ class Ticketstatus_model extends MY_MODEL {
         $user = $this->aauth->user();
         $userView = $user->fin_user_id;
 
-        $ssql = "SELECT * FROM trticket WHERE fin_ticket_id = ? AND NOT FIND_IN_SET (". $userView.",'fst_view_id')";
+        $ssql = "SELECT * FROM trticket WHERE fin_ticket_id = ? AND NOT FIND_IN_SET ($userView,fst_view_id)";
         $qr = $this->db->query($ssql,$fin_ticket_id);
         $rw = $qr->row();
-        $fst_view_id = $rw->fst_view_id;
-        $fst_view_idNew = $fst_view_id . ',' .$userView;
+        //echo $this->db->last_query();
+        //die();
 
         if ($qr->row() != null){
             //--New Ticket viewed by user--
-            $ssql = "UPDATE trticket SET fst_view_id = '$fst_view_idNew' WHERE fin_ticket_id = ?";
+            $fst_view_id = $rw->fst_view_id;
+            $fst_view_idNew = $fst_view_id . ',' .$userView;
+            $ssql = "UPDATE trticket SET fst_view_id = '$fst_view_idNew' WHERE fin_ticket_id = ? AND NOT FIND_IN_SET ($userView,fst_view_id)";
             $this->db->query($ssql,[$fin_ticket_id]);
         }
     }
@@ -440,6 +442,10 @@ class Ticketstatus_model extends MY_MODEL {
         $now = date_create($now);
         date_add($now,date_interval_create_from_date_string("-1 days"));
         $expirydeadline = date_format($now,"Y-m-d H:i:s");
+
+        $toleranceDays = getDbConfig("completed_tolerance_to_closed");
+        //$completed_expirydeadline = ($expirydeadline ('-'$toleranceDays 'days'));
+        $completed_expirydeadline = date('Y-m-d H:i:s', strtotime($expirydeadline. " - {$toleranceDays} days"));
 
         $user_status = $this->aauth->get_user_id();
         $expiryUpdate = false;
@@ -514,8 +520,8 @@ class Ticketstatus_model extends MY_MODEL {
                     $insertId = $this->ticketlog_model->insert($data);
                 }
             }
-    
-            $ssql = "SELECT * FROM trticket WHERE fdt_deadline_extended_datetime < ? AND (fst_status ='ACCEPTED' OR fst_status ='NEED_REVISION' OR fst_status ='COMPLETED' OR fst_status ='COMPLETION_REVISED' OR (fst_status ='APPROVED/OPEN'  AND fdt_deadline_extended_datetime IS NOT NULL)) ";
+            //---UPDATE TICKET EXPIRED UTK STATUS ACCEPTED,NEED_REVISION dan COMPLETION_REVISED atau APPROVED/OPEN yg  fdt_deadline_extended_datetime tidak null
+            $ssql = "SELECT * FROM trticket WHERE fdt_deadline_extended_datetime < ? AND (fst_status ='ACCEPTED' OR fst_status ='NEED_REVISION' OR fst_status ='COMPLETION_REVISED' OR (fst_status ='APPROVED/OPEN'  AND fdt_deadline_extended_datetime IS NOT NULL)) ";
             $qr = $this->db->query($ssql,[$expirydeadline]);
             //echo $this->db->last_query();
             //die();
@@ -530,6 +536,31 @@ class Ticketstatus_model extends MY_MODEL {
                     $this->load->model("ticketlog_model");
                     $data = [
                         "fin_ticket_id" => $dataD->fin_ticket_id,
+                        "fdt_status_datetime" => date("Y-m-d H:i:s"),
+                        "fst_status" => 'TICKET_EXPIRED',
+                        "fst_status_memo" => 'TICKET_EXPIRED BY SYSTEM',
+                        "fin_status_by_user_id" => $user_status
+                    ];
+                    $insertId = $this->ticketlog_model->insert($data);
+                }
+            }
+
+            //---UPDATE TICKET EXPIRED UTK STATUS COMPLETED
+            $ssql = "SELECT * FROM trticket WHERE fdt_deadline_extended_datetime < ? AND fst_status ='COMPLETED' ";
+            $qr = $this->db->query($ssql,[$completed_expirydeadline]);
+            //echo $this->db->last_query();
+            //die();
+            $rwTicketCompletedDeadlineExpiry = $qr->result();
+            if ($qr->row() != null){
+                foreach($rwTicketCompletedDeadlineExpiry as $dataC){
+                    //---Update Expiry Deadline Ticket---
+                    $ssql = "UPDATE trticket SET fst_status = 'TICKET_EXPIRED' WHERE fin_ticket_id = ?";
+                    $this->db->query($ssql,[$dataC->fin_ticket_id]);
+    
+                    //--Ticket LOG--
+                    $this->load->model("ticketlog_model");
+                    $data = [
+                        "fin_ticket_id" => $dataC->fin_ticket_id,
                         "fdt_status_datetime" => date("Y-m-d H:i:s"),
                         "fst_status" => 'TICKET_EXPIRED',
                         "fst_status_memo" => 'TICKET_EXPIRED BY SYSTEM',

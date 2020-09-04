@@ -34,6 +34,7 @@ class Tickets extends MY_Controller
 			['layout' => 1, 'label'=>'Status', 'value'=>'10', 'selected'=>false,'sum_total'=>false],
 			['layout' => 1, 'label'=>'Service Level', 'value'=>'11', 'selected'=>false,'sum_total'=>false],
 			['layout' => 1, 'label'=>'S/L Days', 'value'=>'12', 'selected'=>false,'sum_total'=>false],
+			['layout' => 1, 'label'=>'Last Status', 'value'=>'13', 'selected'=>false,'sum_total'=>false],
 			['layout' => 2, 'label'=>'Nou.', 'value'=>'0', 'selected'=>false,'sum_total'=>false],
             ['layout' => 2, 'label'=>'Department', 'value'=>'1', 'selected'=>false,'sum_total'=>false],
 			['layout' => 2, 'label'=>'Group', 'value'=>'2', 'selected'=>false,'sum_total'=>false],
@@ -225,7 +226,7 @@ class Tickets extends MY_Controller
 						$repTitle = "LAPORAN DAFTAR TICKET";
 						$repPaperSize=\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_LEGAL;
                         $repOrientation=\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE;
-                        $fullColumn = 12;
+                        $fullColumn = 13;
 						break;
 					case "2":
 						$repTitle = "PER-USER TICKET SUMMARY";
@@ -293,6 +294,7 @@ class Tickets extends MY_Controller
 					$sheet->setCellValue("K3", "Status");
 					$sheet->setCellValue("L3", "Service Level");
 					$sheet->setCellValue("M3", "S/L Days");
+					$sheet->setCellValue("N3", "Last status");
                     $sheet->getColumnDimension("A")->setAutoSize(false);
                     $sheet->getColumnDimension("B")->setAutoSize(true);
                     $sheet->getColumnDimension("C")->setAutoSize(true);
@@ -306,6 +308,7 @@ class Tickets extends MY_Controller
 					$sheet->getColumnDimension("K")->setAutoSize(true);
 					$sheet->getColumnDimension("L")->setAutoSize(true);
 					$sheet->getColumnDimension("M")->setAutoSize(true);
+					$sheet->getColumnDimension("N")->setAutoSize(true);
 					$nou = 0;
 					$cellRow = 4;
 					$numOfRecs = count($dataReport);
@@ -313,6 +316,7 @@ class Tickets extends MY_Controller
 					foreach ($dataReport as $rw) {
 
 						$nou++;
+						$fin_ticket_id = $rw->fin_ticket_id;
 						$sheet->setCellValue("A$cellRow", $nou);
 						//$sheet->setCellValue("A$cellRow", $no++);
 						$sheet->setCellValue("B$cellRow", $rw->fst_ticket_no);
@@ -327,6 +331,16 @@ class Tickets extends MY_Controller
 						$sheet->setCellValue("K$cellRow", $rw->fst_status);
 						$sheet->setCellValue("L$cellRow", $rw->fst_service_level_name);
 						$sheet->setCellValue("M$cellRow", $rw->fin_service_level_days);
+
+						$ssql = "SELECT * FROM
+						(SELECT * FROM trticket_log WHERE fin_ticket_id = ? ORDER BY fin_rec_id DESC LIMIT 2) a                   
+						ORDER BY fin_rec_id ASC LIMIT 1";
+						$qr = $this->db->query($ssql,[$fin_ticket_id]);
+						//echo $this->db->last_query();
+						//die();
+						$rwLog = $qr->row();
+
+						$sheet->setCellValue("N$cellRow", $rwLog->fst_status);
 						$cellRow++;
 						
 					}
@@ -352,7 +366,7 @@ class Tickets extends MY_Controller
 							],
 						],
 					];
-					$sheet->getStyle('A3:M'.$cellRow)->applyFromArray($styleArray);
+					$sheet->getStyle('A3:N'.$cellRow)->applyFromArray($styleArray);
 		
 					//FONT BOLD & Center
 					$styleArray = [
@@ -364,7 +378,7 @@ class Tickets extends MY_Controller
 						]
 					];
 					// $sheet->getStyle('A2')->applyFromArray($styleArray);
-					$sheet->getStyle('A3:M3')->applyFromArray($styleArray);
+					$sheet->getStyle('A3:N3')->applyFromArray($styleArray);
 					$sheet->getStyle('A3:A'.$cellRow)->applyFromArray($styleArray);
 
 					$styleArray = [
