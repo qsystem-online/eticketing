@@ -342,7 +342,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div class="form-group">
                                     <label for="fst_memo" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
                                     <div class="col-xs-6 col-md-10">
-                                        <textarea rows="4" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo" readonly></textarea>
+                                        <textarea rows="7" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo" ></textarea>
                                     </div>
                                 </div>			
                             </div>
@@ -588,8 +588,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
         })
 
-
-
         $("#tblbodydocs").on("click",".btn-delete-doc",function(event){
             event.preventDefault();
             var docId = $(this).data("docid");
@@ -826,6 +824,9 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 $.each(resp.ms_ticketlog, function(name, val) {
                     console.log(val);
                     //event.preventDefault();
+                    if (val.fst_username == null ){
+                        val.fst_username = 'SYSTEM';
+                    }
                     if(val.fin_status_by_user_id == issuedBy){
                         var cardlog = '<div class="column col-md-12">';
                             cardlog += '<div class="card-issued">';

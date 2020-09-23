@@ -31,10 +31,11 @@ class Tickets extends MY_Controller
 			['layout' => 1, 'label'=>'Memo', 'value'=>'7', 'selected'=>false,'sum_total'=>false],
 			['layout' => 1, 'label'=>'Deadline', 'value'=>'8', 'selected'=>false,'sum_total'=>false],
 			['layout' => 1, 'label'=>'Expiry', 'value'=>'9', 'selected'=>false,'sum_total'=>false],
-			['layout' => 1, 'label'=>'Status', 'value'=>'10', 'selected'=>false,'sum_total'=>false],
+			['layout' => 1, 'label'=>'Last Status', 'value'=>'10', 'selected'=>false,'sum_total'=>false],
 			['layout' => 1, 'label'=>'Service Level', 'value'=>'11', 'selected'=>false,'sum_total'=>false],
 			['layout' => 1, 'label'=>'S/L Days', 'value'=>'12', 'selected'=>false,'sum_total'=>false],
-			['layout' => 1, 'label'=>'Last Status', 'value'=>'13', 'selected'=>false,'sum_total'=>false],
+			['layout' => 1, 'label'=>'Before Last status', 'value'=>'13', 'selected'=>false,'sum_total'=>false],
+			['layout' => 1, 'label'=>'Memo Before Last status', 'value'=>'14', 'selected'=>false,'sum_total'=>false],
 			['layout' => 2, 'label'=>'Nou.', 'value'=>'0', 'selected'=>false,'sum_total'=>false],
             ['layout' => 2, 'label'=>'Department', 'value'=>'1', 'selected'=>false,'sum_total'=>false],
 			['layout' => 2, 'label'=>'Group', 'value'=>'2', 'selected'=>false,'sum_total'=>false],
@@ -226,7 +227,7 @@ class Tickets extends MY_Controller
 						$repTitle = "LAPORAN DAFTAR TICKET";
 						$repPaperSize=\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_LEGAL;
                         $repOrientation=\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE;
-                        $fullColumn = 13;
+                        $fullColumn = 14;
 						break;
 					case "2":
 						$repTitle = "PER-USER TICKET SUMMARY";
@@ -291,10 +292,11 @@ class Tickets extends MY_Controller
 					$sheet->setCellValue("H3", "Memo");
 					$sheet->setCellValue("I3", "Deadline");
 					$sheet->setCellValue("J3", "Expiry");
-					$sheet->setCellValue("K3", "Status");
+					$sheet->setCellValue("K3", "Last Status");
 					$sheet->setCellValue("L3", "Service Level");
 					$sheet->setCellValue("M3", "S/L Days");
-					$sheet->setCellValue("N3", "Last status");
+					$sheet->setCellValue("N3", "Before Last status");
+					$sheet->setCellValue("O3", "Memo Before Last status");
                     $sheet->getColumnDimension("A")->setAutoSize(false);
                     $sheet->getColumnDimension("B")->setAutoSize(true);
                     $sheet->getColumnDimension("C")->setAutoSize(true);
@@ -309,6 +311,7 @@ class Tickets extends MY_Controller
 					$sheet->getColumnDimension("L")->setAutoSize(true);
 					$sheet->getColumnDimension("M")->setAutoSize(true);
 					$sheet->getColumnDimension("N")->setAutoSize(true);
+					$sheet->getColumnDimension("O")->setAutoSize(true);
 					$nou = 0;
 					$cellRow = 4;
 					$numOfRecs = count($dataReport);
@@ -341,6 +344,7 @@ class Tickets extends MY_Controller
 						$rwLog = $qr->row();
 
 						$sheet->setCellValue("N$cellRow", $rwLog->fst_status);
+						$sheet->setCellValue("O$cellRow", $rwLog->fst_status_memo);
 						$cellRow++;
 						
 					}
@@ -366,7 +370,7 @@ class Tickets extends MY_Controller
 							],
 						],
 					];
-					$sheet->getStyle('A3:N'.$cellRow)->applyFromArray($styleArray);
+					$sheet->getStyle('A3:O'.$cellRow)->applyFromArray($styleArray);
 		
 					//FONT BOLD & Center
 					$styleArray = [
@@ -378,7 +382,7 @@ class Tickets extends MY_Controller
 						]
 					];
 					// $sheet->getStyle('A2')->applyFromArray($styleArray);
-					$sheet->getStyle('A3:N3')->applyFromArray($styleArray);
+					$sheet->getStyle('A3:O3')->applyFromArray($styleArray);
 					$sheet->getStyle('A3:A'.$cellRow)->applyFromArray($styleArray);
 
 					$styleArray = [

@@ -139,13 +139,13 @@ class ticket extends MY_Controller
         $noW = date("Y-m-d H:i:s");
         $noW = date_create($noW);
         date_add($noW,date_interval_create_from_date_string("$notifyDeadline days"));
-        $deadlineDatetime = date_format($noW,"Y-m-d H:i:s");
+        $deadlineDatetime = date_format($noW,"Y-m-d 23:59:59");
 
         $acceptDate = getDbConfig("acceptance_expiry"); // +3 hari
         $dateNow = date("Y-m-d H:i:s");
         $dateNow = date_create($dateNow);
         date_add($dateNow,date_interval_create_from_date_string("$acceptDate days"));
-        $acceptDatetime = date_format($dateNow,"Y-m-d H:i:s");
+        $acceptDatetime = date_format($dateNow,"Y-m-d 23:59:59");
 
         //$timestamp = strtotime('01-01-3000 00:00:00'); // hard coded
         $newDate = date('3000-01-01 00:00:00');
@@ -448,6 +448,108 @@ class ticket extends MY_Controller
             "data"=>$arrResult
         ]);
 
+    }
+
+    public function ajx_add_doc(){
+        /*
+        fst_lampiran: (binary)
+        fst_doc_title: asdasdasdasdasdasdasdasdasdasdasd asdasdasd asdasdasd        
+        fst_memo: asdasdasdasd asdmemo
+        */
+        $this->load->model("ticketdocs_model");
+        $this->load->model("ticket_model");
+        $file = $_FILES['fst_lampiran'];
+
+        
+        $data = [
+            "fin_ticket_id"=>$this->input->post("fin_ticket_id"),
+            "fst_doc_title"=>$this->input->post("fst_doc_title"),
+            "fst_status"=>$this->ticket_model->getLastLogStatus($this->input->post("fin_ticket_id")),
+            "fst_filename"=>$file["name"],
+            "fst_memo"=>$this->input->post("fst_memo"),
+            "fst_active"=>"A",
+        ];
+
+        try{
+
+        
+            $this->db->trans_start();
+            
+            $insertId = $this->ticketdocs_model->insert($data);
+
+            //Save Image
+            if (!empty($_FILES['fst_lampiran']['tmp_name'])) {
+                $config['upload_path']          = './assets/app/tickets/image/';
+                $config['file_name']			= $insertId . '.jpg';
+                $config['overwrite']			= TRUE;
+                $config['file_ext_tolower']		= TRUE;
+                $config['allowed_types']        = 'gif|jpg|png|jpeg';
+                $config['max_size']             = 0; //kilobyte
+                $config['max_width']            = 0; //1024; //pixel
+                $config['max_height']           = 0; //768; //pixel
+                $this->load->library('upload', $config);
+                
+                if (!$this->upload->do_upload('fst_lampiran')) {
+                    throw new CustomException("Failed to upload images, " . $this->upload->display_errors(),3003,"IMAGES_FAILED",$this->upload->display_errors());                    
+                } 
+                
+                $this->ajxResp["data"] = [
+                    "insertId"=>$insertId,                    
+                    "insertDatetime"=>date("Y-m-d H:i:s"),
+                    "data_lampiran" => $this->upload->data()
+                ];
+            }
+
+
+
+            $this->db->trans_complete();
+
+            $this->ajxResp["status"] = "SUCCESS";
+            $this->ajxResp["message"] = "";
+            /*
+            $this->ajxResp["data"] = [
+                "data_lampiran" => $this->upload->data()                
+            ];
+            */
+            $this->json_output();
+
+        }catch(CustomException $e){
+            $this->db->trans_rollback();
+            $this->ajxResp["status"] = $e->getStatus();
+            $this->ajxResp["message"] = $e->getMessage();
+            $this->ajxResp["data"] = $e->getData();
+            $this->json_output();
+        }
+        
+	
+    }
+
+    public function ajx_delete_doc($finDocId){
+        $this->load->model("ticketdocs_model");
+        $result = $this->ticketdocs_model->getDataById($finDocId);
+        $rwDoc = $result["ticket_Docs"];
+        if ($rwDoc == null){
+            $this->json_output([
+                "status"=>"FAILED",
+                "message"=>"Invalid Doc Id"                
+            ]);
+        }else{
+            if ($this->aauth->get_user_id() == $rwDoc->fin_insert_id){
+                //Delete Document file
+                unlink("./assets/app/tickets/image/". $rwDoc->fin_rec_id .".jpg");
+                $this->db->where("fin_rec_id",$rwDoc->fin_rec_id);
+                $this->db->delete("trticket_docs");
+                $this->json_output([
+                    "status"=>"SUCCESS",
+                    "message"=>""                
+                ]);
+            }else{
+                $this->json_output([
+                    "status"=>"FAILED",
+                    "message"=>"Invalid Doc Id"                
+                ]); 
+            }
+        }
     }
     
 }

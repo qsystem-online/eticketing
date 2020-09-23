@@ -271,7 +271,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div class="form-group">
                                     <label for="fst_memo" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
                                     <div class="col-xs-6 col-md-10">
-                                        <textarea rows="4" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo"></textarea>
+                                        <textarea rows="7" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo"></textarea>
                                         <div id="fst_memo_err" class="text-danger"></div>
                                     </div>
                                 </div>
@@ -282,12 +282,6 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                         <div id="fbl_rejected_view_err" class="text-danger" style="padding-left:200px"></div>
                                     </div>
                                 </div>
-                            <!--</div>-->
-                            <!-- end box body -->
-
-                            <!--<div class="box-footer text-right"></div>-->
-
-                            <!-- end box-footer -->
                         </form>
                     <?php } ?>
                     <!-- end form -->
@@ -473,7 +467,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <div class="form-group">
                                                 <label for="fst_memo" class="col-xs-6 col-md-2 control-label"><?= lang("Memo") ?></label>
                                                 <div class="col-xs-6 col-md-10">
-                                                    <textarea rows="4" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo" readonly></textarea>
+                                                    <textarea rows="7" style="width:100%" class="form-control" id="fst_memo" placeholder="<?= lang("Memo") ?>" name="fst_memo"></textarea>
                                                 </div>
                                             </div>
 
@@ -492,6 +486,30 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 </div>
 
                                 <div class="tab-pane fade" id="ticket_lampiran">
+                                    <form id="frmTicketlampiran" class="form-horizontal">
+                                        <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
+                                        <div class="form-group">
+                                            <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"><?=lang("Lampiran Gambar")?></label>
+                                            <div class="col-xs-6 col-md-4">
+                                                <input type="file" class="form-control" id="fst_lampiran"  name="fst_lampiran" accept=".jpg">
+                                                <div id="fst_lampiran_err" class="text-danger"></div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-md-6">
+                                                <input type="text" class="form-control" id="fst_doc_title"  name="fst_doc_title" placeholder="<?= lang("Judul") ?>">
+                                                <div id="fst_doc_title_err" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="fst_lampiran" class="col-xs-6 col-md-2 control-label"><?=lang("Keterangan")?></label>
+                                            <div class="col-xs-6 col-md-9">
+                                                <textarea class="form-control" id="fst_doc_memo"  name="fst_memo"></textarea>
+                                            </div>
+                                            <div class="col-xs-12 col-md-1">
+                                                <button id="btn-add-lampiran" class="btn btn-primary">Add</button>
+                                            </div>                                    
+                                        </div>
+                                    </form>
                                     <table class="table" style="width:100%">
                                         <thead>
                                             <th style="width:30%"><?=lang("Judul")?></th>
@@ -544,6 +562,110 @@ $(function(){
 
         }
     });
+
+    $("#btn-add-lampiran").click(function(event){
+        event.preventDefault();
+        var docTitle = $("#fst_doc_title").val();
+        var docFile = $("#fst_lampiran").val();
+        if (docTitle == null || docTitle == "" ) {
+            $("#fst_doc_title_err").html("Judul harus diisi !!!");
+            $("#fst_doc_title_err").show();
+            return;
+        }
+        if (docFile == ""){
+            $("#fst_lampiran_err").html("Pilih File !!!");
+            $("#fst_lampiran_err").show();
+            return;
+        }else{
+            $("#fst_doc_title_err").hide();
+            data = new FormData($("#frmTicketlampiran")[0]);
+
+            data.append("fin_ticket_id", $("#fin_ticket_id").val());
+            
+            url = "<?= site_url() ?>tr/ticket/ajx_add_doc";
+
+            App.blockUIOnAjaxRequest("Please wait while update ticket status.....");
+            $.ajax({
+                type: "POST",
+                //enctype: 'multipart/form-data',
+                url: url,
+                data: data,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 600000,
+                success: function (resp) {
+                    if (resp.message != "") {
+                        $.alert({
+                            title: 'Message',
+                            content: resp.message,
+                            buttons: {
+                                OK : function(){
+                                    return;
+                                }
+                            },
+                        });
+                    }
+
+                    if (resp.status == "VALIDATION_FORM_FAILED"){
+                        //Show Error
+                        errors = resp.data;
+                        for (key in errors) {
+                            $("#" + key + "_err").html(errors[key]);
+                        }
+                    }else if(resp.status == "SUCCESS") {                            
+                        
+                        var tbody = '<tr id="doc_' + resp.data.insertId + '">';                            
+                        tbody += '<td>';
+                        tbody += '<a href="<?=site_url()?>assets/app/tickets/image/'+resp.data.insertId+'.jpg" target="_blank">';
+                        tbody += '<img src="<?=site_url()?>assets/app/tickets/image/'+resp.data.insertId+'.jpg" width="50" height="50" style="vertical-align: text-top;margin-right:10px;" />';
+                        tbody +=  data.get("fst_doc_title");
+                        tbody +=  '</a>';
+                        tbody +=  '</td>';
+                        tbody += '<td>'+data.get("fst_memo")+'</td>';
+                        tbody += '<td>'+App.dateTimeFormat("<?= date("Y-m-d H:i:s")?>")+'</td>';
+                        tbody += '<td class="text-center">';                            
+                        tbody += '<a class="btn btn-delete-doc" data-docid="'+resp.data.insertId+'" ><i class="fa fa-trash"></i></a>';
+                        tbody += '</td>';
+                        tbody += '</tr>';
+
+
+                        $("#tblbodydocs").prepend(tbody);
+                    }
+                },
+                error: function (e) {
+                    $("#result").text(e.responseText);
+                    console.log("ERROR : ", e);
+                    $("#btnSubmit").prop("disabled", false);
+                }
+            });
+        }   
+
+    });
+
+    $("#tblbodydocs").on("click",".btn-delete-doc",function(event){
+        event.preventDefault();
+        var docId = $(this).data("docid");
+        var confirmDelete = confirm("Delete Lampiran");
+        if (confirmDelete){
+            row = $(this).parents('tr');
+            App.blockUIOnAjaxRequest("Delete attachment .....");
+            $.ajax({
+                url:"<?=site_url()?>tr/ticket/ajx_delete_doc/" + docId,
+                method:"GET",
+            }).done(function(resp){
+                if (resp.message !=""){
+                    alert(resp.message);
+                }
+
+                if (resp.status =="SUCCESS"){
+                    row.remove();
+                }
+            });
+        }
+
+    });
+
 });
 
 
@@ -763,15 +885,15 @@ $(function(){
                         $("#fdt_deadline_extended_datetime").val(null);                 //tambahan 31/03/2020 17.24
                         $("#fdt_deadline_extended_datetime").prop("disabled", true);    //tambahan 31/03/2020 17.24
                     }else if($(this).find(":selected").data("notice") == "ASSIGNMENT"){
-                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('3 days'))?>")).prop("disabled", true);
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d 23:59:59", strtotime('3 days'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("ASSIGNMENT");
                         $("#fdt_deadline_extended_datetime").val(null);                 //tambahan 31/03/2020 17.24
                         $("#fdt_deadline_extended_datetime").prop("disabled", true);    //tambahan 31/03/2020 17.24
                         $("#select-serviceLevel").val(null).trigger("change.select2");
                         $("#select-serviceLevel").prop("disabled", false);
                     }else if($(this).find(":selected").data("notice") == "INFO"){
-                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
-                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true);
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d 23:59:59", strtotime('7 days'))?>")).prop("disabled", true);
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d 23:59:59", strtotime('7 days'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("INFO");
                         $("#select-serviceLevel").val(null).trigger("change.select2");
                         $("#select-serviceLevel").prop("disabled", true);
@@ -886,11 +1008,20 @@ $(function(){
 
                 //populate Ticket Log
                 var issuedBy = resp.ms_ticket.fin_issued_by_user_id;
-                //alert(issuedBy);
+                var ticketStatus = resp.ms_ticket.fst_status;
+                //alert(ticketStatus);
+                if (ticketStatus !="APPROVED/OPEN" || $userActive != issuedBy){
+                    $("#frmTicketlampiran").hide();
+                    //alert(issuedBy);
+                    //alert(ticketStatus);
+                }
                 //Tampilan Nav Tabs Ticket Log
                 $.each(resp.ms_ticketlog, function(name, val) {
                     console.log(val);
                     //event.preventDefault();
+                    if (val.fst_username == null ){
+                        val.fst_username = 'SYSTEM';
+                    }
                     if(val.fin_status_by_user_id == issuedBy){
                         var cardlog = '<div class="column col-md-12">';
                             cardlog += '<div class="card-issued">';

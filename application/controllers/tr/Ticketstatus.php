@@ -595,7 +595,7 @@ class Ticketstatus extends MY_Controller
         $now = date("Y-m-d H:i:s");
         $now = date_create($now);
         date_add($now,date_interval_create_from_date_string($daysLevel));
-        $ticketdeadline_datetime = date_format($now,"Y-m-d H:i:s");
+        $ticketdeadline_datetime = date_format($now,"Y-m-d 23:59:59");
         //echo ($ticketdeadline_datetime);
         $data = [
             "fin_ticket_id" => $fin_ticket_id,

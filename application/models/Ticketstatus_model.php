@@ -44,7 +44,7 @@ class Ticketstatus_model extends MY_MODEL {
         $now = date("Y-m-d H:i:s");
         $now = date_create($now);
         date_add($now,date_interval_create_from_date_string($daysLevel));
-        $ticketdeadline_datetime = date_format($now,"Y-m-d H:i:s");
+        $ticketdeadline_datetime = date_format($now,"Y-m-d 23:59:59");
 
         if ($rwTicketstatus->fdt_deadline_datetime == null){
             //$rwTicketstatus->fdt_deadline_datetime = $ticketdeadline_datetime;
@@ -447,7 +447,8 @@ class Ticketstatus_model extends MY_MODEL {
         //$completed_expirydeadline = ($expirydeadline ('-'$toleranceDays 'days'));
         $completed_expirydeadline = date('Y-m-d H:i:s', strtotime($expirydeadline. " - {$toleranceDays} days"));
 
-        $user_status = $this->aauth->get_user_id();
+        //$user_status = $this->aauth->get_user_id();
+        $user_status = 0;
         $expiryUpdate = false;
         $newLog = false;
 
