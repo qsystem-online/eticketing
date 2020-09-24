@@ -1010,10 +1010,12 @@ $(function(){
                 var issuedBy = resp.ms_ticket.fin_issued_by_user_id;
                 var ticketStatus = resp.ms_ticket.fst_status;
                 //alert(ticketStatus);
-                if (ticketStatus !="APPROVED/OPEN" || $userActive != issuedBy){
-                    $("#frmTicketlampiran").hide();
+                if ($userActive == issuedBy && (ticketStatus =="APPROVED/OPEN" || ticketStatus =="NEED_APPROVAL")){
+                    $("#frmTicketlampiran").show();
                     //alert(issuedBy);
                     //alert(ticketStatus);
+                }else{
+                    $("#frmTicketlampiran").hide();
                 }
                 //Tampilan Nav Tabs Ticket Log
                 $.each(resp.ms_ticketlog, function(name, val) {

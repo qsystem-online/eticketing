@@ -164,7 +164,7 @@ class Ticketstatus_model extends MY_MODEL {
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id
             LEFT JOIN mstickettype c ON c.fin_ticket_type_id = a.fin_ticket_type_id
-            WHERE a.fst_status = 'APPROVED/OPEN' AND c.fst_assignment_or_notice != 'INFO' AND a.fin_issued_by_user_id =? AND CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' ";
+            WHERE a.fst_status = 'APPROVED/OPEN' AND c.fst_assignment_or_notice != 'INFO' AND a.fin_issued_by_user_id =? AND (CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' OR fdt_deadline_extended_datetime IS NOT NULL) ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         //echo $this->db->last_query();
         return $qr->result_array();
@@ -210,10 +210,13 @@ class Ticketstatus_model extends MY_MODEL {
         //date_add($now,date_interval_create_from_date_string("0 days"));
         //$expirydeadline = date_format($now,"Y-m-d H:i:s");
         $expirydeadline = date("Y-m-d");
+        $toleranceDays = getDbConfig("completed_tolerance_to_closed");
+        //$completed_expirydeadline = ($expirydeadline ('-'$toleranceDays 'days'));
+        $completed_expirydeadline = date('Y-m-d', strtotime($expirydeadline. " - {$toleranceDays} days"));
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_to_user_id = b.fin_user_id 
-            where a.fst_status = 'COMPLETED' and a.fin_issued_by_user_id =? AND CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' ";
+            where a.fst_status = 'COMPLETED' and a.fin_issued_by_user_id =? AND CAST(fdt_deadline_extended_datetime AS DATE) >='$completed_expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 
@@ -229,7 +232,7 @@ class Ticketstatus_model extends MY_MODEL {
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id
             LEFT JOIN mstickettype c ON c.fin_ticket_type_id = a.fin_ticket_type_id 
-            where a.fst_status = 'APPROVED/OPEN' AND c.fst_assignment_or_notice != 'INFO' AND a.fin_issued_to_user_id =? AND CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' ";
+            where a.fst_status = 'APPROVED/OPEN' AND c.fst_assignment_or_notice != 'INFO' AND a.fin_issued_to_user_id =? AND (CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' OR fdt_deadline_extended_datetime IS NOT NULL) ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         //echo $this->db->last_query();
         return $qr->result_array();
@@ -275,10 +278,13 @@ class Ticketstatus_model extends MY_MODEL {
         //date_add($now,date_interval_create_from_date_string("0 days"));
         //$expirydeadline = date_format($now,"Y-m-d H:i:s");
         $expirydeadline = date("Y-m-d");
+        $toleranceDays = getDbConfig("completed_tolerance_to_closed");
+        //$completed_expirydeadline = ($expirydeadline ('-'$toleranceDays 'days'));
+        $completed_expirydeadline = date('Y-m-d', strtotime($expirydeadline. " - {$toleranceDays} days"));
 
         $ssql = "SELECT a.*,b.fin_user_id,b.fst_username,b.fin_department_id FROM trticket a 
             INNER JOIN users b ON a.fin_issued_by_user_id = b.fin_user_id 
-            where a.fst_status = 'COMPLETED' and a.fin_issued_to_user_id =? AND CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' ";
+            where a.fst_status = 'COMPLETED' and a.fin_issued_to_user_id =? AND CAST(fdt_deadline_extended_datetime AS DATE) >='$completed_expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         return $qr->result_array();
 

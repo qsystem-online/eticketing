@@ -90,7 +90,7 @@ class Dashboard_model extends CI_Model {
 
         $ssql = "select count(*) as ttl_approved from trticket a
             LEFT JOIN mstickettype b ON b.fin_ticket_type_id = a.fin_ticket_type_id
-            where fst_status = 'APPROVED/OPEN' and b.fst_assignment_or_notice != 'INFO' and fin_issued_by_user_id =? and cast(fdt_acceptance_expiry_datetime as date) >='$expiryaccepted' ";
+            where fst_status = 'APPROVED/OPEN' and b.fst_assignment_or_notice != 'INFO' and fin_issued_by_user_id =? and (cast(fdt_acceptance_expiry_datetime as date) >='$expiryaccepted' or fdt_deadline_extended_datetime IS NOT NULL) ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         //echo $this->db->last_query();
         $rw = $qr->row();
@@ -139,10 +139,15 @@ class Dashboard_model extends CI_Model {
         //date_add($now,date_interval_create_from_date_string("0 days"));
         //$expirydeadline = date_format($now,"Y-m-d H:i:s");
         $expirydeadline = date("Y-m-d");
+        $toleranceDays = getDbConfig("completed_tolerance_to_closed");
+        //$completed_expirydeadline = ($expirydeadline ('-'$toleranceDays 'days'));
+        $completed_expirydeadline = date('Y-m-d', strtotime($expirydeadline. " - {$toleranceDays} days"));
 
         $ssql = "select count(*) as ttl_issued_completed from trticket 
-            where fst_status = 'COMPLETED' and fin_issued_by_user_id =? and CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' ";
+            where fst_status = 'COMPLETED' and fin_issued_by_user_id =? and CAST(fdt_deadline_extended_datetime AS DATE) >='$completed_expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        //echo $this->db->last_query();
+        //die();
         $rw = $qr->row();
         return $rw->ttl_issued_completed;
 
@@ -158,7 +163,7 @@ class Dashboard_model extends CI_Model {
 
         $ssql = "select count(*) as ttl_received_approved from trticket a
             LEFT JOIN mstickettype b ON b.fin_ticket_type_id = a.fin_ticket_type_id
-            where fst_status = 'APPROVED/OPEN' and b.fst_assignment_or_notice != 'INFO' and fin_issued_to_user_id =? and CAST(fdt_acceptance_expiry_datetime AS DATE) >='$expiryaccepted' ";
+            where fst_status = 'APPROVED/OPEN' and b.fst_assignment_or_notice != 'INFO' and fin_issued_to_user_id =? and (cast(fdt_acceptance_expiry_datetime as date) >='$expiryaccepted' or fdt_deadline_extended_datetime IS NOT NULL) ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
         $rw = $qr->row();
         return $rw->ttl_received_approved;
@@ -207,10 +212,15 @@ class Dashboard_model extends CI_Model {
         //date_add($now,date_interval_create_from_date_string("0 days"));
         //$expirydeadline = date_format($now,"Y-m-d H:i:s");
         $expirydeadline = date("Y-m-d");
+        $toleranceDays = getDbConfig("completed_tolerance_to_closed");
+        //$completed_expirydeadline = ($expirydeadline ('-'$toleranceDays 'days'));
+        $completed_expirydeadline = date('Y-m-d', strtotime($expirydeadline. " - {$toleranceDays} days"));
 
         $ssql = "select count(*) as ttl_received_completed from trticket 
-            where fst_status = 'COMPLETED' and fin_issued_to_user_id =? and CAST(fdt_deadline_extended_datetime AS DATE) >='$expirydeadline' ";
+            where fst_status = 'COMPLETED' and fin_issued_to_user_id =? and CAST(fdt_deadline_extended_datetime AS DATE) >='$completed_expirydeadline' ";
         $qr = $this->db->query($ssql,[$user->fin_user_id]);
+        //echo $this->db->last_query();
+        //die();
         $rw = $qr->row();
         return $rw->ttl_received_completed;
 
