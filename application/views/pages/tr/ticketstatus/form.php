@@ -430,6 +430,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
             }
 
             App.blockUIOnAjaxRequest("Please wait while update ticket status.....");
+            $("#btnSubmitAjax").prop('disabled', true);
             $.ajax({
                 type: "POST",
                 //enctype: 'multipart/form-data',
@@ -476,7 +477,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                 error: function (e) {
                     $("#result").text(e.responseText);
                     console.log("ERROR : ", e);
-                    $("#btnSubmit").prop("disabled", false);
+                    $("#btnSubmitAjax").prop("disabled", false);
                 }
             });
         });

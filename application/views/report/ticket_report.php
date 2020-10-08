@@ -41,12 +41,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <div class="row">
         <div class="col-md-12">
             <div class="box box-info">
-                <!--<div class="box-header with-border">
-                    <h3 class="box-title title"><?= $title ?></h3>
-                    <div class="btn-group btn-group-sm pull-right">
-						<a id="btnPrinted" class="btn btn-primary" href="#" title="<?=lang("Cetak")?>"><i class="fa fa-print" aria-hidden="true"></i></a>											
-					</div>
-                </div>-->
                 <div class="box-header with-border">
                     <h3 class="box-title title"><?= lang("Ticket Monitoring") ?></h3>
                     <div class="btn-group btn-group-sm pull-right">

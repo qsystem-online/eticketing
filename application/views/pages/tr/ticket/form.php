@@ -95,7 +95,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                     <div class="btn-group btn-group-sm pull-right">
                         <a id="btnNew" class="btn btn-primary" href="#" title="<?=lang("Tambah Baru")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-plus" aria-hidden="true"></i></a>
                         <a id="btnSubmitAjax" class="btn btn-primary" href="#" title="<?=lang("Simpan")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
-                        <a id="btnDelete" class="btn btn-primary" href="#" title="<?=lang("Void")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        <!--<a id="btnDelete" class="btn btn-primary" href="#" title="<?=lang("Void")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-trash" aria-hidden="true"></i></a> -->
                         <a id="btnList" class="btn btn-primary" href="#" title="<?=lang("Daftar Transaksi")?>" style="display:<?= $mode == "VIEW" ? "none" : "inline-block" ?>"><i class="fa fa-list" aria-hidden="true"></i></a>
                     </div>
                 </div>
@@ -584,7 +584,7 @@ $(function(){
             
             url = "<?= site_url() ?>tr/ticket/ajx_add_doc";
 
-            App.blockUIOnAjaxRequest("Please wait while update ticket status.....");
+            App.blockUIOnAjaxRequest("Please wait while add attachment.....");
             $.ajax({
                 type: "POST",
                 //enctype: 'multipart/form-data',
@@ -803,7 +803,7 @@ $(function(){
             window.location.replace("<?=site_url()?>tr/ticket/lizt");
         });
 
-        $("#btnDelete").confirmation({
+        /*$("#btnDelete").confirmation({
             title:"<?=lang("Void data ini ?")?>",
             rootSelector: '#btnDelete',
             placement: 'left',
@@ -842,7 +842,7 @@ $(function(){
                     $('#fst_ticket_no').prop('readonly', true);
                 }
             });
-        });
+        });*/
 
         $("#fdt_ticket_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s")?>")).datetimepicker("update");
 

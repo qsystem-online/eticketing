@@ -586,4 +586,23 @@ class Ticketstatus_model extends MY_MODEL {
         }
     }
 
+    public function delete_ticket_doc($end_date){
+        if (isset($end_date)) {
+            $end_date = date('Y-m-d 23:59:59', strtotime($end_date));
+        }
+        $ssql = "SELECT * FROM trticket WHERE fdt_ticket_datetime <= ? AND (fst_status ='CLOSED' OR fst_status ='APPROVAL_EXPIRED' OR fst_status ='REVISION_EXPIRED' OR fst_status ='ACCEPTANCE_EXPIRED' OR fst_status ='TICKET_EXPIRED' OR fst_status ='VOID' OR fst_status ='REJECTED') ";
+        $qr = $this->db->query($ssql,[$end_date]);
+        //echo $this->db->last_query();
+        //die();
+        $rsTicket = $qr->result();
+        $data = [
+            "del_ticket" => $rsTicket
+            //"del_ticketlog" => $rsTicketlog,
+            //"del_ticketdocs" => $rsTicketDocs
+        ];
+
+        return $data;
+
+    }
+
 }

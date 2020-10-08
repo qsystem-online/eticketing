@@ -152,7 +152,7 @@ class Ticket_model extends MY_MODEL {
         $rw = $qr->row();
         //update status void and active = D
         if($rw->fst_status =='CLOSED' OR $rw->fst_status =='REJECTED' OR $rw->fst_status =='APPROVAL_EXPIRED' OR $rw->fst_status =='ACCEPTANCE_EXPIRED' OR $rw->fst_status =='TICKET_EXPIRED'){
-            return ["status"=>"FAILED","message"=>"CLOSED/REJECTED TICKET CAN'T VOID"];
+            return ["status"=>"FAILED","message"=>"CLOSED/REJECTED/EXPIRED TICKET CAN'T VOID"];
         }else{
             $ssql = "UPDATE trticket SET fst_status='VOID',fst_active='D' WHERE fin_ticket_id = ?";
             $this->db->query($ssql,$fin_ticket_id);
