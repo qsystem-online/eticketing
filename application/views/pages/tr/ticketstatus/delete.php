@@ -1,28 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<style type="text/css">
-    .border-0 {
-        border: 0px;
-    }
-
-    td {
-        padding: 2px;
-         !important
-    }
-
-    .nav-tabs-custom>.nav-tabs>li.active>a {
-        font-weight: bold;
-        border-left-color: #3c8dbc;
-        border-right-color: #3c8dbc;
-        border-style: fixed;
-    }
-
-    .nav-tabs-custom>.nav-tabs {
-        border-bottom-color: #3c8dbc;
-        border-bottom-style: fixed;
-    }
-</style>
 <section class="content-header">
     <h1><?= lang("Delete Ticket") ?><small><?= lang("") ?></small></h1>
     <ol class="breadcrumb">
@@ -32,14 +10,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </section>
 
 <section class="content">
-    <div class="row">
-        <div class="col-xs-12 col-md-12">
-            <div class="box box-info">
-                <div class="box-header with-border">
-                    <h3 class="box-title title">
+<div class="row">
+    <div class="col-md-6">
+        <div class="box box-default">
+        <div class="box-header with-border">
+            <i class="fa fa-bullhorn"></i>
+
+            <h3 class="box-title">Informasi</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">TOTAL LAMPIRAN</span>
+                    <span class="info-box-number">
                     <?php
-                        function folderSizeX ($dir)
-                        {
+                        function folderSizeX($dir){
                             $size = 0;
                             foreach (glob(rtrim($dir, '/').'/*', GLOB_NOSORT) as $each) {
                                 $size += is_file($each) ? filesize($each) : folderSizeX($each);
@@ -50,66 +37,73 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 //$size=round($size/1024, 1)." KB";
                                 $size=round($size/1048576, 2)." MB";
                             }elseif(($size<1073741824)&&($size>1048575)){
-                                $size=round($size/1048576, 1)." MB";
+                                $size=round($size/1048576, 2)." MB";
                             }else{
-                                $size=round($size/1073741824, 1)." GB";
+                                $size=round($size/1073741824, 2)." GB";
                             }
                             return $size;
                         }
                         $filename = './assets/app/tickets/image/';
-                        $lampiran = 'Total pemakaian semua lampiran';
-                        echo $lampiran . ': ' . folderSizeX($filename);
+                        $lampiran = '';
+                        echo $lampiran . '' . folderSizeX($filename);
                     ?>
-                    </h3>
+                    </span>
                 </div>
-                <!-- end box header -->
-                <div class="box-body">
-                    <!-- form start -->
-                    <form id="frmDeltickets" action="<?= site_url() ?>tr/deleteticket/ajx_delete_ticket" method="GET" enctype="multipart/form-data">
-                        <div class="box-body">
-                            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
-                            <div class="form-group row">
-                                <label for="fdt_ticket_datetime" class="col-sm-8 control-label"><?=lang("Delete ticket termasuk log ticket dan attachment s/d tgl :")?></label>
-                                <div class="col-sm-4">
-                                    <div class="input-group date">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-calendar"></i>
-                                        </div>
-                                        <input type="text" class="form-control datepicker" id="fdt_ticket_datetime" name="fdt_ticket_datetime"/>
-                                    </div>
-                                    <div id="fdt_ticket_datetime_err" class="text-danger"></div>
-                                    <!-- /.input group -->
-                                </div>
-                            </div>
-                            <button type="button"  id="btnDelete" href="#" title="<?=lang("Clear ticket and attachment")?>" class="btn btn-primary btn-block"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                        </div>
-                        <div class="col-md-12">
-                        <div class="box box-warning box-solid">
-                            <div class="box-header with-border">
-                            <h3 class="box-title">PENTING!!!</h3>
-                            <div class="box-tools pull-right">
-                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <!-- /.box-tools -->
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body" style="">
-                            *Harap lakukan backup/cetak data laporan ticket sebelum melakukan delete ticket termasuk Log ticket dan lampiran.
-                            <br/>
-                            *Delete ticket berlaku untuk semua ticket dengan status REJECTED,VOID,CLOSED,APPROVAL_EXPIRED,REVISION_EXPIRED,ACCEPTANCE_EXPIRED dan TICKET_EXPIRED sampai dengan tanggal yang dipilih.
-                            </div>
-                            <!-- /.box-body -->
-                        </div>
-                        <!-- /.box -->
-                        </div>
-                    </form>
-                </div>
-                <!-- end box body -->
-                <div class="box-footer"></div>
-                <!-- end box-footer -->
+                <!-- /.info-box-content -->
+            </div>
+
+            <div class="callout callout-warning">
+            <h4>PENTING!!!</h4>
+			<li>Jalankan backup/cetak data laporan ticket sebelum delete ticket.</li>
+            <li>Delete ticket berlaku untuk semua ticket dengan status :
+                <ul>
+                <li>REJECTED</li>
+                <li>VOID</li>
+                <li>CLOSED</li>
+                <li>APPROVAL_EXPIRED</li>
+                <li>REVISION_EXPIRED</li>
+                <li>ACCEPTANCE_EXPIRED</li>
+                <li>TICKET_EXPIRED</li>
+                </ul>
+            </li>
             </div>
         </div>
+        <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+	<div class="col-md-6">
+	  <div class="box box-default">
+		<div class="box-header with-border">
+		  <i class="fa fa-trash"></i>
+
+		  <h3 class="box-title">Delete ticket (termasuk Log dan lampiran)</h3>
+		</div>
+		<!-- /.box-header -->
+		<div class="box-body">
+			<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+			<div class="form-group row">
+				<label for="fdt_ticket_datetime" class="col-sm-4 control-label"><?=lang("s/d Tanggal Ticket :")?></label>
+				<div class="col-sm-8">
+					<div class="input-group date">
+						<div class="input-group-addon">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control datepicker" id="fdt_ticket_datetime" name="fdt_ticket_datetime"/>
+					</div>
+					<div id="fdt_ticket_datetime_err" class="text-danger"></div>
+					<!-- /.input group -->
+				</div>
+			</div>
+			<button type="button"  id="btnDelete" href="#" title="<?=lang("Clear ticket and attachment")?>" class="btn btn-primary btn-block"><i class="fa fa-trash" aria-hidden="true"></i></button>
+		</div>
+		<!-- /.box-body -->
+	  </div>
+	  <!-- /.box -->
+	</div>
+	<!-- /.col -->
+</div>
 </section>
 
 <script type="text/javascript">
@@ -124,9 +118,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 return;
             }else{
                 $("#fdt_ticket_datetime_err").hide();
-                var confirmDelete = confirm("Delete ticket termasuk log ticket and attachment <= " + end_date +"???");
+                var confirmDelete = confirm("Delete ticket <= " + end_date +"???");
                 if (confirmDelete){
-                    App.blockUIOnAjaxRequest("Deleting ticket termasuk log ticket and attachment .....");
+                    App.blockUIOnAjaxRequest("Deleting ticket, log ticket and attachment .....");
                     $.ajax({
                         url:"<?=site_url()?>tr/deleteticket/ajx_delete_ticket/" + end_date,
                         method:"GET",
@@ -141,7 +135,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 buttons: {
                                     OK : function(){
                                         if (resp.status == "SUCCESS"){
-                                            //$("#btnNew").trigger("click");
+                                            window.location.replace("<?=site_url()?>tr/deleteticket");
                                             return;
                                         }
                                     },
