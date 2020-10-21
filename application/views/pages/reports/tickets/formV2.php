@@ -6,6 +6,15 @@ defined('BASEPATH') or exit ('No direct script access allowed');
     #row1{
         display:none;
     }
+    .border-0{
+		border: 0px;
+	}
+	.form-group{
+		margin-bottom: 5px;
+	}
+	.checkbox label, .radio label {
+		font-weight:700;
+	}
 </style>
 <!-- form start -->
 <form id="rptTicketsV2" action="<?= site_url() ?>report/tickets_v2/process" method="POST" enctype="multipart/form-data">

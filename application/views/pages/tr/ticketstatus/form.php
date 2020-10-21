@@ -12,7 +12,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         padding: 2px; !important
     }
     .form-group{
-		margin-bottom:10px;
+		margin-bottom:5px;
 	}
     #frmTicketStatus{
         display:none;

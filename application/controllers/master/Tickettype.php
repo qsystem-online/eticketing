@@ -29,6 +29,7 @@ class Tickettype extends MY_Controller
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'master/tickettype/fetch_list_data';
         $this->list['delete_ajax_url'] = site_url() . 'master/tickettype/delete/';
         $this->list['edit_ajax_url'] = site_url() . 'master/tickettype/edit/';
+        $this->list['addcopy_ajax_url'] = site_url() . 'master/tickettype/copy/'; //Hanya Dipakai di ticketList
         $this->list['arrSearch'] = [
             'fin_ticket_type_id' => 'Ticket Type ID',
             'fst_ticket_type_name' => 'Ticket Type Name'

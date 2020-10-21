@@ -588,6 +588,8 @@ class Ticketstatus extends MY_Controller
             $this->json_output();
             return;
         }
+        $this->db->trans_start();
+
         $days = $this->input->post("fin_service_level_days");
         $newStatus = $this->input->post("fst_update_status");
         $days = abs(intval($days)); //tambahan
@@ -633,7 +635,6 @@ class Ticketstatus extends MY_Controller
             //die();
             $data["fin_service_level_id"]= $this->input->post("fin_service_level_id");
         }
-        $this->db->trans_start();
 
         $this->ticketstatus_model->update($data);
         $dbError = $this->db->error();
@@ -1680,8 +1681,15 @@ class Ticketstatus extends MY_Controller
     public function get_new_ticket(){
         $new = $this->dashboard_model->get_ttl_newTickets();
         $result['new'] = $new;
-        $result['msg'] = "Berhasil direfresh secara realtime";
+        $result['msg'] = "Refresh success!";
         echo json_encode($result);
+    }
+
+    public function get_new_ticket_notif(){
+        $arrNotif = $this->ticketstatus_model->get_our_tickets_notif();
+        $this->json_output([
+            "arrNotif"=>$arrNotif
+        ]);
     }
 
 }

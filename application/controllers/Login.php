@@ -24,6 +24,7 @@ class Login extends CI_Controller
 					$this->session->set_userdata("active_group_id", $rw->ActiveGroup);
 					$this->session->set_userdata("active_level_id", $rw->ActiveLevel);
 					$this->session->set_userdata("active_dept_id", $rw->fin_department_id);
+					$this->session->set_userdata("active_notif", 1);
 					$this->session->set_userdata("last_login_session", time());
 					unset($this->aauth);
 					$this->load->library('aauth');

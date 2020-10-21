@@ -29,6 +29,7 @@ class Department extends MY_Controller
 		$this->list['fetch_list_data_ajax_url'] = site_url() . 'master/department/fetch_list_data';
 		$this->list['delete_ajax_url'] = site_url() . 'master/department/delete/';
 		$this->list['edit_ajax_url'] = site_url() . 'master/department/edit/';
+		$this->list['addcopy_ajax_url'] = site_url() . 'master/department/copy/'; //Hanya Dipakai di ticketList
 		$this->list['arrSearch'] = [
 			'fin_department_id' => 'Department ID',
 			'fst_department_name' => 'Department Name'

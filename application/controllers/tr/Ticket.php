@@ -25,6 +25,7 @@ class ticket extends MY_Controller
         $this->list['page_name'] = "Ticket";
         $this->list['list_name'] = "Ticket List";
         $this->list['addnew_ajax_url'] = site_url() . 'tr/ticket/add';
+        $this->list['addcopy_ajax_url'] = site_url() . 'tr/ticket/copy/';
         //$this->list['report_url'] = site_url() . 'report/tickets';
         $this->list['pKey'] = "id";
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'tr/ticket/fetch_list_data';
@@ -53,9 +54,10 @@ class ticket extends MY_Controller
             ['title' => 'Action', 'width' => '10%', 'data' => 'action', 'sortable' => false, 'className' => 'dt-body-center text-center',
                 'render'=>"function(data,type,row){
                     action = \"<div style='font-size:16px'>\";
-                    action += \"<a class='btn-edit' href='#' data-id='\" + row.fin_ticket_id + \"'><i style='font-size:16px;color:lime' class='fa fa-bars'></i></a>\";
-					action += \"</div>\";
-					return action;
+                    action += \"<a class='btn-edit' href='#' data-id='\" + row.fin_ticket_id + \"'><i style='font-size:16px;color:lime' class='fa fa-bars'></i></a> &nbsp;\";
+                    action += \"<a class='btn-copy' href='#' data-id='\" + row.fin_ticket_id + \"'><i style='font-size:16px;color:lime' class='fa fa-clone'></i></a>\";
+                    action += \"</div>\";
+                    return action;
                 }",
             ]
         ];
@@ -86,7 +88,7 @@ class ticket extends MY_Controller
         $main_header = $this->parser->parse('inc/main_header', [], true);
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $data["mode"] = $mode;
-        $data["title"] = $mode == "ADD" ? "Add Ticket" : "View";
+        $data["title"] = $mode != "VIEW" ? "Add Ticket" : "View";
         // tambah ini
         if ($mode == 'ADD'){
             $data["fin_ticket_id"] = 0;
@@ -94,6 +96,9 @@ class ticket extends MY_Controller
         }else if ($mode == "VIEW"){
             $data["fin_ticket_id"] = $fin_ticket_id;
             $data["fst_ticket_no"] = "";
+        }else if ($mode == "COPY"){
+            $data["fin_ticket_id"] = $fin_ticket_id;
+            $data["fst_ticket_no"] = $this->ticket_model->GenerateTicketNo();
         }
 
         $page_content = $this->parser->parse('pages/tr/ticket/form', $data, true);
@@ -112,6 +117,9 @@ class ticket extends MY_Controller
         $this->openForm("ADD", 0);
     }
 
+    public function copy($finTicketId){
+        $this->openForm("COPY", $finTicketId);
+    }
     /*public function Edit($fin_ticket_id){
         $this->openForm("EDIT", $fin_ticket_id);
     }*/

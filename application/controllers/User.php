@@ -30,6 +30,7 @@ class User extends MY_Controller
 		$this->list['fetch_list_data_ajax_url'] = site_url() . 'user/fetch_list_data';
 		$this->list['delete_ajax_url'] = site_url() . 'user/delete/';
 		$this->list['edit_ajax_url'] = site_url() . 'user/edit/';
+		$this->list['addcopy_ajax_url'] = site_url() . 'user/copy/'; //Hanya Dipakai di ticketList
 		$this->list['arrSearch'] = [
 			'fin_user_id' => 'User ID',
 			'fst_username' => 'User Name'
@@ -494,6 +495,13 @@ class User extends MY_Controller
 		if ($activeUser->fbl_is_hq) {
 			$this->session->set_userdata('active_branch_id', $active_branch_id);
 		}
+		$reqURL = $_SERVER["HTTP_REFERER"];
+		redirect($reqURL);
+	}
+
+	public function change_active_notif($active_notif)
+	{
+		$this->session->set_userdata('active_notif', $active_notif);
 		$reqURL = $_SERVER["HTTP_REFERER"];
 		redirect($reqURL);
 	}

@@ -5,9 +5,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<!-- Logo -->
 	<a href="index2.html" class="logo">
 		<!-- mini logo for sidebar mini 50x50 pixels -->
-		<span class="logo-mini"><b>A</b>LT</span>
+		<span class="logo-mini"><b>A</b>MS</span>
 		<!-- logo for regular state and mobile devices -->
-		<span class="logo-lg"><b>Admin</b>LTE</span>
+		<span class="logo-lg"><b>AMS</b> E-Ticketing</span>
 	</a>
 
 	<!-- Header Navbar: style can be found in header.less -->
@@ -19,6 +19,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 		<div class="navbar-custom-menu">
 			<ul class="nav navbar-nav">
+				<div class="pull-left notif">
+					<select id="active_notif" style="color:#b9ecde;width:170px;background:#3c8dbc;padding:15px;border-width:0px">
+						<?php
+						$active_notif = $this->session->userdata("active_notif");
+						if($active_notif == 1){
+							$name = "Notifikasi Aktif";
+							echo "<option value='0'>Notifikasi Non-aktif</option>";
+							$selected = "selected";
+						}else{
+							$name = "Notifikasi Non-aktif";
+							echo "<option value='1'>Notifikasi Aktif</option>";
+							$selected = "selected";
+						}
+						echo "<option value=" . $active_notif . " $selected >" . $name . "</option>";
+						?>
+					</select>
+				</div>
 				<!-- Notifications: style can be found in dropdown.less -->
 				<li class="dropdown notifications-menu">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -108,18 +125,119 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	});
 </script>
 <script type="text/javascript">
+  var dataNew = 0;
+  $active_notif = $("#active_notif").val();
   $(document).ready(function(){
-    setInterval(function(){
-          $.ajax({
-                url:"<?=site_url()?>tr/ticketstatus/get_new_ticket",
-                type:"GET",
-                dataType:"json",//datatype lainnya: html, text
-                data:{},
-                success:function(data){
-                    $("#ticket-new").html(data.new);
-					$("#ticket-newDetail").html(data.new);
+	setInterval(function(){
+		$.ajax({
+			url:"<?=site_url()?>tr/ticketstatus/get_new_ticket",
+			type:"GET",
+			dataType:"json",//datatype lainnya: html, text
+			data:{},
+			success:function(data){
+				$("#ticket-new").html(data.new);
+				$("#ticket-newDetail").html(data.new);
+				dataNew = data.new;
+			}
+		});
+	},60000);
+  })
+</script>
+
+<!--<script>
+	function showNotification() {
+		const notification = new Notification("New Ticket !!", {
+			body: "Hi there. How are you doing?",
+			//icon: "yourimageurl.png"
+		});
+
+		notification.onclick = (e) => {
+			window.location.href = "https://google.com";
+		};
+	}
+	console.log(Notification.permission);
+	if (Notification.permission === "granted") {
+		showNotification();
+	} else if (Notification.permission !== "denied") {
+		Notification.requestPermission().then(permission => {
+			console.log(permission);
+		});
+	}
+</script>-->
+
+<script type="text/javascript">
+  //var dataNew = 0;
+  $active_notif = $("#active_notif").val();
+  $(document).ready(function(){
+     setInterval(function(){
+		//alert($active_notif);
+        if (dataNew > 0 && $active_notif == 1){
+            notifikasi() 
+        }
+     },61000);
+  });
+</script>
+
+<script type="text/javascript">
+$(function() {
+	$("#active_notif").change(function(event) {
+		$active_notif = $("#active_notif").val();
+		event.preventDefault();
+		window.location = "<?= site_url() ?>user/change_active_notif/" + $("#active_notif").val();
+	});
+});
+</script>
+
+<script type="text/javascript">
+    function notifikasi(){
+        url = "<?= site_url() ?>tr/ticketstatus/get_new_ticket_notif";
+        $.ajax({
+            url: url,
+            method:"GET",
+            //data: data,
+            datatype:"JSON",
+        }).done(function(resp){
+            console.log(resp);
+            var notif = resp.arrNotif;
+            $.each(notif,function(i,v){
+                console.log(v);
+                var from = v.IssuedBy;
+                var id_ticket = v.fin_ticket_id;
+				var no_ticket = v.fst_ticket_no;
+                var memo = v.fst_memo
+				//alert(memo);
+                /*Push.create('New Ticket :' + id_ticket,{
+                    body: 'From :' + from,
+                    //icon: 'icon.png',
+                    timeout: 24000,               // Timeout before notification closes automatically.
+                    vibrate: [100, 100, 100],    // An array of vibration pulses for mobile devices.
+                    onClick: function() {
+                        window.location.replace("<?=site_url()?>tr/ticketstatus/Update/" + id_ticket); 
+                        // Callback for when the notification is clicked. 
+                        console.log(this);
+                    }  
+                });*/
+                function showNotification() {
+                    const notification = new Notification("AMS E-Ticketing =" + no_ticket, {
+                        body: "From :" + from,
+                        //icon: "yourimageurl.png"
+                    });
+                    notification.onclick = (e) => {
+                        window.open("<?=site_url()?>tr/ticketstatus/Update/" + id_ticket);
+                        console.log(this);
+                    };
+                }
+
+                console.log(Notification.permission);
+                if (Notification.permission === "granted") {
+                    showNotification();
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission().then(permission => {
+                        console.log(permission);
+                    });
                 }
             });
-          },60000);
-  })
-</script> 
+        });
+    }
+</script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/push.js/0.0.11/push.min.js"></script>-->

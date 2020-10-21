@@ -29,6 +29,7 @@ class Servicelevel extends MY_Controller
         $this->list['fetch_list_data_ajax_url'] = site_url() . 'master/servicelevel/fetch_list_data';
         $this->list['delete_ajax_url'] = site_url() . 'master/servicelevel/delete/';
         $this->list['edit_ajax_url'] = site_url() . 'master/servicelevel/edit/';
+        $this->list['addcopy_ajax_url'] = site_url() . 'master/servicelevel/copy/'; //Hanya Dipakai di ticketList
         $this->list['arrSearch'] = [
             'fin_service_level_id' => 'Service Level ID',
             'fst_service_level_name' => 'Service Level Name'

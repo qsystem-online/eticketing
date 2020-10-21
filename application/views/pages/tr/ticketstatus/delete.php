@@ -15,7 +15,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="box box-default">
         <div class="box-header with-border">
             <i class="fa fa-bullhorn"></i>
-
             <h3 class="box-title">Informasi</h3>
         </div>
         <!-- /.box-header -->
@@ -54,7 +53,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             <div class="callout callout-warning">
             <h4>PENTING!!!</h4>
-			<li>Jalankan backup/cetak data laporan ticket sebelum delete ticket.</li>
+			<li>Lakukan download ticket LOG dan cetak data laporan ticket sebelum delete ticket.</li>
             <li>Delete ticket berlaku untuk semua ticket dengan status :
                 <ul>
                 <li>REJECTED</li>
@@ -74,6 +73,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     <!-- /.col -->
 	<div class="col-md-6">
+    <div class="box box-default">
+		<div class="box-header with-border">
+		  <i class="fa fa-cloud-download"></i>
+		  <h3 class="box-title">Download Ticket LOG (Excel)</h3>
+		</div>
+		<!-- /.box-header -->
+		<div class="box-body">
+			<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+			<div class="form-group row">
+				<label for="fdt_ticket_datetime" class="col-sm-4 control-label"><?=lang("s/d Tanggal Ticket :")?></label>
+				<div class="col-sm-8">
+					<div class="input-group date">
+						<div class="input-group-addon">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control datepicker" id="fdt_ticket_datetime2" name="fdt_ticket_datetime2"/>
+					</div>
+					<div id="fdt_ticket_datetime2_err" class="text-danger"></div>
+					<!-- /.input group -->
+				</div>
+			</div>
+			<button type="button"  id="btnLOG" href="#" title="<?=lang("Download Ticket LOG")?>" class="btn btn-primary btn-block"><i class="fa fa-cloud-download" aria-hidden="true"></i></button>
+		</div>
+		<!-- /.box-body -->
+	  </div>
+	  <!-- /.box -->
 	  <div class="box box-default">
 		<div class="box-header with-border">
 		  <i class="fa fa-trash"></i>
@@ -147,10 +172,43 @@ defined('BASEPATH') or exit('No direct script access allowed');
             }
 
         });
+
+        $("#btnLOG").click(function(event){
+            event.preventDefault();
+            var end_dateLog = $("#fdt_ticket_datetime2").val();
+            if (end_dateLog =="" | end_dateLog == null){
+                $("#fdt_ticket_datetime2_err").html("Tanggal batas ticket harus diisi !!!");
+                $("#fdt_ticket_datetime2_err").show();
+                return;
+            }else{
+                $("#fdt_ticket_datetime2_err").hide();
+                var confirmDelete = confirm("Download ticket LOG <= " + end_dateLog +"???");
+                if (confirmDelete){
+                    App.blockUIOnAjaxRequest("Download ticket LOG .....");
+                    $.ajax({
+                        url:"<?=site_url()?>tr/deleteticket/ajx_download_ticketLog/?dateLog=" + end_dateLog,
+                        method:"GET",
+                    }).done(function(resp){
+                        if (resp.status != "NOT FOUND"){
+                            window.location.replace("<?=site_url()?>tr/deleteticket/ajx_download_ticketLog/?dateLog=" + end_dateLog);
+                            return;
+                        }else{
+                            $.alert({
+                                title: 'Message',
+                                content: 'Data Not Found!!!',
+                                buttons: {
+                                    OK : function(){
+                                        window.location.replace("<?=site_url()?>tr/deleteticket");
+                                        return;
+                                    },
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+
+        });
+
     });
 </script>
-
-<!-- Select2 -->
-<script src="<?= COMPONENT_URL ?>bower_components/select2/dist/js/select2.full.js"></script>
-<!-- DataTables -->
-<script src="<?= COMPONENT_URL ?>bower_components/datatables.net/datatables.min.js"></script>

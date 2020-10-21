@@ -169,3 +169,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
     </div>
 </section>
+
+<script type="text/javascript">
+    setTimeout(function() {
+        location.reload();
+    }, 125000);
+</script>

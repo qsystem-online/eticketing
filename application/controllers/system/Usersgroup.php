@@ -23,7 +23,8 @@ class Usersgroup extends MY_Controller {
         $this->list['pKey']="id";
 		$this->list['fetch_list_data_ajax_url']=site_url().'system/usersgroup/fetch_list_data';
         $this->list['delete_ajax_url']=site_url().'system/usersgroup/delete/';
-        $this->list['edit_ajax_url']=site_url().'system/usersgroup/edit/';
+		$this->list['edit_ajax_url']=site_url().'system/usersgroup/edit/';
+		$this->list['addcopy_ajax_url'] = site_url() . 'system/usersgroup/copy/'; //Hanya Dipakai di ticketList
         $this->list['arrSearch']=[
             'fin_group_id' => 'Group ID',
             'fst_group_name' => 'Group Name'

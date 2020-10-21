@@ -155,6 +155,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			window.location.replace("<?=$edit_ajax_url?>" + id);
 		});
 
+		$("#tblList").on("click",".btn-copy",function(event){
+			id = $(this).data("<?=$pKey?>");
+			if (typeof id === "undefined") {
+				t = $('#tblList').DataTable();
+				var trRow = $(this).parents('tr');				
+				data = t.row(trRow).data();
+				id = data.<?=$pKey?>;
+			}
+			window.location.replace("<?=$addcopy_ajax_url?>" + id);
+		});
+
 	});
 
 	function deleteAjax(id,confirmDelete){

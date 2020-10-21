@@ -15,7 +15,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
         padding: 2px; !important
     }
     .form-group{
-		margin-bottom:10px;
+		margin-bottom:5px;
 	}
     .body {
         font-family: Arial, Helvetica, sans-serif;
@@ -103,7 +103,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                 <div class="box-body">
                     <!-- form start -->
-                    <?php if ($mode == "ADD") { ?>
+                    <?php if ($mode != "VIEW") { ?>
                         <form id="frmTicket" class="form-horizontal" action="<?= site_url() ?>tr/ticket/add" method="POST" enctype="multipart/form-data">
                             <!--<div class="box-body">-->
                                 <input type="hidden" name = "<?=$this->security->get_csrf_token_name()?>" value="<?=$this->security->get_csrf_hash()?>">			
@@ -124,7 +124,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div class="form-group">
                                     <label for="select-ticketType" class="col-xs-6 col-md-2 control-label"><?=lang("Ticket Type")?></label>
                                     <div class="col-xs-6 col-md-4">
-                                        <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id">
+                                        <select id="select-ticketType" class="form-control select2" name="fin_ticket_type_id" style="width:100%">
                                             <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $tickettypeList = $this->tickettype_model->getTicketType();
@@ -138,7 +138,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 
                                     <label for="select-serviceLevel" class="col-xs-6 col-md-2 control-label"><?=lang("Service Level")?></label>
                                     <div class="col-xs-6 col-md-4">
-                                        <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id">
+                                        <select id="select-serviceLevel" class="form-control select2" name="fin_service_level_id" style="width:100%">
                                             <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $servicelevelList = $this->servicelevel_model->get_data_serviceLevel();
@@ -192,7 +192,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div class="form-group">
                                     <label for="select-users" class="col-xs-6 col-md-2 control-label"><?=lang("Issued By")?></label>
                                     <div class="col-xs-6 col-md-4">
-                                        <select id="select-users" class="form-control select2" name="fin_issued_by_user_id">
+                                        <select id="select-users" class="form-control select2" name="fin_issued_by_user_id" style="width:100%">
                                             <?php
                                                 $active_user = $this->aauth->user();
                                                 $issuedByOthers = getDbConfig("issued_by_others");
@@ -212,7 +212,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                                     <label for="select-toUser" class="col-xs-6 col-md-2 control-label"><?=lang("Issued To")?></label>
                                     <div class="col-xs-6 col-md-4">
-                                        <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id">
+                                        <select id="select-toUser" class="form-control select2" name="fin_issued_to_user_id" style="width:100%">
                                             <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $touserList = $this->users_model->getToUserList();
@@ -228,7 +228,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div class="form-group">
                                     <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
                                     <div class="col-xs-6 col-md-4">
-                                        <select id="select-department" class="form-control select2" name="fin_to_department_id">
+                                        <select id="select-department" class="form-control select2" name="fin_to_department_id" style="width:100%">
                                         <option value="" selected>-- <?=lang("select")?> --</option>
                                             <?php
                                                 $deptidList = $this->msdepartments_model->getDepartment();
@@ -244,13 +244,13 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                 <div class="form-group">
                                     <label for="fin_approved_by_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Approved By")?></label>
                                     <div class="col-xs-6 col-md-4">
-                                        <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id"></select>
+                                        <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id" style="width:100%"></select>
                                         <div id="fin_approved_by_user_id_err" class="text-danger"></div>
                                     </div>
 
                                     <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Status")?></label>
                                     <div class="col-xs-6 col-md-4">
-                                        <select id="select-status" class="form-control select2" name="fst_status" disabled>
+                                        <select id="select-status" class="form-control select2" name="fst_status" style="width:100%" disabled>
                                             <option value="">-- <?=lang("select")?> --</option>
                                             <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
                                             <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
@@ -419,7 +419,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <div class="form-group">
                                                 <label for="fin_to_department_id" class="col-xs-6 col-md-2 control-label"><?=lang("Department")?></label>
                                                 <div class="col-xs-6 col-md-4">
-                                                    <select id="select-department" class="form-control select2" name="fin_to_department_id" disabled>
+                                                    <select id="select-department" class="form-control select2" name="fin_to_department_id" style="width:100%" disabled>
                                                         <option value="" selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $deptidList = $this->msdepartments_model->getDepartment();
@@ -434,7 +434,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
                                             <div class="form-group">
                                                 <label for="fin_approved_by_user_id" class="col-xs-6 col-md-2 control-label"><?=lang("Approved By")?></label>
                                                 <div class="col-xs-6 col-md-4">
-                                                    <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id" disabled>
+                                                    <select id="select-approvedby" class="form-control select2" name="fin_approved_by_user_id" style="width:100%" disabled>
                                                         <option value="" selected>-- <?=lang("select")?> --</option>
                                                         <?php
                                                             $approvedbyList = $this->users_model->getToUserList();
@@ -447,7 +447,7 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 
                                                 <label for="fst_status" class="col-xs-6 col-md-2 control-label"><?=lang("Status")?></label>
                                                 <div class="col-xs-6 col-md-4">
-                                                    <select id="select-status" class="form-control select2" name="fst_status" disabled>
+                                                    <select id="select-status" class="form-control select2" name="fst_status" style="width:100%" disabled>
                                                         <option value="NEED_APPROVAL"><?=lang("NEED APPROVAL")?></option>
                                                         <option value="APPROVED/OPEN"><?=lang("APPROVED/OPEN")?></option>
                                                         <option value="ACCEPTED"><?=lang("ACCEPTED")?></option>
@@ -673,12 +673,11 @@ $(function(){
 
 <script type="text/javascript">
     var $active_user = "<?= $this->aauth->get_user_id()?>";
-
     $(function(){
 
-        <?php if($mode == "VIEW"){?>
+        <?php if($mode != "ADD"){?>
             init_form($("#fin_ticket_id").val());
-        <?php } ?>
+        <?php }?>
 
         $("#btnSubmitAjax").click(function(event){
             event.preventDefault();
@@ -734,7 +733,7 @@ $(function(){
             }
 
             mode = $("#frm-mode").val();
-            if (mode == "ADD"){
+            if (mode != "VIEW"){
                 url = "<?= site_url() ?>tr/ticket/ajx_add_save";
             }else{
                 url = "<?= site_url() ?>tr/ticket/ajx_view_save";
@@ -847,9 +846,12 @@ $(function(){
         $("#fdt_ticket_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s")?>")).datetimepicker("update");
 
         mode = $("#frm-mode").val();
-        if(mode == "ADD"){
+        if(mode != "VIEW"){
             $("#select-ticketType").change(function(event){
                 event.preventDefault();
+                <?php $acceptance_expiry = getDbConfig("acceptance_expiry")?>
+                <?php $notify_deadline = getDbConfig("notify_deadline")?>
+
                 var ticketType = $("#select-ticketType option:selected").data("notice");
                 if (ticketType == "NOTICE" || ticketType == "INFO" ){
 
@@ -879,18 +881,18 @@ $(function(){
                     if($(this).find(":selected").data("notice") == "NOTICE"){
                         $("#select-serviceLevel").val(null).trigger("change.select2");
                         $("#select-serviceLevel").prop("disabled", true);
-                        //$("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('7 days'))?>")).prop("disabled", true); // 19/03/2020 dimatikan
+                        //$("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime("{$notify_deadline}days"))?>")).prop("disabled", true); // 19/03/2020 dimatikan
                         $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d H:i:s", strtotime('01-01-3000 00:00:00'))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("NOTICE");
                         $("#fdt_deadline_extended_datetime").val(null);                 //tambahan 31/03/2020 17.24
                         $("#fdt_deadline_extended_datetime").prop("disabled", true);    //tambahan 31/03/2020 17.24
                     }else if($(this).find(":selected").data("notice") == "ASSIGNMENT"){
-                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d 23:59:59", strtotime('3 days'))?>")).prop("disabled", true);
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d 23:59:59", strtotime("{$acceptance_expiry}days"))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("ASSIGNMENT");
                         $("#fdt_deadline_extended_datetime").val(null);                 //tambahan 31/03/2020 17.24
                         $("#fdt_deadline_extended_datetime").prop("disabled", true);    //tambahan 31/03/2020 17.24
-                        $("#select-serviceLevel").val(null).trigger("change.select2");
-                        $("#select-serviceLevel").prop("disabled", false);
+                        //$("#select-serviceLevel").val(null).trigger("change.select2");
+                        //$("#select-serviceLevel").prop("disabled", false);
                     }else if($(this).find(":selected").data("notice") == "INFO"){
                         $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d 23:59:59", strtotime('7 days'))?>")).prop("disabled", true);
                         $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d 23:59:59", strtotime('7 days'))?>")).prop("disabled", true);
@@ -929,7 +931,7 @@ $(function(){
         }
 
         mode = $("#frm-mode").val();
-        if(mode == "ADD"){
+        if(mode != "VIEW"){
             $("#select-ticketType").change(function(event){
                 event.preventDefault();
 
@@ -955,12 +957,14 @@ $(function(){
         //alert("Init Form);
         var $userActive ="<?= $this->aauth->get_user_id()?>";
         var url = "<?=site_url()?>tr/ticket/fetch_data/" + fin_ticket_id;
+        var d = new Date();
+        d.setDate(d.getDate() + 0);
         $.ajax({
             type: "GET",
             url: url,
             success: function (resp) {
                 console.log(resp.ms_ticket);
-
+                var ticket_no = $("#fst_ticket_no").val();
                 $.each(resp.ms_ticket, function(name, val){
                     var $el = $('[name="'+name+'"]'),
                     type = $el.attr('type');
@@ -1097,6 +1101,11 @@ $(function(){
                     $("#btnVoid").hide();
                 }
 
+                if (mode == "COPY"){
+                    $("#fst_ticket_no").val(ticket_no);
+                    $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(d));
+                }
+
             },
             error: function (e) {
                 $("#result").text(e.responseText);
@@ -1151,7 +1160,6 @@ $(function(){
             });
         });
     }
-
 </script>
 
 <!-- Select2 -->

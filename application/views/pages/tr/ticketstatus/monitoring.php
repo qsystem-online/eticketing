@@ -429,7 +429,7 @@ $(function(){
       //$('#carousel-pengumuman').carousel({
         //interval: 9000
       //});
-    }
+  }
 </script>
 
 <script src="<?= COMPONENT_URL?>bower_components/jquery/dist/jquery.min.js"></script>
