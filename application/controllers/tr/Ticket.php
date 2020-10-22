@@ -88,7 +88,14 @@ class ticket extends MY_Controller
         $main_header = $this->parser->parse('inc/main_header', [], true);
         $main_sidebar = $this->parser->parse('inc/main_sidebar', [], true);
         $data["mode"] = $mode;
-        $data["title"] = $mode != "VIEW" ? "Add Ticket" : "View";
+        if ($mode == 'ADD'){
+            $data["title"] ="Add Ticket";
+        }else if ($mode == "VIEW"){
+            $data["title"] ="View Ticket";
+        }else if ($mode == "COPY"){
+            $data["title"] ="Add Ticket (Copy)";
+        }
+        //$data["title"] = $mode != "VIEW" ? "Add Ticket" : "View";
         // tambah ini
         if ($mode == 'ADD'){
             $data["fin_ticket_id"] = 0;
@@ -118,7 +125,13 @@ class ticket extends MY_Controller
     }
 
     public function copy($finTicketId){
-        $this->openForm("COPY", $finTicketId);
+        //$this->openForm("COPY", $finTicketId);
+        $is_permit_ticket = $this->ticket_model->is_permit_ticket($finTicketId);
+        if ($is_permit_ticket != null){
+            $this->openForm("COPY", $finTicketId);
+        }else{
+            show_404();
+        }
     }
     /*public function Edit($fin_ticket_id){
         $this->openForm("EDIT", $fin_ticket_id);

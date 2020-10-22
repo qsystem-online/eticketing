@@ -673,6 +673,7 @@ $(function(){
 
 <script type="text/javascript">
     var $active_user = "<?= $this->aauth->get_user_id()?>";
+    var $issuedByOthers = "<?= getDbConfig("issued_by_others")?>";
     $(function(){
 
         <?php if($mode != "ADD"){?>
@@ -714,6 +715,11 @@ $(function(){
             // TAMBAHAN 21/04/2020 15.00 filter issued to
             if ($("#select-toUser").val() == $("#select-users").val()){
                 alert("<?=lang('IssuedBy tidak boleh sama dengan IssuedTo!!!')?>");
+                return;
+            }
+
+            if ( $issuedByOthers == 0 && $("#select-users").val() != $active_user){
+                alert("<?=lang('Cek IssuedBy!!!')?>");
                 return;
             }
 
@@ -894,8 +900,8 @@ $(function(){
                         //$("#select-serviceLevel").val(null).trigger("change.select2");
                         //$("#select-serviceLevel").prop("disabled", false);
                     }else if($(this).find(":selected").data("notice") == "INFO"){
-                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d 23:59:59", strtotime('7 days'))?>")).prop("disabled", true);
-                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d 23:59:59", strtotime('7 days'))?>")).prop("disabled", true);
+                        $("#fdt_deadline_extended_datetime").val(dateTimeFormat("<?= date("Y-m-d 23:59:59", strtotime("{$notify_deadline}days"))?>")).prop("disabled", true);
+                        $("#fdt_acceptance_expiry_datetime").val(dateTimeFormat("<?= date("Y-m-d 23:59:59", strtotime("{$notify_deadline}days"))?>")).prop("disabled", true);
                         $("#fst_assignment_or_notice").val("INFO");
                         $("#select-serviceLevel").val(null).trigger("change.select2");
                         $("#select-serviceLevel").prop("disabled", true);
@@ -1104,6 +1110,7 @@ $(function(){
                 if (mode == "COPY"){
                     $("#fst_ticket_no").val(ticket_no);
                     $("#fdt_ticket_datetime").datetimepicker('update', dateTimeFormat(d));
+                    $('#select-users').select2();
                 }
 
             },
