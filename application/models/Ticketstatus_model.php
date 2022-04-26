@@ -470,7 +470,7 @@ class Ticketstatus_model  extends MY_MODEL {
         $logStartToday = date("Y-m-d H:i:s");
         $dateToday = date("Y-m-d");
 
-        $now = date("Y-m-d H:i:s",strtotime(' 23:59:59'));
+        $now = date("Y-m-d H:i:s");
         $now = date_create($now);
         date_add($now,date_interval_create_from_date_string("0 days"));
         $expirydeadline = date_format($now,"Y-m-d H:i:s");
@@ -481,10 +481,11 @@ class Ticketstatus_model  extends MY_MODEL {
 
         //$user_status = $this->aauth->get_user_id();
         $user_status = 0;
-        $expiryUpdate = false;
+        //-- 2 variabel ini harusnya false jika fungsi cek dan insert trticketexpiry_log akan digunakan
+        $expiryUpdate = true;
         $newLog = false;
 
-        $ssql = "SELECT * FROM trticketexpiry_log WHERE fdt_log_start_datetime LIKE ? ";
+        /*$ssql = "SELECT * FROM trticketexpiry_log WHERE fdt_log_start_datetime LIKE ? ";
         $qr = $this->db->query($ssql,["%".$dateToday."%"]);
         $rw = $qr->row();
 
@@ -497,10 +498,10 @@ class Ticketstatus_model  extends MY_MODEL {
                     $expiryUpdate = true;
                 }
             }
-        }
+        }*/
         //--Record LOG hari ini sudah ada
         if ($expiryUpdate == true){
-            if ($newLog == true){
+            /*if ($newLog == true){
                 $data  = array(
                     'fdt_log_start_datetime' => date('Y-m-d H:i:s'),
                     'fin_count' => '1'
@@ -515,7 +516,7 @@ class Ticketstatus_model  extends MY_MODEL {
                 );
                 $this->db->where('rec_id', $log_id);
                 $this->db->update('trticketexpiry_log', $data);
-            }
+            }*/
             $ssql = "SELECT * FROM trticket WHERE fdt_acceptance_expiry_datetime < ? AND (fst_status ='APPROVED/OPEN' OR fst_status ='NEED_APPROVAL' OR fst_status ='NEED_REVISION') AND fdt_deadline_extended_datetime IS NULL AND fst_active !='D'";
             $qr = $this->db->query($ssql,[$expirydeadline]);
             //echo $this->db->last_query();
@@ -603,28 +604,48 @@ class Ticketstatus_model  extends MY_MODEL {
                 }
             }
 
-            $data  = array(
+            /*$data  = array(
                 'fdt_log_end_datetime' => date('Y-m-d H:i:s')
             );
             $this->db->where('rec_id', $log_id);
             $this->db->update('trticketexpiry_log', $data);
+            */
 
         }
     }
 
-    public function delete_ticket_doc($end_date){
-        if (isset($end_date)) {
-            $end_date = date('Y-m-d 23:59:59', strtotime($end_date));
+    public function delete_ticket_doc($data){
+        $end_date ="";
+        $fst_status ="";
+        $opsi_delete ="";
+        if (isset($data['fdt_ticket_datetime'])) { 
+            $end_date = date('Y-m-d 23:59:59', strtotime($data['fdt_ticket_datetime']));
         }
-        $ssql = "SELECT * FROM trticket WHERE fdt_ticket_datetime <= ? AND (fst_status ='CLOSED' OR fst_status ='APPROVAL_EXPIRED' OR fst_status ='REVISION_EXPIRED' OR fst_status ='ACCEPTANCE_EXPIRED' OR fst_status ='TICKET_EXPIRED' OR fst_status ='VOID' OR fst_status ='REJECTED') ";
-        $qr = $this->db->query($ssql,[$end_date]);
+        if (isset($data['fst_status'])) { 
+            $fst_status = $data['fst_status'];
+        }
+        if (isset($data['opsi_delete'])) { 
+            $opsi_delete = $data['opsi_delete'];
+        }
+        $swhere = "";
+        if ($fst_status != "0" ) {
+            $swhere .= " and fst_status = " . $this->db->escape($fst_status);
+        }else{
+            $swhere .= " and (fst_status ='REJECTED' OR fst_status ='VOID' OR fst_status ='CLOSED' OR fst_status ='APPROVAL_EXPIRED' OR fst_status ='REVISION_EXPIRED' OR fst_status ='ACCEPTANCE_EXPIRED' OR fst_status ='TICKET_EXPIRED')";
+        }
+        if (isset($end_date)) {
+            $swhere .= " and fdt_ticket_datetime <= '". date('Y-m-d 23:59:59', strtotime($end_date)). "'";
+        }
+        if ($swhere != "") {
+            $swhere = " WHERE " . substr($swhere, 5);
+        }
+        $ssql = "SELECT * FROM ". $this->tableName ."" . $swhere;
+        $qr = $this->db->query($ssql);
         //echo $this->db->last_query();
         //die();
         $rsTicket = $qr->result();
         $data = [
             "del_ticket" => $rsTicket
-            //"del_ticketlog" => $rsTicketlog,
-            //"del_ticketdocs" => $rsTicketDocs
         ];
 
         return $data;

@@ -24,12 +24,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<?php
 						$active_notif = $this->session->userdata("active_notif");
 						if($active_notif == 1){
-							$name = "Notifikasi Aktif";
-							echo "<option value='0'>Notifikasi Non-aktif</option>";
+							$name = "Aktif";
+							echo "<option value='0'>Push Notif Non-aktif</option>";
 							$selected = "selected";
 						}else{
-							$name = "Notifikasi Non-aktif";
-							echo "<option value='1'>Notifikasi Aktif</option>";
+							$name = "Non-aktif";
+							echo "<option value='1'>Push Notif Aktif</option>";
 							$selected = "selected";
 						}
 						echo "<option value=" . $active_notif . " $selected >" . $name . "</option>";

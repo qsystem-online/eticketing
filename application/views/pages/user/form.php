@@ -187,9 +187,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
 
 					<div class="form-group">
-						<label for="fbl_admin" class="col-xs-6 col-md-2 control-label"><?=lang("Admin")?></label>
+						<label for="fbl_admin" class="col-xs-6 col-md-2 control-label"><?=lang("")?></label>
 						<div class="col-xs-6 col-md-2">
 							<label class="checkbox-inline"><input id="fbl_admin" name='fbl_admin' type="checkbox" value="1"><?=lang("Admin")?></label>
+						</div>
+						<div class="col-xs-6 col-md-4">
+							<label class="checkbox-inline"><input id="fbl_block_direct_email" name='fbl_block_direct_email' type="checkbox" value="1"><?=lang("Block received email direct ticket")?></label>
+						</div>
+						<div class="col-xs-6 col-md-4">
+							<label class="checkbox-inline"><input id="fbl_block_hirarki_email" name='fbl_block_hirarki_email' type="checkbox" value="1"><?=lang("Block received email hirarki ticket")?></label>
 						</div>
 					</div>
 				</div>

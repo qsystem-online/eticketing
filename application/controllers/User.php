@@ -181,7 +181,9 @@ class User extends MY_Controller
 			"fin_department_id" => $this->input->post("fin_department_id"),
 			"fin_branch_id" => $this->input->post("fin_branch_id"),
 			"fin_group_id" => $this->input->post("fin_group_id"),
-			"fbl_admin" => $this->input->post("fbl_admin") == null? 0:1
+			"fbl_admin" => $this->input->post("fbl_admin") == null? 0:1,
+			"fbl_block_direct_email" => $this->input->post("fbl_block_direct_email") == null? 0:1,
+			"fbl_block_hirarki_email" => $this->input->post("fbl_block_hirarki_email") == null? 0:1
 		];
 
 		if ($this->input->post("fbl_admin") == null || $this->input->post("fbl_admin") == 0){
@@ -286,7 +288,9 @@ class User extends MY_Controller
 			"fin_department_id" => $this->input->post("fin_department_id"),
 			"fin_branch_id" => $this->input->post("fin_branch_id"),
 			"fin_group_id" => $this->input->post("fin_group_id"),
-			"fbl_admin" =>  $this->input->post("fbl_admin") == null? 0:1
+			"fbl_admin" => $this->input->post("fbl_admin") == null? 0:1,
+			"fbl_block_direct_email" => $this->input->post("fbl_block_direct_email") == null? 0:1,
+			"fbl_block_hirarki_email" => $this->input->post("fbl_block_hirarki_email") == null? 0:1
 		];
 
 		if ($this->input->post("fst_password") == $user->fst_password ){

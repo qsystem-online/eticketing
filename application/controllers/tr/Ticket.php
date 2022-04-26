@@ -9,6 +9,7 @@ class ticket extends MY_Controller
         $this->load->library('form_validation');
         $this->load->model('ticket_model');
         $this->load->model('ticketdocs_model');
+        $this->load->model("ticketemail_model");
         $this->load->model('servicelevel_model');
         $this->load->model('tickettype_model');
         $this->load->model('users_model');
@@ -260,7 +261,17 @@ class ticket extends MY_Controller
         }else{
             $data["fst_status"] = "NEED_APPROVAL";
         }
-        $insertId = $this->ticketlog_model->insert($data);
+        $this->ticketlog_model->insert($data);
+
+        // Ticket Email
+        /*$email = [
+            "fin_ticket_id" => $insertId,
+            "fbl_need_approval" => $fbl_need_approval,
+            "fdt_email_datetime" => $fdt_ticket_datetime,
+			"fin_issued_to_user_id" => $this->input->post("fin_issued_to_user_id"),
+			"fin_approved_by_user_id" => $this->input->post("fin_approved_by_user_id"),
+		];
+        $this->ticketemail_model->postingEmail($email);*/
 
         $this->db->trans_complete();
         $this->ajxResp["status"] = "SUCCESS";
